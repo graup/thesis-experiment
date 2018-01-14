@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UI Design Pilot Study</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="content">
+    <p class="progress">Step 2/3</p>
+
+    <p><strong>You will now be asked to compare a few interface mockups.</strong></p>
+    <p>On the top of the screen, you will be given a scenario and a task.</p>
+    <p>Below that, you will see two versions (A and B) of an interface supporting this task.</p>
+    <p>Please choose in which version you think you personally would be more likely to initiate and complete the task.</p>
+
+    <form method="post">
+      {% for pair in comparison_pairs %}
+        {% set cloop = loop %}
+        Please compare
+        <ul>
+        {% for item in pair['items'] %}
+          <li><input type="radio" name="{{pair['key']}}" value="{{item}}"> {{item}}</li>
+        {% endfor %}
+        </ul>
+      {% endfor %}
+
+      <div class="actions">
+        <input type="submit" class="btn" value="Continue">
+      </div>
+    </form>
+  </div>
+</body>
+</html>

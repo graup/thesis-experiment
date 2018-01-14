@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UI Design Pilot Study</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="content">
+    <p class="progress">Step 3/3</p>
+
+    <p><strong>Thank you for your participation.</strong></p>
+
+    {% if saved %}
+    <p>All done!</p>
+    {% else %}
+    <p>If you are interested in your test score and analysis of the results, please leave your email address so I can contact you. Note that you will give up anonymity by doing so. However, I guarantee you that your information will not be shared with anyone else.</p>
+
+    <form method="post">
+      <label>E-mail address: <input type="text" name="email"</label>
+
+      <div class="actions">
+        <input type="submit" class="btn" value="Save">
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</body>
+</html>

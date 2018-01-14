@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UI Design Pilot Study</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="content">
+    <p class="progress">Step 0/3</p>
+
+    <p><strong>Thank you for helping me out!</strong></p>
+    <p>I this short pilot study, you will first complete a pre-test and then perform a series of pairwise comparison tasks.</p>
+    <p>When you're ready, please press start.</p>
+    <p>Your user id: {{user_id}}</p>
+
+    <div class="actions">
+      <a href="{{ url_for('gcos') }}" class="btn">Start</a>
+    </div>
+  </div>
+</body>
+</html>
