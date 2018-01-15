@@ -8,26 +8,76 @@
   <div id="content">
     <p class="progress">Step 2/3</p>
 
-    <p><strong>You will now be asked to compare a few interface mockups.</strong></p>
-    <p>On the top of the screen, you will be given a scenario and a task.</p>
-    <p>Below that, you will see two versions (A and B) of an interface supporting this task.</p>
-    <p>Please choose in which version you think you personally would be more likely to initiate and complete the task.</p>
+    <form method="post" id="compare_form">
+      <div class="steps" id="steps">
 
-    <form method="post">
-      {% for pair in comparison_pairs %}
-        {% set cloop = loop %}
-        Please compare
-        <ul>
-        {% for item in pair['items'] %}
-          <li><input type="radio" name="{{pair['key']}}" value="{{item}}"> {{item}}</li>
+        <div id="step0">
+          <p><strong>You will now be asked to compare a few static interface mockups.</strong></p>
+          <p>On the top of the screen, you will be given a scenario and a user task.</p>
+          <p>Below that, you will see two versions (1 and 2) of an interface supporting this task.</p>
+          <p>Please choose in which version you think <strong>you personally would be more likely to initiate and complete the task</strong>.</p>
+
+          <div class="actions">
+            <a href="javascript:next()" class="btn">OK, let's go</a>
+          </div>
+        </div>
+
+        {% for pair in comparison_pairs %}
+          <div id="step{{loop.index}}">
+
+            <p><strong>Screnario 1</strong></p>
+            <p>You joined an application that aims to gather ideas to improve conditions in your community, the members of KAIST. We want as many people as possible to participate, because not everyone knows about the troubles of everyone else. The school’s administration agreed to monitor the community’s ideas and follow-up with concrete steps once an issue has been identified.</p>
+            <p>This is the main screen of the app that you are presented with just after signup.</p>
+            <p>The task that this design affords is to contribute a new idea.</p>
+
+            <p>In which version <strong>would you personally be more likely to initiate and complete the task?</strong></p>
+
+            <p style="text-align: center"><strong>Comparison {{loop.index}} of 6</strong></p>
+            {% set cloop = loop %}
+            <ul class="compare">
+            {% for item in pair['items'] %}
+              <li>
+                <img src="{{ url_for('static', filename='img/' + item + '.png') }}">
+                <label><input type="radio" name="{{pair['key']}}" value="{{item}}"> Version {{loop.index}}</label></li>
+            {% endfor %}
+            </ul>
+
+            <div class="actions">
+              <input type="submit" class="btn" value="Next">
+            </div>
+          </div>
         {% endfor %}
-        </ul>
-      {% endfor %}
-
-      <div class="actions">
-        <input type="submit" class="btn" value="Continue">
       </div>
     </form>
   </div>
+<script>
+var step = -1;
+function next() {
+  var num_steps = document.getElementById('steps').children.length;
+  if (step+1 >= num_steps) {
+    document.getElementById('compare_form').submit();
+  } else {
+    if (step >= 0) {
+      document.getElementById('step'+step).style.display = 'none';
+      document.querySelectorAll('#step'+step+' input').forEach(function(elem){elem.required=false;});
+    }
+    step++;
+    document.getElementById('step'+step).style.display = 'block';
+    document.querySelectorAll('#step'+step+' input').forEach(function(elem){elem.required=true;});
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  next();
+  document.getElementById('compare_form').addEventListener("submit", function(e) {
+    e.preventDefault();
+    next();
+  });
+});
+</script>
+<style>
+.steps > div {
+  display: none;
+}
+</style>
 </body>
 </html>

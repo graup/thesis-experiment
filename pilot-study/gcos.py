@@ -110,6 +110,7 @@ vignette = [
 ]
 
 def score_test(ratings):
+    "ratings is a 2d list of integers: ratings[question_index][answer_index]: int(rating)"
     scores = {
         "A": 0,
         "C": 0,
