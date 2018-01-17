@@ -1,14 +1,14 @@
 from flask import Flask, make_response, render_template, session, url_for, request, redirect
-from gcos import vignette, score_test
+from datetime import datetime
 from collections import defaultdict
-from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random
 import os
 import uuid
 import json
-from datetime import datetime
+
+from gcos import vignette, score_test
+from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 def save_session(session):
     filename = 'data/%s.json' % session['user_id']
@@ -100,6 +100,7 @@ def dated_url_for(endpoint, **values):
     return url_for(endpoint, **values)
 
 if __name__ == '__main__':
-    app.secret_key = os.urandom(32)
-    app.user_counter = 0
-    app.run(threaded=True)
+    app.secret_key = os.urandom(32)  # random key resets sessions every time the app loads
+    app.user_counter = 0  # user counter for balanced experiment
+    app.config['DEBUG'] = True
+    app.run(threaded=True, host='0.0.0.0')

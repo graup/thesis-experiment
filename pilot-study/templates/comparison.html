@@ -15,7 +15,7 @@
           <p><strong>You will now be asked to compare a few static interface mockups.</strong></p>
           <p>On the top of the screen, you will be given a scenario and a user task.</p>
           <p>Below that, you will see two versions (1 and 2) of an interface supporting this task.</p>
-          <p>Please choose in which version you think <strong>you personally would be more likely to initiate and complete the task</strong>.</p>
+          <p>Please choose in which version you think <strong>you personally would be more likely to do the task (both now and later)</strong>.</p>
 
           <div class="actions">
             <a href="javascript:next()" class="btn">OK, let's go</a>
@@ -25,12 +25,12 @@
         {% for pair in comparison_pairs %}
           <div id="step{{loop.index}}">
 
-            <p><strong>Screnario 1</strong></p>
+            <p><strong>Screnario</strong></p>
             <p>You joined an application that aims to gather ideas to improve conditions in your community, the members of KAIST. We want as many people as possible to participate, because not everyone knows about the troubles of everyone else. The school’s administration agreed to monitor the community’s ideas and follow-up with concrete steps once an issue has been identified.</p>
             <p>This is the main screen of the app that you are presented with just after signup.</p>
             <p>The task that this design affords is to contribute a new idea.</p>
 
-            <p>In which version <strong>would you personally be more likely to initiate and complete the task?</strong></p>
+            <p>In which version <strong>would you personally be more likely to do the task (both now and later)?</strong></p>
 
             <p style="text-align: center"><strong>Comparison {{loop.index}} of 6</strong></p>
             {% set cloop = loop %}
