@@ -12,6 +12,13 @@ conditions = ('A', 'I', 'C', 'BL')
 pairs = list(combinations(conditions, 2))
 orderings = balanced_latin_squares(len(pairs))
 
+rationale_texts = {
+    'A': 'This design should be suitable for people who are motivated by freedom of choice, dislike pressure, and have high self-esteem.',
+    'I': 'This design should be suitable for people who are unsure about their competence and like to follow examples.',
+    'C': 'This design should be suitable for people who are motivated by rewards, clear directives, and external pressure.',
+    'BL': 'This design is a baseline for comparison. It includes only general text and no additional context.'
+}
+
 def get_ordering(n):
     "Return ordering sequence based on some number that is fixed per user (user_id or counter)"
     return orderings[n % len(orderings)]
@@ -26,3 +33,21 @@ def shuffle_pair_random(pair):
     if order == 1:
         pair = list(pair[::-1])
     return pair, order
+
+def get_top_preference(comparisons):
+
+    prefs = list(comparisons.values())
+    counts = dict([x, prefs.count(x)] for x in set(prefs))
+    print(counts)
+    highscore = max(counts.values())
+    winners = [condition for condition, count in counts.items() if count == highscore]
+    winner = None
+    if len(winners) == 1:
+        winner = winners[0]
+    # if there are two winners, we can decide by looking at the direct comparison
+    if len(winners) == 2:
+        try:
+            winner = comparisons['_'.join(winners)]
+        except ValueError:
+            winner = comparisons['_'.join(winners[::-1])]    
+    return winner

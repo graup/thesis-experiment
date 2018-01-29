@@ -6,12 +6,14 @@ import uuid
 import json
 
 from gcos import vignette, score_test
-from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random
+from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random, get_top_preference, rationale_texts
+
+base_directory = os.path.dirname(os.path.realpath(__file__))
 
 app = Flask(__name__)
 
 def save_session(session):
-    filename = 'data/%s.json' % session['user_id']
+    filename = '%s/data/%s.json' % (base_directory, session['user_id'])
     data = dict(session)
     data['user_id'] = str(data['user_id'])
     with open(filename, 'w') as fp:
@@ -57,9 +59,8 @@ def comparison():
     context = {}
     if request.method == 'POST':
         session['comparisons'] = request.form
-        session['finished'] = datetime.now().timestamp()
         save_session(session)
-        return redirect(url_for('finish'))
+        return redirect(url_for('survey'))
 
     comparison_pair_items = get_ordered_pairs(get_ordering(session['user_counter']))
     comparison_pairs = []
@@ -73,16 +74,29 @@ def comparison():
 
     return make_response(render_template('comparison.html', **context))
 
-@app.route('/finish', methods=['GET', 'POST'])
-def finish():
-    "Finish and get email optionally"
-    context = {}
-    if request.method == 'POST':
-        session['email'] = request.form['email']
-        save_session(session)
-        session.clear()
-        context['saved'] = True
 
+@app.route('/survey', methods=['GET', 'POST'])
+def survey():
+    "Post-test survey"
+    context = {}
+
+    if request.method == 'POST':
+        session['survey'] = request.form
+        session['finished'] = datetime.now().timestamp()
+        save_session(session)
+        return redirect(url_for('finish'))
+
+    context['winner'] = get_top_preference(session['comparisons'])
+    if context['winner']:
+        context['rationale_text'] = rationale_texts[context['winner']]
+
+    return make_response(render_template('survey.html', **context))
+
+
+@app.route('/finish')
+def finish():
+    "Finish "
+    context = {'code': str(session['user_id'])[:6]}
     return make_response(render_template('finish.html', **context))
 
 @app.context_processor
@@ -99,8 +113,12 @@ def dated_url_for(endpoint, **values):
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
+app.secret_key = os.urandom(32)
+app.user_counter = 0
+
 if __name__ == '__main__':
-    app.secret_key = os.urandom(32)  # random key resets sessions every time the app loads
+    app.secret_key = 'sdy2f356rfvesfudnufd8'
+    #app.secret_key = os.urandom(32)  # random key resets sessions every time the app loads
     app.user_counter = 0  # user counter for balanced experiment
     app.config['DEBUG'] = True
-    app.run(threaded=True, host='0.0.0.0')
+    app.run(threaded=True) #, host='0.0.0.0'

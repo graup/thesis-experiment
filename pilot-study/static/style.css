@@ -17,6 +17,10 @@ p {
     line-height: 1.5;
 }
 
+hr {
+    margin: 1.5em 0;
+}
+
 #content {
     width: 750px;
     background-color: #fff;
@@ -51,6 +55,7 @@ label {
 
 .actions {
     text-align: center;
+    clear: both;
 }
 
 .answers {
@@ -116,4 +121,18 @@ label {
     max-width: 100%;
     display: block;
     margin-bottom: 15px;
+}
+
+.winner-image {
+    width: 250px;
+    float: left;
+    margin-right: 2em;
+}
+
+.text-field {
+    width: 300px;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 8px;
+
 }

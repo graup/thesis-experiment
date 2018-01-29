@@ -7,7 +7,7 @@ writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MIN
     
 #header = ['subject', 'duration', 'test_A', 'test_C', 'test_I', 'item_1', 'item_2', 'result', 'order', 'pair_order']
 pairs = ['A_I', 'A_C', 'I_C', 'A_BL', 'I_BL', 'C_BL']
-header = pairs + ['test', ]
+header = pairs + ['test', ] + ['test_I', 'test_A', 'test_C',]
 print(header)
 writer.writerow(header)
 
@@ -57,6 +57,7 @@ for filename in glob.glob("data/*.json"):
             test_score_categories.append(test_scores_order)
         row.append(1+test_score_categories.index(test_scores_order))
 
+        row = row + list(data['test_scores'].values())
         print(row)
         writer.writerow(row)
 
