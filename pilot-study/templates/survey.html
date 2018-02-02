@@ -12,31 +12,45 @@
       <p><strong>Comparison results</strong></p>
       {% if winner %}
       <p>According to your ratings, this is the version that you prefer the most.</p>
-      <div>
+      <div class="survey-columns">
         <img src="{{ url_for('static', filename='img/' + winner + '.png') }}" class="winner-image">
-        <p><strong>Is this correct?</strong><br>
-            <label><input type="radio" name="result_correct" value="yes" required> Yes</label>
-            <label><input type="radio" name="result_correct" value="no" required> No</label>
-        </p>
-        <p><strong>Please explain in one sentence why you think you preferred (or did not prefer) this version:</strong><br>
-            <textarea name="result_reason" class="text-field" required></textarea>
-        </p>
-        {% if winner != 'BL' %}
-        <p><strong>Design explanation</strong><br>{{rationale_text}}</p>
-        <p><strong>Do you think the design supports this idea well?</strong><br>
-            <label><input type="radio" name="rationale_correct" value="yes" required> Yes</label>
-            <label><input type="radio" name="rationale_correct" value="no" required> No</label>
-        {% endif %}
+
+        <div>
+          <div class="box">
+            <p><strong>Is this really a version you liked?</strong><br>
+                <label><input type="radio" name="result_correct" value="yes" required> Yes</label>
+                <label><input type="radio" name="result_correct" value="no" required> No</label>
+            </p>
+            <p><strong>Please explain in one sentence why you think you preferred (or did not prefer) this version:</strong><br>
+                <textarea name="result_reason" class="text-field" required></textarea>
+            </p>
+          </div>
+
+          {% if winner != 'BL' %}
+          <div class="box">
+            <p><strong>Design explanation</strong><br>{{rationale_text}}</p>
+            <p><strong>Do you think the design supports this idea well?</strong><br>
+                <label><input type="radio" name="rationale_correct" value="yes" required> Yes</label>
+                <label><input type="radio" name="rationale_correct" value="no" required> No</label>
+            </p>
+          </div>
+          {% endif %}
+        </div>
 
       </div>
       {% else %}
+      
       <p>It seems like you liked multiple versions equally.</p>
-      <p><strong>Please explain any difficulty you had in deciding which version you prefer: </strong><br>
+      <div class="box">
+        <p><strong>Please explain any difficulty you had in deciding which version you prefer: </strong><br>
           <textarea name="result_reason" class="text-field" required></textarea></p>
+      </div>
       {% endif %}
 
-      <p><strong>Thinking more generally, what would motivate you to participate? Feel free to share any ideas or thoughts you have.</strong><br>
-        <textarea name="open" class="text-field" required></textarea></p>
+      <div class="box">
+        <p><strong>Thinking more generally, what would motivate you to participate in this app? Feel free to share any ideas or thoughts you have.</strong><br>
+          <textarea name="open" class="text-field" required></textarea></p>
+        </div>
 
       <div class="actions">
         <input type="submit" class="btn" value="Continue">

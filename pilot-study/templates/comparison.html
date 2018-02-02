@@ -10,11 +10,12 @@
       <div class="steps" id="steps">
 
         <div id="step0">
-          <p><strong>You will now be asked to compare a few static interface mockups.</strong></p>
-          <p>A mockup is an image of a design that is not functional.</p>
+          <p><strong>You will now be asked to compare a few user interface mockups for a new app.</strong></p>
           <p>On the top of the screen, you will be given a scenario and a related task.</p>
           <p>Below that, you will see two versions (1 and 2) of an interface supporting this task.</p>
           <p>Please choose in which version you think <strong>you personally would be more likely to do the task</strong>.</p>
+
+          <img src="{{ url_for('static', filename='img/explanation.png') }}" class="explainer">
 
           <div class="actions">
             <a href="javascript:next()" class="btn">OK, let's go</a>

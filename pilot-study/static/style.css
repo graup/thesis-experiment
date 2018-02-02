@@ -123,8 +123,16 @@ label {
     margin-bottom: 15px;
 }
 
+.survey-columns {
+    display: flex;
+    align-items: start;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
 .winner-image {
     width: 250px;
+    height: auto;
     float: left;
     margin-right: 2em;
 }
@@ -134,5 +142,18 @@ label {
     height: 100px;
     box-sizing: border-box;
     padding: 8px;
+}
 
+.box {
+    border: 1px solid #aaa;
+    margin: 0 0 1em;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.explainer {
+    display: block;
+    width: 606px;
+    height: auto;
+    margin: 2em auto;
 }

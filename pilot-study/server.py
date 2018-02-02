@@ -96,7 +96,7 @@ def survey():
 @app.route('/finish')
 def finish():
     "Finish "
-    context = {'code': str(session['user_id'])[:6]}
+    context = {'code': str(uuid.uuid1())[:6].upper()}
     return make_response(render_template('finish.html', **context))
 
 @app.context_processor
