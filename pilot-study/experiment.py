@@ -35,10 +35,8 @@ def shuffle_pair_random(pair):
     return pair, order
 
 def get_top_preference(comparisons):
-
     prefs = list(comparisons.values())
     counts = dict([x, prefs.count(x)] for x in set(prefs))
-    print(counts)
     highscore = max(counts.values())
     winners = [condition for condition, count in counts.items() if count == highscore]
     winner = None
@@ -48,6 +46,6 @@ def get_top_preference(comparisons):
     if len(winners) == 2:
         try:
             winner = comparisons['_'.join(winners)]
-        except ValueError:
+        except KeyError:
             winner = comparisons['_'.join(winners[::-1])]    
     return winner

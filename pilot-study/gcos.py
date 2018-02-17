@@ -109,6 +109,9 @@ vignette = [
 }
 ]
 
+def normalize_score(score):
+    return (score - 12)/(12*7)
+
 def score_test(ratings):
     "ratings is a 2d list of integers: ratings[question_index][answer_index]: int(rating)"
     scores = {
