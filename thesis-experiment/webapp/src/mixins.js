@@ -1,5 +1,3 @@
-import { mapGetters } from 'vuex';
-
 const navigationMixins = {
   computed: {
     isMenuOpened() {

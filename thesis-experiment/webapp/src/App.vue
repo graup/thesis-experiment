@@ -47,7 +47,6 @@ body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 
@@ -105,16 +104,26 @@ header {
   transition: all .2s;
 
   .view-title {
-    flex: 1;
+    /*flex: 1;*/
     text-align: center;
-    line-height: 40px;
+    line-height: 45px;
     font-weight: bold;
     text-transform: uppercase;
   }
+
+  > :first-child {
+    margin-right: auto;
+  }
+  > :last-child {
+    /* put a copy of the first item here to achieve equal margins */
+    margin-left: auto;
+    visibility: hidden;
+  }
+
 }
 .viewport.has-header {
   main {
-    margin-top: 40px;
+    margin-top: 45px;
   }
 }
 
@@ -181,9 +190,7 @@ header {
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
-.child-view, .child-view .content {
 
-}
 .child-view > * {
   transition: all .5s cubic-bezier(.55,0,.1,1);
 }

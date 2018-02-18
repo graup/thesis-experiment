@@ -6,6 +6,8 @@ const path = require('path')
 
 module.exports = {
   dev: {
+    // API settings
+    api_host: 'http://localhost:8000',
 
     // Paths
     assetsSubDirectory: 'static',
@@ -72,5 +74,7 @@ module.exports = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report
-  }
+  },
+
+  
 }
