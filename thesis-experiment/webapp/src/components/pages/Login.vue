@@ -1,10 +1,9 @@
 <template>
   <div class="viewport hello has-header">
     <header>
-      <div class="icon-button" v-on:click="goBack">
-        <ChevronLeftIcon />
-      </div>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
       <div class="view-title">Log in</div>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
     </header>
 
     <main class="content">
@@ -58,16 +57,12 @@ export default {
       data.set('client_id', 'webapp');
       const requestOptions = {config: { headers: {'Content-Type': 'multipart/form-data' }}};
       this.$store.dispatch('login', { user: data, requestOptions }).then(() => {
-        console.log(this.$store);
         this.$router.push('feed');
-        /*this.$http.get('http://localhost:8000/api/test').then((response) => {
-          console.log(response.data)
-        });*/
       });
-    }
+    },
   },
   components: {
-    ChevronLeftIcon
+    ChevronLeftIcon,
   },
 };
 </script>

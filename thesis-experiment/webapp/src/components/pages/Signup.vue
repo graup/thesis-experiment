@@ -1,10 +1,9 @@
 <template>
   <div class="viewport hello has-header">
     <header>
-      <div class="icon-button" v-on:click="goBack">
-        <ChevronLeftIcon />
-      </div>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
       <div class="view-title">Sign up</div>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
     </header>
 
     <main class="content">

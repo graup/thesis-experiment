@@ -27,6 +27,7 @@ export default {
   line-height: 2.5;
   padding: 0 1.5em;
   font-weight: 600;
+  text-align: center;
 
   background-color: #8FB5CE;
   color: #fff;
@@ -53,9 +54,9 @@ export default {
 .button-group {
   display: flex;
 
-  &.horizontal {
+  /*&.horizontal {
 
-  }
+  }*/
   &.vertical {
     flex-direction: column;
     align-items: center;

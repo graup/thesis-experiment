@@ -31,8 +31,10 @@ export default {
 </script>
 
 <style scoped>
-.intro {
+.content {
   text-align: center;
+}
+.intro {
   padding: 0 2em;
   margin-bottom: 3rem;
 }

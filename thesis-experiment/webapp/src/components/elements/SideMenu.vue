@@ -3,9 +3,9 @@
     <app-logo instance-name="KAIST" class="small inverted" />
 
     <ul class="menu-items" v-if="isAuthenticated">
-      <li><a class="menu-item">Recent Issues</a></li>
-      <li><a class="menu-item">Recent Issues</a></li>
-      <li><a class="menu-item">Recent Issues</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
       <li><a class="menu-item" v-on:click="logout">Logout</a></li>
     </ul>
     <ul class="menu-items" v-if="!isAuthenticated">
@@ -14,7 +14,7 @@
     </ul>
 
     <div class="authentication-status" v-if="isAuthenticated">
-      Logged in
+      Logged in as {{user.username}}.
       <div class="token">{{authToken}}</div>
     </div>
   </div>
@@ -28,6 +28,22 @@ export default {
   mixins: [navigationMixins],
   name: 'side-menu',
   props: ['instanceName'],
+  data() {
+    return {
+      user: {},
+    };
+  },
+  created () {
+    this.$store.dispatch('getCurrentUser').then(user => {
+      this.$data.user = user;
+    })
+  },
+  methods: {
+    gotoRoute(path) {
+      this.$store.commit('setMenuOpened', false);
+      this.$router.push(path);
+    },
+  },
 };
 </script>
 
@@ -41,6 +57,8 @@ export default {
   width: 200px;
   background-color: #333;
   color: #fff;
+
+  text-align: center;
 
   transition: all .5s cubic-bezier(.55,0,.1,1);
   transform: translateX(-100%);
