@@ -79,6 +79,18 @@ export default {
         });
       });
     },
+    signup({ dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        console.log('send register', payload);
+        vueAuth.register(payload.user, payload.requestOptions).then(() => {
+          payload.user.set('grant_type', 'password');
+          payload.user.set('client_id', 'webapp');
+          payload.requestOptions = { config: { headers: { 'Content-Type': 'multipart/form-data' } } };
+          console.log('send login', payload);
+          dispatch('login', payload).then(resolve).catch(reject);
+        }).catch(reject);
+      });
+    },
     logout({ commit }) {
       return vueAuth.logout().then(() => {
         commit('isAuthenticated', {

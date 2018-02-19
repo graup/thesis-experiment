@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Issue, Category
+from api.serializers import UserSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -11,6 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class IssueSerializer(serializers.HyperlinkedModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects)
+    author = UserSerializer()
 
     class Meta:
         model = Issue

@@ -7,25 +7,38 @@
     </header>
     <main class="content">
 
+      <div class="tutorial-message">
+        Here you can see details about the idea and comments that other people left.
+        If you agree with this issue, how about showing your support by tapping the heart?
+        If you have another opinion, try writing a short comment.
+      </div>
+
       <div class="loading" v-if="loading">
         Loading...
       </div>
 
       <div v-if="issue">
+        <Issue v-bind:item="issue" expanded="true" />
+      </div>
 
-        <p>Idea {{slug}}</p>
-        <p>{{issue.text}}</p>
-
+      <div class="empty-state">
+        No comments yet. <br>
+        You can be the first!
       </div>
 
     </main>
-    <footer></footer>
+    <footer>
+      <div class="call-to-action">
+        <my-button text="Leave a comment" primary={true} link-to="" />
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
 import ChevronLeftIcon from "icons/chevron-left";
 import {navigationMixins} from "@/mixins";
+import Issue from "@/components/elements/Issue";
 
 export default {
   mixins: [navigationMixins],
@@ -45,31 +58,22 @@ export default {
   },
   components: {
     ChevronLeftIcon,
+    Issue,
   },
   methods: {
     fetchData () {
       if (this.$props.item) {
+        // issue was passed in through router, no need to load again
         this.issue = this.$props.item;
         return;
       }
       this.error = this.issue = null;
       this.loading = true;
       
-      
       this.$store.dispatch('getIssue', {slug: this.$props.slug}).then((issue) => {
         this.issue = issue;
         this.loading = false;
       });
-      //{id: 1, text: 'newly fetched'}
-      /*getPost(this.$route.params.id, (err, post) => {
-        this.loading = false
-        if (err) {
-          this.error = err.toString()
-        } else {
-          this.issue = post
-        }
-      })
-      */
     },
   },
 };

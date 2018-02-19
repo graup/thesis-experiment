@@ -14,6 +14,12 @@ export default new Router({
     { path: '/login', component: Login, meta: { unauth: true } },
     { path: '/signup', component: Signup, meta: { unauth: true } },
     { path: '/feed', component: Feed, meta: { auth: true } },
-    { path: '/issue/:slug', name: 'issue-detail', component: IssueDetails, meta: { auth: true }, props: true },
+    {
+      path: '/issue/:slug',
+      name: 'issue-detail',
+      component: IssueDetails,
+      meta: { auth: true },
+      props: true,
+    },
   ],
 });

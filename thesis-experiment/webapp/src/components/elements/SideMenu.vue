@@ -34,11 +34,17 @@ export default {
     };
   },
   created () {
-    this.$store.dispatch('getCurrentUser').then(user => {
-      this.$data.user = user;
-    })
+    this.getUser();
+  },
+  watch: {
+    'isAuthenticated': 'getUser'
   },
   methods: {
+    getUser() {
+      this.$store.dispatch('getCurrentUser').then(user => {
+        this.$data.user = user;
+      });
+    },
     gotoRoute(path) {
       this.$store.commit('setMenuOpened', false);
       this.$router.push(path);

@@ -50,7 +50,7 @@ body {
   color: #2c3e50;
   margin-top: 60px;
 
-  max-width: 375px; /* for testing mobile layout */
+  max-width: 400px; /* for testing mobile layout */
   margin: 0 auto;
 
   position: relative;
@@ -120,10 +120,26 @@ header {
     visibility: hidden;
   }
 
+  @media (min-width: 600px) {
+    /* debugging on desktop */
+    max-width: 400px;
+    left: 50%;
+    margin-left: -200px;
+  }
+
 }
 .viewport.has-header {
   main {
     margin-top: 45px;
+  }
+}
+/* footer */
+footer {
+  .call-to-action {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 -1px 6px rgba(0,0,0,0.15);
   }
 }
 
@@ -173,15 +189,44 @@ header {
   transition: box-shadow 150ms ease-out;
   
   &:focus {
-    box-shadow: 0 2px 0 0 #386b8d;
+    box-shadow: 0 3px 0 -1px #386b8d;
+    outline: 0;
   }
 }
 
 .form-input.filled {
   box-shadow: 0 2px 0 0 lightgreen;
 }
+.form-group .error {
+  color: #c51111;
+  margin: .5rem 0 0 0;
+  font-size: 90%;
+}
 
+.empty-state {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  font-size: 110%;
+  margin: 1rem 2rem;
+  text-align: center;
+  line-height: 1.5;
+  text-shadow: 0 1px 1px #fff;
+}
 
+.tutorial-message {
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: #fff;
+  border: 2px dashed #ccc;
+  border-width: 2px 0;
+  line-height: 1.3;
+  font-size: 95%;
+  text-align: justify;
+  hyphens: auto;
+}
 
 /* page transitions */
 .fade-enter-active, .fade-leave-active {

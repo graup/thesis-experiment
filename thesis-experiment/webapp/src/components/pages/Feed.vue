@@ -7,6 +7,14 @@
     </header>
     <main class="content">
 
+      <div class="tutorial-message">
+        <strong>Welcome to Many Ideas for KAIST!</strong><br>
+        We're happy to have you here.
+        On this page, you can see posts by other members.
+        Do you see anything you are interested in?<br>
+        Try tapping on a post.
+      </div>
+
       <IssueList v-bind:items="issues" />
 
     </main>

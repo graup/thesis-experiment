@@ -4,7 +4,7 @@ const navigationMixins = {
       return this.$store.state.ui.menuOpen;
     },
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated;
+      return this.$store.state.user.isAuthenticated;
     },
     authToken() {
       return this.$store.getters.authToken;

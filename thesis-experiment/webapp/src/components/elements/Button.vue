@@ -1,13 +1,16 @@
 <template>
-  <div class="button" v-bind:class="{primary: primary}" v-on:click="click">
-    {{text}}
+  <div class="button" v-bind:class="{primary, loading}" v-on:click="click">
+    <span class="label">{{text}}</span>
+    <Spinner v-if="loading" size="18px" />
   </div>
 </template>
 
 <script>
+import Spinner from './Spinner';
+
 export default {
   name: 'Button',
-  props: ['text', 'primary', 'linkTo'],
+  props: ['text', 'primary', 'linkTo', 'loading'],
   methods: {
     click() {
       if (typeof this.$props.linkTo !== 'undefined') {
@@ -15,6 +18,9 @@ export default {
         return;
       }
     },
+  },
+  components: {
+    Spinner,
   },
 };
 </script>
@@ -34,6 +40,8 @@ export default {
   cursor: pointer;
   box-sizing: border-box;
 
+  transition: all .4s cubic-bezier(0.84, 0, 0.66, 1);
+
   &:hover {
     text-decoration: none;
     background-color: darken(#8FB5CE, 10%);
@@ -49,6 +57,30 @@ export default {
 
   &.huge {
     font-size: 110%;
+  }
+
+  .label {
+    opacity: 1;
+    transition: opacity .4s;
+    white-space: nowrap;
+  }
+
+  max-width: 400px;
+  &.loading {
+    max-width: 50px;
+
+    .label {
+      opacity: 0;
+    }
+
+    position: relative;
+
+    .spinner {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin: 8px 0 0 -9px;
+    }
   }
 }
 .button-group {

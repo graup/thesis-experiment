@@ -1,6 +1,8 @@
 <template>
   <ul class="issue-list">
-    <Issue v-for="item in items" v-bind:key="item.id" v-bind:item="item"></Issue>
+    <li v-for="item in items" v-bind:key="item.id">
+      <Issue v-bind:item="item"></Issue>
+    </li>
   </ul>
 </template>
 
