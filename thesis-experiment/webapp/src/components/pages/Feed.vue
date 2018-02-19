@@ -1,5 +1,5 @@
 <template>
-  <div class="viewport feed has-header">
+  <div class="viewport feed has-header" v-touch:swipe.right="showMenu" v-touch:swipe.left="hideMenu">
     <header>
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
       <div class="view-title">Recent Ideas</div>

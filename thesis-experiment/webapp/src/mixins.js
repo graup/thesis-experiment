@@ -17,6 +17,12 @@ const navigationMixins = {
     toggleMenu() {
       this.$store.dispatch('toggleMenu');
     },
+    showMenu() {
+      this.$store.commit('setMenuOpened', true);
+    },
+    hideMenu() {
+      this.$store.commit('setMenuOpened', false);
+    },
     logout() {
       console.log("will log out");
       return this.$store.dispatch('logout').then(() => {

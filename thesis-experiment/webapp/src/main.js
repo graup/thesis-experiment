@@ -1,5 +1,6 @@
 import Vue from 'vue';
-
+import Vue2TouchEvents from 'vue2-touch-events';
+ 
 import Logo from '@/components/elements/Logo';
 import Button from '@/components/elements/Button';
 
@@ -9,6 +10,7 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
+Vue.use(Vue2TouchEvents);
 
 Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);

@@ -2,26 +2,27 @@
   <div class="side-menu" v-bind:class="{opened: isMenuOpened}">
     <app-logo instance-name="KAIST" class="small inverted" />
 
+    <div class="authentication-status" v-if="isAuthenticated">
+      <PersonIcon fillColor="#fff" />
+      {{user.username}}
+    </div>
+
     <ul class="menu-items" v-if="isAuthenticated">
       <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Issues</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">My Issues</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">FAQ</a></li>
       <li><a class="menu-item" v-on:click="logout">Logout</a></li>
     </ul>
     <ul class="menu-items" v-if="!isAuthenticated">
       <li><a class="menu-item" v-on:click="$router.push('login')">Log in</a></li>
       <li><a class="menu-item" v-on:click="$router.push('signup')">Sign up</a></li>
     </ul>
-
-    <div class="authentication-status" v-if="isAuthenticated">
-      Logged in as {{user.username}}.
-      <div class="token">{{authToken}}</div>
-    </div>
   </div>
 </template>
 
 <script>
 import {navigationMixins} from "@/mixins";
+import PersonIcon from 'icons/account-circle';
 
 
 export default {
@@ -49,6 +50,9 @@ export default {
       this.$store.commit('setMenuOpened', false);
       this.$router.push(path);
     },
+  },
+  components: {
+    PersonIcon,
   },
 };
 </script>
@@ -97,5 +101,15 @@ export default {
   width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.authentication-status {
+  font-size: 90%;
+  margin-bottom: 1.5rem;
+
+  .material-design-icon {
+      display: block;
+  }
+
+
 }
 </style>
