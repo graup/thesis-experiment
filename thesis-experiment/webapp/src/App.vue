@@ -42,6 +42,7 @@ export default {
 
 body {
   background-color: #e7e7e7;
+  -webkit-overflow-scrolling: touch;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -67,6 +68,8 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  padding-bottom: 150px;
+  box-sizing: border-box;
 }
 .content {
   flex: 1;
@@ -133,13 +136,18 @@ header {
     margin-top: 45px;
   }
 }
+
 /* footer */
 footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   .call-to-action {
     background-color: #f0f0f0;
     padding: 1rem;
     text-align: center;
-    box-shadow: 0 -1px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 -1px 6px rgba(0,0,0,0.25);
   }
 }
 

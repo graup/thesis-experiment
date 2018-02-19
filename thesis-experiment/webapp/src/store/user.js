@@ -14,7 +14,7 @@ const vueAuth = VueAuthenticate.factory(Vue.prototype.$http, {
   bindRequestInterceptor: () => {
     /* eslint-disable no-param-reassign, dot-notation */
     $http.interceptors.request.use((request) => {
-      console.log(`HTTP ${request.method} ${request.url}`, this);
+      console.log(`HTTP ${request.method} ${request.url}`);
       if (vueAuth.isAuthenticated()) {
         request.headers['Authorization'] = [
           vueAuth.options.tokenType, vueAuth.getToken(),

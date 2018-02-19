@@ -6,24 +6,32 @@
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
     </header>
     <main class="content">
+      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: 'Pull to reload', readyLabel: 'Release to reload', loadingLabel: 'Loading...', pullDownHeight: 60}">
 
-      <div class="tutorial-message">
-        <strong>Welcome to Many Ideas for KAIST!</strong><br>
-        We're happy to have you here.
-        On this page, you can see posts by other members.
-        Do you see anything you are interested in?<br>
-        Try tapping on a post.
-      </div>
+        <div class="tutorial-message">
+          <strong>Welcome to Many Ideas for KAIST!</strong><br>
+          We're happy to have you here.
+          On this page, you can see posts by other members.
+          Do you see anything you are interested in?<br>
+          Try tapping on a post.
+        </div>
 
-      <IssueList v-bind:items="issues" />
+        <IssueList v-bind:items="issues" />
 
+      </vue-pull-refresh>
     </main>
-    <footer></footer>
+    <footer>
+      <div class="call-to-action">
+        <p>We need your contribution!</p>
+        <my-button text="Submit new idea" primary={true} link-to="" />
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
 import MenuIcon from "icons/menu";
+import VuePullRefresh from 'vue-pull-refresh';
 import IssueList from "@/components/elements/IssueList";
 import {navigationMixins} from "@/mixins";
 
@@ -47,15 +55,22 @@ export default {
       this.error = null;
       this.loading = true;
       
-      this.$store.dispatch('getIssues').then((issues) => {
+      return this.$store.dispatch('getIssues').then((issues) => {
         this.issues = issues;
         this.loading = false;
+        this.error = null;
+      });
+    },
+    onRefresh() {
+      return this.$store.dispatch('fetchIssues').then((issues) => {
+        this.issues = issues;
       });
     },
   },
   components: {
     MenuIcon,
     IssueList,
+    VuePullRefresh,
   },
 };
 </script>

@@ -16,7 +16,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Issue
-        fields = ('url', 'title', 'text', 'created_date', 'modified_date', 'author', 'categories', 'slug',)
+        fields = ('url', 'id', 'title', 'text', 'created_date', 'modified_date', 'author', 'categories', 'slug',)
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}

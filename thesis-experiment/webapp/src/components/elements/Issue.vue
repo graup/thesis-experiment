@@ -20,7 +20,7 @@
 
 <script>
 import HeartIcon from 'icons/heart-outline';
-import CommentIcon from 'icons/comment';
+import CommentIcon from 'icons/comment-outline';
 import PersonIcon from 'icons/account-circle';
 
 export default {
@@ -50,8 +50,9 @@ export default {
 }
 .issue-title {
   font-size: 1em;
-  font-weight: bold;
+  font-weight: normal;
   margin: 0;
+  line-height: 1.3;
 }
 .issue-title, .issue-text, .issue-stats {
   padding: .75rem;
@@ -73,7 +74,7 @@ export default {
 .icon-with-text {
   font-weight: bold;
   margin-right: 1rem;
-  font-size: 90%;
+  font-size: 85%;
 
   &:last-child {
     margin-right: 0;
