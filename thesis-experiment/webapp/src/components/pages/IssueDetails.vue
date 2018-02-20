@@ -1,29 +1,37 @@
 <template>
   <div class="viewport feed has-header">
     <header>
-      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
+      <div class="icon-button" v-on:click="gotoRoute('feed')"><ChevronLeftIcon /></div>
       <div class="view-title">Idea Details</div>
-      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
+      <div class="icon-button" v-on:click="gotoRoute('feed')"><ChevronLeftIcon /></div>
     </header>
     <main class="content">
 
-      <div class="tutorial-message">
-        Here you can see details about the idea and comments that other people left.
-        If you agree with this issue, how about showing your support by tapping the heart?
-        If you have another opinion, try writing a short comment.
-      </div>
-
-      <div class="loading" v-if="loading">
-        Loading...
-      </div>
+      <transition name="fade-up">
+        <div class="loading" v-if="loading">
+          <Spinner />
+          Loading...
+        </div>
+      </transition>
 
       <div v-if="issue">
-        <Issue v-bind:item="issue" expanded="true" />
-      </div>
+        <div class="tutorial-message" v-if="issue.author.username!=user.username">
+          Here you can see details about the idea and comments that other people left.
+          If you agree with this issue, how about showing your support by tapping the heart?
+          If you have another opinion, try writing a short comment.
+        </div>
 
-      <div class="empty-state">
-        No comments yet. <br>
-        You can be the first!
+        <div class="tutorial-message" v-if="issue.author.username==user.username">
+          This is your idea! Good job. Let's wait until other members give their opinion.
+        </div>
+        
+        <Issue v-bind:item="issue" expanded="true" />
+      
+        <div class="empty-state">
+          No comments yet. <br>
+          You can be the first!
+        </div>
+
       </div>
 
     </main>
@@ -36,6 +44,7 @@
 </template>
 
 <script>
+import Spinner from '@/components/elements/Spinner';
 import ChevronLeftIcon from "icons/chevron-left";
 import {navigationMixins} from "@/mixins";
 import Issue from "@/components/elements/Issue";
@@ -59,6 +68,7 @@ export default {
   components: {
     ChevronLeftIcon,
     Issue,
+    Spinner,
   },
   methods: {
     fetchData () {

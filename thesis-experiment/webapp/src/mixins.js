@@ -9,10 +9,16 @@ const navigationMixins = {
     authToken() {
       return this.$store.getters.authToken;
     },
+    user() {
+      return this.$store.state.user.user;
+    },
   },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    gotoRoute(route) {
+      this.$router.push(route);
     },
     toggleMenu() {
       this.$store.dispatch('toggleMenu');

@@ -30,6 +30,13 @@ const vueAuth = VueAuthenticate.factory(Vue.prototype.$http, {
     $http.interceptors.response.use((response) => {
       vueAuth.setToken(response);
       return response;
+    }, (error) => {
+      if (error.response.status === 401) {
+        console.error('Authentication error, should re-login');
+        vueAuth.logout();
+        location.reload(); // TODO find a better way to force a login
+      }
+      throw error;
     });
   },
 });

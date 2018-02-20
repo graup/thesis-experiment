@@ -29,11 +29,6 @@ export default {
   mixins: [navigationMixins],
   name: 'side-menu',
   props: ['instanceName'],
-  data() {
-    return {
-      user: {},
-    };
-  },
   created () {
     this.getUser();
   },
@@ -42,9 +37,7 @@ export default {
   },
   methods: {
     getUser() {
-      this.$store.dispatch('getCurrentUser').then(user => {
-        this.$data.user = user;
-      });
+      this.$store.dispatch('getCurrentUser');
     },
     gotoRoute(path) {
       this.$store.commit('setMenuOpened', false);

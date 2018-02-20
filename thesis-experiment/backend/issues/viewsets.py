@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
@@ -7,6 +7,17 @@ from .serializers import *
 from .models import Issue
 from rest_framework.pagination import LimitOffsetPagination
 from django.contrib.auth.models import User
+
+class IsAuthorOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    """
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.author == request.user
 
 class LargeResultsSetPagination(LimitOffsetPagination):
     default_limit = 100
@@ -19,6 +30,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     search_fields = ('title',)
     pagination_class = LargeResultsSetPagination
     lookup_field = 'slug'
+    permission_classes = (IsAuthorOrReadOnly,)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

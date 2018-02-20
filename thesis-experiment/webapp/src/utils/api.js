@@ -5,7 +5,7 @@ function apiGet(url, params) {
 }
 
 function apiPost(url, params) {
-  return client.post(url);
+  return client.post(url, params);
 }
 
 export {

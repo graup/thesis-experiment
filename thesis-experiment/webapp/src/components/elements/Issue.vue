@@ -6,10 +6,10 @@
     </div>
     <div class="issue-stats">
       <span class="icon-with-text">
-        <HeartIcon /> 123
+        <HeartIcon /> 1
       </span>
       <span class="icon-with-text">
-        <CommentIcon /> 12
+        <CommentIcon /> 0
       </span>
       <span class="icon-with-text">
         <PersonIcon /> {{item.author.username}}

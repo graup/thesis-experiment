@@ -12,7 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class IssueSerializer(serializers.HyperlinkedModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects)
-    author = UserSerializer()
+    author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Issue

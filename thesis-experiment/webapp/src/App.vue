@@ -224,9 +224,33 @@ footer {
   text-shadow: 0 1px 1px #fff;
 }
 
+.loading {
+  text-align: center;
+  font-size: 90%;
+  padding: 3rem 0;
+
+  .spinner {
+    width: 60px;
+    display: block;
+    margin: 1.5rem auto;
+  }
+
+  max-height: 200px;
+  box-sizing: border-box;
+}
+
+.fade-up-enter-active, .fade-up-leave-active {
+  transition: all .5s, opacity .3s;
+}
+.fade-up-enter, .fade-up-leave-to {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+}
+
 .tutorial-message {
   padding: 1rem;
-  margin: 1rem 0;
+  margin: 1rem 0 0;
   background-color: #fff;
   border: 2px dashed #ccc;
   border-width: 2px 0;

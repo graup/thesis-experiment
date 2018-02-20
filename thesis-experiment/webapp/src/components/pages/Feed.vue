@@ -16,6 +16,13 @@
           Try tapping on a post.
         </div>
 
+        <transition name="fade-up">
+          <div class="loading" v-if="loading">
+            <Spinner />
+            Loading...
+          </div>
+        </transition>
+
         <IssueList v-bind:items="issues" />
 
       </vue-pull-refresh>
@@ -23,7 +30,7 @@
     <footer>
       <div class="call-to-action">
         <p>We need your contribution!</p>
-        <my-button text="Submit new idea" primary={true} link-to="" />
+        <my-button text="Submit new idea" primary={true} :link-to="{name: 'new-issue'}" />
       </div>
     </footer>
   </div>
@@ -31,6 +38,7 @@
 
 <script>
 import MenuIcon from "icons/menu";
+import Spinner from '@/components/elements/Spinner';
 import VuePullRefresh from 'vue-pull-refresh';
 import IssueList from "@/components/elements/IssueList";
 import {navigationMixins} from "@/mixins";
@@ -71,6 +79,7 @@ export default {
     MenuIcon,
     IssueList,
     VuePullRefresh,
+    Spinner,
   },
 };
 </script>

@@ -40,7 +40,9 @@ export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errors: {},
+      loading: false,
     };
   },
   computed: {
@@ -50,6 +52,7 @@ export default {
   },
   methods: {
     login() {
+      this.$data.loading = true;
       const data = new FormData();
       data.set('username', this.$data.username);
       data.set('password', this.$data.password);
@@ -58,6 +61,9 @@ export default {
       const requestOptions = {config: { headers: {'Content-Type': 'multipart/form-data' }}};
       this.$store.dispatch('login', { user: data, requestOptions }).then(() => {
         this.$router.push('feed');
+      }).catch(error => {
+        this.$data.errors = error.response.data;
+        this.$data.loading = false;
       });
     },
   },
