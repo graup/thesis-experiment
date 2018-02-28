@@ -32,7 +32,7 @@
 
             <p>In which version <strong>would you personally be more likely to do the task?</strong></p>
 
-            <p style="text-align: center"><strong>Comparison {{loop.index}} of 6</strong></p>
+            <p style="text-align: center"><strong>Comparison {{loop.index}} of {{comparison_pairs|length}}</strong></p>
             {% set cloop = loop %}
             <ul class="compare">
             {% for item in pair['items'] %}

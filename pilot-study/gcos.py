@@ -1,5 +1,14 @@
 vignette = [
 {
+    "prompt": "You are taking a personality test. You are likely to:",
+    "answers": [
+        "Read all the items thoroughly",
+        "Pay attention and think about each answer before choosing a response",
+        "Rate answers randomly because you don't care",
+    ],
+    "code": None
+},
+{
     "prompt": "You have been offered a new position in a company where you have worked for some time. The first question that is likely to come to mind is:",
     "answers": [
         "What if I can't live up to the new responsibility?",
@@ -81,6 +90,15 @@ vignette = [
     "code": "ICA"
 },
 {
+    "prompt": "For a online study, you have to read and answer a set of questions. You are likely to:",
+    "answers": [
+        "Read every scenario and think about it thoroughly",
+        "Answer everything as quickly as possible without thinking much",
+        "Think about each answer and rate them honestly",
+    ],
+    "code": None
+},
+{
     "prompt": "You are embarking on a new career. The most important consideration is likely to be:",
     "answers": [
         "Whether you can do the work without getting in over your head.",
@@ -120,6 +138,8 @@ def score_test(ratings):
         "I": 0
     }
     for qidx, q in enumerate(vignette):
+        if not q['code']:
+            continue
         code = list(q['code'])
         for aidx, a in enumerate(q['answers']):
             scores[code[aidx]] += ratings[str(qidx)][str(aidx)]

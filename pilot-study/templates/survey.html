@@ -7,7 +7,7 @@
 <body>
   <div id="content">
     <form method="post">
-      <p>Good job! You're almost done, please just answer this short survey.</p>
+      <p>Good job! You're almost done, please just answer these final questions.</p>
 
       <p><strong>Comparison results</strong></p>
       {% if winner %}
@@ -25,16 +25,6 @@
                 <textarea name="result_reason" class="text-field" required></textarea>
             </p>
           </div>
-
-          {% if winner != 'BL' %}
-          <div class="box">
-            <p><strong>Design explanation</strong><br>{{rationale_text}}</p>
-            <p><strong>Do you think the design supports this idea well?</strong><br>
-                <label><input type="radio" name="rationale_correct" value="yes" required> Yes</label>
-                <label><input type="radio" name="rationale_correct" value="no" required> No</label>
-            </p>
-          </div>
-          {% endif %}
         </div>
 
       </div>
@@ -50,7 +40,46 @@
       <div class="box">
         <p><strong>Thinking more generally, what would motivate you to participate in this app? Feel free to share any ideas or thoughts you have.</strong><br>
           <textarea name="open" class="text-field" required></textarea></p>
-        </div>
+          <p><strong>In the past three months, how often, on average, did you participate in volunteering activities?</strong><br>
+            <select name="volunteering">
+                <option>Never</option>
+                <option>Less than one time per week</option>
+                <option>About one time per week</option>
+                <option>Two to three times per week</option>
+                <option>Four to five times per week</option>
+                <option>More than five times per week</option>
+              </select>
+          </p>
+          <p><strong>Motivation to participate:</strong><br>(Waiting for response from Motivation to Volunteer Scale (MVS) author to include this scale)</p>
+        
+      </div>
+
+      <div class="box">
+        <p>Finally, we need just a little more information from you.</p>
+        <p><strong>Gender:</strong> <br>
+          <label><input type="radio" name="gender" value="female"> Female</label>
+          <label><input type="radio" name="gender" value="male"> Male</label>
+        </p>
+        <p><strong>Age:</strong> <br>
+          <select name="age">
+            <option>18-26</option>
+            <option>27-32</option>
+            <option>33-40</option>
+            <option>41-55</option>
+            <option>56+</option>
+          </select>
+        </p>
+        <p><strong>Level of education:</strong> <br>
+          <select name="education">
+            <option>No high school</option>
+            <option>High school / GED</option>
+            <option>Some college</option>
+            <option>Bachelor's degree</option>
+            <option>Master's degree</option>
+            <option>PhD or higher</option>
+          </select>
+        </p>
+    </div>
 
       <div class="actions">
         <input type="submit" class="btn" value="Continue">

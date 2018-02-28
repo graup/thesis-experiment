@@ -47,6 +47,7 @@ def gcos():
             _, question, answer = key.split('_')
             ratings[question][answer] = int(request.form[key])
         session['test_scores'] = score_test(ratings)
+        session['gcos_raw'] = ratings
         save_session(session)
         return redirect(url_for('comparison'))
 
@@ -63,11 +64,17 @@ def comparison():
         return redirect(url_for('survey'))
 
     comparison_pair_items = get_ordered_pairs(get_ordering(session['user_counter']))
+
     comparison_pairs = []
     for idx, pair_items in enumerate(comparison_pair_items):
         pair = {'key': '_'.join(pair_items), 'order': idx}
         pair['items'], pair['pair_order'] = shuffle_pair_random(pair_items)
         comparison_pairs.append(pair)
+
+    # repeat one pair for checking consistency/attention
+    bogus_item = dict(comparison_pairs[session['user_counter'] % len(comparison_pairs)])
+    bogus_item['key'] += '_check'
+    comparison_pairs.append(bogus_item)
     
     context['comparison_pairs'] = comparison_pairs
     session['comparison_pairs'] = comparison_pairs
