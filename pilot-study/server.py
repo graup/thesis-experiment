@@ -30,10 +30,16 @@ def before_request():
         session['user_counter'] = app.user_counter
         app.user_counter += 1
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def start():
     "Welcome page"
     context = {}
+
+    if request.method == 'POST':
+        session['demographics'] = request.form
+        save_session(session)
+        return redirect(url_for('gcos'))
+
     context['user_id'] = session['user_id']
     context['user_counter'] = session['user_counter']
     return make_response(render_template('start.html', **context))

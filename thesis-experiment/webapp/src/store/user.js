@@ -71,6 +71,10 @@ export default {
         if (state.user_loaded) {
           resolve(state.user);
         } else {
+          if (!state.isAuthenticated) {
+            // simply drop if not authenticated
+            return;
+          }
           apiGet('users/me/').then((response) => {
             const user = response.data;
             commit('setUser', user);

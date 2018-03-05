@@ -6,14 +6,49 @@
 </head>
 <body>
   <div id="content">
+    <form method="post">
     <p><strong>Welcome!</strong></p>
-    <p>In this study, you will (1) take a short personality test, (2) perform a series of pairwise comparison tasks, and (3) answer a few more questions. In total, this will take around 10 minutes of your time.</p>
-    <p>When you're ready, please press start.</p>
+    <p>In this study, you will<br>
+      (1) take a short personality test,<br>
+      (2) perform a series of pairwise comparison tasks, and<br>
+      (3) answer a few more questions.<br>
+      In total, this will take around 10 minutes of your time.</p>
+    <p>To start, please enter the following information and press Continue.</p>
+
+    <div class="box">
+        <p><strong>Gender:</strong> <br>
+          <label><input type="radio" name="gender" value="female" required> Female</label>
+          <label><input type="radio" name="gender" value="male" required> Male</label>
+        </p>
+        <p><strong>Age:</strong> <br>
+          <select name="age" required>
+            <option value="">Please select</option>
+            <option>18-26</option>
+            <option>27-32</option>
+            <option>33-40</option>
+            <option>41-55</option>
+            <option>56+</option>
+          </select>
+        </p>
+        <p><strong>Level of education:</strong> <br>
+          <select name="education" required>
+            <option value="">Please select</option>
+            <option>No high school</option>
+            <option>High school / GED</option>
+            <option>Some college</option>
+            <option>Bachelor's degree</option>
+            <option>Master's degree</option>
+            <option>PhD or higher</option>
+          </select>
+        </p>
+    </div>
+
     <!--<p>Your user id: {{user_id}}-{{user_counter}}</p>-->
 
     <div class="actions">
-      <a href="{{ url_for('gcos') }}" class="btn">Start</a>
+      <input type="submit" class="btn" value="Continue">
     </div>
+    </form>
   </div>
 </body>
 </html>

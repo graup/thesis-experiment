@@ -32,6 +32,7 @@ Anova(m, type=3)
 # no effect of pair_order
 
 prefs = read.csv("data/preferences.csv", sep=";", header=T)
+prefs = prefs[prefs$duration>=240,] 
 head(prefs)
 test_labels = c('I>A>C', 'A>C>I', 'C>I>A', 'A>I>C', 'C>A>I', 'I>C>A')
 
@@ -45,17 +46,17 @@ axis(side = 1, at = seq(from=1, to=max(prefs$test), by=1), col = NA, labels = te
 
 # Analyze stats
 plot.new()
-par(mfrow=c(1,2))
+par(mfrow=c(1,1))
 
 library(prefmod)
 
 # Loglinear Bradley-Terry Model (LLBT)
 dsgnmat <- llbt.design(prefs, nitems = 4, resptype = "paircomp", ia = TRUE, cat.scovs=c('test'), objnames=c("A", "I", "C", "BL"))
-res <- gnm(y ~ A+I+C+BL, family='poisson', data=dsgnmat)
+res <- gnm(y ~ (A+I+C+BL), family='poisson', data=dsgnmat)
 summary(res)
-wmat<-llbt.worth(res)
-colnames(wmat) <- c('overall')
-plot.wmat(wmat, ylim=c(0,0.65))
+wmat_o<-llbt.worth(res)
+colnames(wmat_o) <- c('overall')
+#plot.wmat(wmat, ylim=c(0,0.65))
 
 # plot interaction effect with test score (even though it is not statiscally significant)
 res <- gnm(y ~ (A+I+C+BL) + (A+I+C+BL):test, eliminate = mu, family='poisson', data=dsgnmat)
@@ -66,10 +67,11 @@ wmat <- llbt.worth(res)
 ord = rev(order(test_results))
 wmat <- wmat[,ord]
 colnames(wmat) <- test_labels[ord]
-plot.wmat(wmat, ylim=c(0,0.65))
+plot.wmat(cbind(wmat_o, wmat), ylim=c(0,0.65), main="")
 title(xlab = "Order of GCOS results", line=0)
 #labels <- lapply(seq_along(test_results), function(i) paste(test_labels[i]," (n=", test_results[i], ")", sep=""))
 labels <- lapply(ord, function(i) paste("(n=", test_results[i], ")", sep=""))
-axis(side = 1, at = seq(from=1, to=max(prefs$test), by=1), line=1, col = NA, labels = labels, tck = -0.01)
+labels = c(c(paste("(n=", sum(test_results), ")", sep="")), labels)
+axis(side = 1, at = seq(from=1, to=max(1+prefs$test), by=1), line=1, col = NA, labels = labels, tck = -0.01)
 
 

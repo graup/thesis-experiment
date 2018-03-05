@@ -1,9 +1,9 @@
 <template>
   <div class="viewport feed has-header">
     <header>
-      <div class="icon-button" v-on:click="gotoRoute('feed')"><ChevronLeftIcon /></div>
+      <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
       <div class="view-title">Idea Details</div>
-      <div class="icon-button" v-on:click="gotoRoute('feed')"><ChevronLeftIcon /></div>
+      <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
     </header>
     <main class="content">
 

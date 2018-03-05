@@ -21,6 +21,12 @@ hr {
     margin: 1.5em 0;
 }
 
+h1 {
+    font-size: 1.5em;
+    font-weight: normal;
+    margin: 0 0 1rem;
+}
+
 #content {
     width: 750px;
     background-color: #fff;
@@ -35,7 +41,7 @@ hr {
 }
 
 .btn {
-    background-color: #26E6B7;
+    background-color: #05e2ac;
     border: 0;
     font: inherit;
     line-height: 2;
@@ -87,9 +93,11 @@ label {
 }
 .answers .rating span:first-child {
     text-align: left;
+    transform: translateX(-2.4em);
 }
 .answers .rating span:last-child {
     text-align: right;
+    transform: translateX(1.7em);
 }
 .answers label {
     display: flex;

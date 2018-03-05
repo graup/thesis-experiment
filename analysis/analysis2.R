@@ -2,7 +2,7 @@ setwd('/Users/paul/Documents/_Studium/Master Inf/Thesis/code/pilot-study')
 
 prefs = read.csv("data/preferences.csv", sep=";", header=T)
 prefs$order = factor(prefs$order)
-prefs = prefs[prefs$duration>=120,]  # filter out very quick responses
+prefs = prefs[prefs$duration>=240,]  # filter out very quick responses
 head(prefs)
 View(prefs)
 count(prefs)
@@ -67,34 +67,43 @@ mtext("Distribution of GCOS results (N=124)", side = 3, line = -3, outer = TRUE)
 # Analyze stats
 library(prefmod)
 # Loglinear Bradley-Terry Model (LLBT)
-dsgnmat <- llbt.design(prefs, nitems = 4, resptype = "paircomp", ia = TRUE, cat.scovs=c('order'), num.scovs=c('test_I', 'test_A', 'test_C'), objnames=c("A", "I", "C", "BL"))
+# why is it poisson?
+dsgnmat <- llbt.design(prefs, nitems = 4, resptype = "paircomp", ia = TRUE, cat.scovs=c('order', 'test'), num.scovs=c('test_I', 'test_A', 'test_C'), objnames=c("A", "I", "C", "BL"))
 
 # maximum model of all interactions
 # BL was dropped. It ranked consistently low and had non-signficant interaction with other factors
-mod.max <- gnm(y ~ (A+I+C)*(test_I*test_A*test_C) + (A+I+C):order, eliminate = mu:CASE, family='poisson', data=dsgnmat)
+mod.max <- gnm(y ~ (A+I+C)*(test_I*test_A*test_C), eliminate = mu:CASE, family='poisson', data=dsgnmat)
 summary(mod.max)
 # order effect is non-significant
 
-mod.simple <- gnm(y ~ (A+I+C)*(test), eliminate = mu:CASE, family=poisson, data=dsgnmat)
+plot(prefs[c('test_I', 'test_A')])
+mod.tests <- gnm(test_I~(test_A), eliminate = mu:CASE, family='poisson', data=dsgnmat)
+summary(mod.tests)
+
+mod.simple <- gnm(y ~ (A+I+C)*(test), eliminate = mu:CASE, family='poisson', data=dsgnmat)
+summary(mod.simple)
 anova(mod.max, mod.simple, test="Chisq")
 # -> using only the score order instead of absolute test scores is signficantly worse
 
-mod.noInt <- gnm(y ~ (A+I+C)*(test_I+test_A+test_C), eliminate = mu:CASE, family=poisson, data=dsgnmat)
+mod.noInt <- gnm(y ~ (A+I+C)*(test_I+test_A+test_C), eliminate = mu:CASE, family='poisson', data=dsgnmat)
 summary(mod.noInt)
 anova(mod.max, mod.noInt, test="Chisq")
 # -> removing the interactions between the test scores is signficantly worse
 
 # test individual score effects
-mod.testA <- gnm(y ~ (A+I+C)*test_A, eliminate = mu:CASE, family=poisson, data=dsgnmat)
+mod.testA <- gnm(y ~ (A+I+C)*test_A, eliminate = mu:CASE, family='poisson', data=dsgnmat)
 summary(mod.testA)
 # both A and I seem to be (positively) correlated to test_A, but why is C non-signficantly negatively correlated??
-mod.testC <- gnm(y ~ (A+I+C)*test_C, eliminate = mu:CASE, family=poisson, data=dsgnmat)
+mod.testC <- gnm(y ~ (A+I+C)*test_C, eliminate = mu:CASE, family='poisson', data=dsgnmat)
 summary(mod.testC)
-# no signficant correlation
-mod.testI <- gnm(y ~ (A+I+C)*test_I, eliminate = mu:CASE, family=poisson, data=dsgnmat)
+# no signficant correlation for test_C
+mod.testI <- gnm(y ~ (A+I+C)*test_I, eliminate = mu:CASE, family='poisson', data=dsgnmat)
 summary(mod.testI)
 # both A and I seem to be (negatively) correlated to test_I, but why is C non-signficantly positively correlated??
 
+
+mod.AI <- gnm(y ~ (A+I)*(test_I+test_A), eliminate = mu:CASE, family='poisson', data=dsgnmat)
+summary(mod.AI)
 
 
 # plot
@@ -107,11 +116,13 @@ plot_prediction <- function(t, xlab) {
   fmla<-as.formula(paste(c("y~(A+I+C)*test", t), sep='', collapse='_'))
   mod <- gnm(fmla, eliminate = mu:CASE, family='poisson', data=dsgnmat)
   est <- parameters(mod)
+  #est <- parameters(mod.noInt)
   cols1 = c('A', 'C', 'I')
   cols2 = c(paste(c('A:test_', t), collapse=""), paste(c('C:test_', t), collapse=""), paste(c('I:test_', t), collapse=""))
   estmat <- do.call("cbind", lapply(predict,
                                     function(x) est[cols1] + est[cols2] * x))
   wmat <- apply(estmat, 2, function(obj) exp(2 * obj)/sum(exp(2 * obj)))
+  #wmat <- apply(estmat, 2, function(obj) (obj)/sum((obj)))
   col <- rainbow_hcl(3)
   plot(c(0, 1), c(0,1), type = "n", xlab='', ylab='Preference estimate')
   for (i in 1:3) lines(predict, wmat[i, ], col = col[i])
@@ -122,4 +133,4 @@ plot_prediction <- function(t, xlab) {
 plot_prediction('I', "Impersonal score")
 plot_prediction('A', "Autonomy score")
 plot_prediction('C', "Control score")
-title(main = "Preferences by causality orientation", sub='(Scores normalized and centered at mean)', line=-2, outer=TRUE)
+#title(main = "Preferences by causality orientation", sub='(Scores normalized and centered at mean)', line=-2, outer=TRUE)
