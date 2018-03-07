@@ -31,10 +31,36 @@ class Issue(models.Model):
     def __str__(self):
         return self.title
 
+    def get_like_count(self):
+        return self.tag_set.filter(kind=0).count()
+
+    def set_user_liked(self, user, liked):
+        likes = self.tag_set.filter(kind=0, author=user).all()
+        if liked and not likes:
+            tag = Tag(issue=self, author=user, kind=0)
+            tag.save()
+        if not liked and likes:
+            Tag.objects.filter(issue=self, author=user, kind=0).delete()
+        self.user_liked = liked
+
     class Meta:
         ordering = ('-created_date',)
         verbose_name = _("issue")
 
+
+class Tag(models.Model):
+    KIND_CHOICES = (
+        (0, 'like'),
+        (1, 'flag'),
+    )
+
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    kind = models.IntegerField(default=0, choices=KIND_CHOICES)
+    value = models.IntegerField(default=1)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '<%s> %ss <%s>' % (self.author, self.get_kind_display(), self.issue)
 
 class Comment(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)

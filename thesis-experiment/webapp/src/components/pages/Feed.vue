@@ -8,7 +8,7 @@
     <main class="content">
       <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: 'Pull to reload', readyLabel: 'Release to reload', loadingLabel: 'Loading...', pullDownHeight: 60}">
 
-        <div class="tutorial-message">
+        <div class="tutorial-message" v-if="tutorial_feed">
           <strong>Welcome to Many Ideas for KAIST!</strong><br>
           We're happy to have you here.
           On this page, you can see posts by other members.
@@ -21,9 +21,14 @@
             <Spinner />
             Loading...
           </div>
+          <div class="loading loading-error" v-if="error">
+            <ErrorIcon /><br>
+            An error occured while loading.<br>
+            Try to reload this page.
+          </div>
         </transition>
 
-        <IssueList v-bind:items="issues" />
+        <IssueList v-bind:items="issues" v-on::click.native="completeTutorial('feed')" />
 
       </vue-pull-refresh>
     </main>
@@ -38,10 +43,12 @@
 
 <script>
 import MenuIcon from "icons/menu";
+import ErrorIcon from "icons/cloud-off-outline";
 import Spinner from '@/components/elements/Spinner';
 import VuePullRefresh from 'vue-pull-refresh';
 import IssueList from "@/components/elements/IssueList";
 import {navigationMixins} from "@/mixins";
+import {hasCompletedTutorial, completeTutorial} from "@/utils/tutorials";
 
 export default {
   mixins: [navigationMixins],
@@ -58,7 +65,15 @@ export default {
   watch: {
     '$route': 'fetchData'
   },
+  computed: {
+    tutorial_feed() {
+      return ! hasCompletedTutorial(this.$localStorage, 'feed');
+    },
+  },
   methods: {
+    completeTutorial(name) {
+      completeTutorial(this.$localStorage, name);
+    },
     fetchData () {
       this.error = null;
       this.loading = true;
@@ -67,9 +82,13 @@ export default {
         this.issues = issues;
         this.loading = false;
         this.error = null;
-      });
+      }).catch(error => {
+        this.error = true;
+        this.loading = false;
+      })
     },
     onRefresh() {
+      this.error = null;
       return this.$store.dispatch('fetchIssues').then((issues) => {
         this.issues = issues;
       });
@@ -77,6 +96,7 @@ export default {
   },
   components: {
     MenuIcon,
+    ErrorIcon,
     IssueList,
     VuePullRefresh,
     Spinner,

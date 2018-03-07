@@ -74,5 +74,13 @@ export default {
         }).catch(reject);
       });
     },
+    likeIssue({ commit }, { issue }) {
+      return new Promise((resolve, reject) => {
+        apiPost(`issues/${issue.slug}/like/`, { liked: issue.user_liked }).then(() => {
+          commit('setIssue', issue);
+          resolve();
+        }).catch(reject);
+      });
+    },
   },
 };

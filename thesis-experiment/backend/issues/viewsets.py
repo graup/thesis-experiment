@@ -1,12 +1,14 @@
 from rest_framework import viewsets, filters, permissions
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import *
 from .models import Issue
 from rest_framework.pagination import LimitOffsetPagination
 from django.contrib.auth.models import User
+from django.db.models import Count, Q
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
@@ -24,13 +26,36 @@ class LargeResultsSetPagination(LimitOffsetPagination):
     max_limit = 1000
 
 class IssueViewSet(viewsets.ModelViewSet):
-    queryset = Issue.objects.all()
+    queryset = Issue.objects
     serializer_class = IssueSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title',)
     pagination_class = LargeResultsSetPagination
     lookup_field = 'slug'
     permission_classes = (IsAuthorOrReadOnly,)
+
+    def get_queryset(self):
+        qs = self.queryset
+        # Add like count
+        qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0)))
+        # Add if user has liked this issue
+        if self.request.user and self.request.user.is_authenticated:
+            qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user)))
+        return qs
+
+    @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
+    def like(self, request, **kwargs):
+        self.kwargs = kwargs
+        if not self.request.user or not self.request.user.is_authenticated:
+            raise NotAuthenticated()
+
+        obj = self.get_object()
+        obj.set_user_liked(self.request.user, self.request.data['liked'])
+        context = {
+            'request': request
+        }
+        serializer = IssueSerializer(obj, context=context)
+        return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

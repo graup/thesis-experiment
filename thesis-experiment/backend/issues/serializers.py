@@ -13,10 +13,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class IssueSerializer(serializers.HyperlinkedModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects)
     author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
+    like_count = serializers.IntegerField()
+    user_liked = serializers.BooleanField(default=False)
 
     class Meta:
         model = Issue
-        fields = ('url', 'id', 'title', 'text', 'created_date', 'modified_date', 'author', 'categories', 'slug',)
+        fields = ('url', 'id', 'title', 'text', 'created_date', 'modified_date', 'author', 'categories', 'slug', 'like_count', 'user_liked')
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
