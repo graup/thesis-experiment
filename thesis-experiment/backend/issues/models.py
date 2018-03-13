@@ -72,3 +72,6 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-created_date',)
         verbose_name = _("comment")
+
+    def __str__(self):
+        return self.text[:50]

@@ -6,12 +6,22 @@
 </head>
 <body>
   <div id="content">  
-    <h1>Step 1 / 3</h1>  
+      <div class="progress">
+          <div class="completed" style="width: {{100*completed_count/total_count}}%"></div>
+          <div class="status">Completed {{completed_count}} of {{total_count}} questions ({{(100*completed_count)//total_count}}%)</div>
+        </div> 
+      
+    <h1>Step 1 / 4</h1>  
     <p><strong>Please take the following short personality test consisting of {{vignette|length}} items.</strong></p>
-    <p>These items refer to a series of hypothetical scenarios. Each scenario describes an incident and lists three ways of responding to it. Please <strong>read</strong> each scenario, <strong>imagine</strong> yourself in that situation, and then <strong>rate the likeliness</strong> of each of the possible responses.</p>
-    <p>We all respond in a variety of ways to situations, and probably most or all responses are at least slightly likely for you. If it is very unlikely that you would respond the way described in a given response, you should select answer 1 or 2. If it is moderately likely, you would select a number in the mid range, and if it is very likely that you would respond as described, you would select answer 6 or 7.</p>
-    <p>Your results will be saved anonymously.</p>
-    
+    <p>These items refer to a series of hypothetical scenarios. Each scenario describes an incident and lists three ways of responding to it. Please <strong>read</strong> each scenario, <strong>imagine</strong> yourself in that situation, and then <strong>rate the likeliness</strong> of each of the possible responses. Here are some tips:</p>
+    <ul>
+      <li>We all respond in a variety of ways to situations, and probably most or all responses are at least slightly likely for you.</li>
+      <li>If it is very unlikely that you would respond the way described in a given response, you should select answer 1 or 2.</li>
+      <li>If it is moderately likely, you would select a number in the mid range.</li>
+      <li>If it is very likely that you would respond as described, you would select answer 6 or 7.</li>
+    </ul>
+
+    <p><strong>Please take your time.</strong> This questionaire is a major part of this task, and the data is important for our research.</p>
     <hr>
 
     <form method="post">

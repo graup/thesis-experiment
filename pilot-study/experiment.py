@@ -8,8 +8,9 @@ def balanced_latin_squares(n):
         l += [seq[::-1] for seq in l]
     return l
 
-conditions = ('A', 'I', 'C', 'BL')
+conditions = ('AA', 'RR', 'CC', 'A', 'I', 'C', 'BL')
 pairs = list(combinations(conditions, 2))
+num_combinations = len(pairs)
 orderings = balanced_latin_squares(len(pairs))
 
 rationale_texts = {

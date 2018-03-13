@@ -12,9 +12,13 @@ body {
     font-weight: 300;
 }
 
-p {
+p, ul {
     margin: 0 0 1em 0;
     line-height: 1.5;
+}
+
+ul {
+    padding: 0 0 0 1.5em;
 }
 
 hr {
@@ -32,13 +36,9 @@ h1 {
     background-color: #fff;
     border-radius: 3px;
     padding: 30px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.25);
 }
 
-.progress {
-    text-align: center;
-    color: #00FF8B;
-    font-weight: 500;
-}
 
 .btn {
     background-color: #05e2ac;
@@ -67,6 +67,9 @@ label {
 .answers {
     list-style-type: lower-alpha;
 }
+.answers.numeric-bullet {
+    list-style-type: decimal;
+}
 .answers li {
     margin: 0 0 1em 0;
 }
@@ -74,7 +77,8 @@ label {
     margin: 0;
 }
 .answers .rating-container {
-    width: 370px;
+    width: 350px;
+    margin-bottom: 2em;
 }
 .answers .answer-text {
     margin-bottom: 1em;
@@ -92,12 +96,10 @@ label {
     color: #666;
 }
 .answers .rating span:first-child {
-    text-align: left;
-    transform: translateX(-2.4em);
+    transform: translateX(-3.5em);
 }
 .answers .rating span:last-child {
-    text-align: right;
-    transform: translateX(1.7em);
+    transform: translateX(3.5em);
 }
 .answers label {
     display: flex;
@@ -122,7 +124,7 @@ label {
 }
 .compare li {
     flex: 1;
-    padding: 1em 50px;
+    padding: 0 50px;
     text-align: center;
 }
 .compare img {
@@ -164,4 +166,24 @@ label {
     width: 606px;
     height: auto;
     margin: 2em auto;
+}
+
+.progress {
+    margin: -15px -15px 30px -15px;
+    height: 18px;
+    position: relative;
+    background-color: #444;
+}
+.progress .completed {
+    height: 100%;
+    background-color: #097755;
+}
+.progress .status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-weight: 300;
+    font-size: .75em;
+    color: #fff;
 }

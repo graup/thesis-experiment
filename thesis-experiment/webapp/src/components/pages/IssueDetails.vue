@@ -21,16 +21,18 @@
           If you have another opinion, try writing a short comment.
         </div>
 
-        <div class="tutorial-message" v-if="issue.author.username==user.username">
+        <div class="tutorial-message" v-if="issue.author.username==user.username && !comments.length && issue.like_count<=1">
           This is your idea! Good job. Let's wait until other members give their opinion.
         </div>
         
         <Issue v-bind:item="issue" expanded="true" />
       
-        <div class="empty-state">
+        <div class="empty-state" v-if="!comments.length">
           No comments yet. <br>
           You can be the first!
         </div>
+
+        <CommentList v-bind:items="comments" />
 
       </div>
 
@@ -48,6 +50,7 @@ import Spinner from '@/components/elements/Spinner';
 import ChevronLeftIcon from "icons/chevron-left";
 import {navigationMixins} from "@/mixins";
 import Issue from "@/components/elements/Issue";
+import CommentList from "@/components/elements/CommentList";
 
 export default {
   mixins: [navigationMixins],
@@ -56,6 +59,7 @@ export default {
     return {
       loading: false,
       issue: null,
+      comments: [],
       error: null
     }
   },
@@ -69,6 +73,7 @@ export default {
     ChevronLeftIcon,
     Issue,
     Spinner,
+    CommentList,
   },
   methods: {
     fetchData () {
@@ -82,6 +87,11 @@ export default {
       
       this.$store.dispatch('getIssue', {slug: this.$props.slug}).then((issue) => {
         this.issue = issue;
+        this.loading = false;
+      });
+
+      this.$store.dispatch('getComments', {slug: this.$props.slug}).then((comments) => {
+        this.comments = comments;
         this.loading = false;
       });
     },

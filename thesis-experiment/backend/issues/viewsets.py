@@ -25,6 +25,12 @@ class LargeResultsSetPagination(LimitOffsetPagination):
     default_limit = 100
     max_limit = 1000
 
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects
+    serializer_class = CommentSerializer
+    pagination_class = LargeResultsSetPagination
+    permission_classes = (IsAuthenticated,)
+
 class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects
     serializer_class = IssueSerializer
@@ -38,11 +44,26 @@ class IssueViewSet(viewsets.ModelViewSet):
         qs = self.queryset
         # Add like count
         qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0)))
+        # Add comment count
+        qs = qs.annotate(comment_count=Count('comment'))
         # Add if user has liked this issue
         if self.request.user and self.request.user.is_authenticated:
             qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user)))
         return qs
 
+    @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
+    def comments(self, request, **kwargs):
+        self.kwargs = kwargs
+        if not self.request.user or not self.request.user.is_authenticated:
+            raise NotAuthenticated()
+
+        obj = self.get_object()
+        context = {
+            'request': request
+        }
+        serializer = CommentSerializer(obj.comment_set, many=True, context=context)
+        return Response(serializer.data)
+    
     @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
     def like(self, request, **kwargs):
         self.kwargs = kwargs

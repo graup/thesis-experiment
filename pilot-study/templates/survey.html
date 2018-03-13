@@ -7,7 +7,11 @@
 <body>
   <div id="content">
     <form method="post">
-      <h1>Step 3 / 3</h1>  
+        <div class="progress">
+            <div class="completed" style="width: {{100*completed_count/total_count}}%"></div>
+            <div class="status">Completed {{completed_count}} of {{total_count}} questions ({{(100*completed_count)//total_count}}%)</div>
+          </div> 
+      <h1>Step 4 / 4</h1>  
 
       <p>Good job! You're almost done, please just answer these final questions.</p>
 
@@ -40,20 +44,8 @@
       {% endif %}
 
       <div class="box">
-        <p><strong>Thinking more generally, what would motivate you to participate in this app? Feel free to share any ideas or thoughts you have.</strong><br>
+        <p><strong>Thinking more generally, what would motivate you personally to participate in this app? Feel free to share any ideas or thoughts you have.</strong><br>
           <textarea name="open" class="text-field" required></textarea></p>
-          <p><strong>In the past three months, how often, on average, did you participate in volunteering activities?</strong><br>
-            <select name="volunteering">
-                <option>Never</option>
-                <option>Less than one time per week</option>
-                <option>About one time per week</option>
-                <option>Two to three times per week</option>
-                <option>Four to five times per week</option>
-                <option>More than five times per week</option>
-              </select>
-          </p>
-          <p><strong>Motivation to participate:</strong><br>(Waiting for response from Motivation to Volunteer Scale (MVS) author to include this scale)</p>
-        
       </div>
 
       <div class="actions">

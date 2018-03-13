@@ -6,12 +6,19 @@
 </head>
 <body>
   <div id="content">
+      <div class="progress">
+          <div class="completed" style="width: {{100*completed_count/total_count}}%"></div>
+          <div class="status">Completed {{completed_count}} of {{total_count}} questions ({{(100*completed_count)//total_count}}%)</div>
+        </div> 
+
+        
     <form method="post" id="compare_form">
-        <h1>Step 2 / 3</h1>  
+        <h1>Step 3 / 4</h1>  
 
       <div class="steps" id="steps">
 
         <div id="step0">
+          <p>Thank you! Great job so far. Your data is really important for us.</p>
           <p><strong>You will now compare a few user interface mockups for a new app.</strong></p>
           <p>On the top of the screen, you will be given a scenario and a related task.</p>
           <p>Below that, you will see two versions (1 and 2) of an interface supporting this task.</p>
@@ -32,21 +39,23 @@
             <p>This is the main screen of the app that you are presented with just after signup.</p>
             <p>The task that this design affords is to contribute a new idea.</p>
 
-            <p>In which version <strong>would you personally be more likely to do the task?</strong></p>
+            <div class="box">
+              <p>In which version <strong>would you personally be more likely to contribute an idea?</strong></p>
 
-            <p style="text-align: center"><strong>Comparison {{loop.index}} of {{comparison_pairs|length}}</strong></p>
-            {% set cloop = loop %}
-            <ul class="compare">
-            {% for item in pair['items'] %}
-              <li>
-                <img src="{{ url_for('static', filename='img/' + item + '.png') }}">
-                <label><input type="radio" name="{{pair['key']}}" value="{{item}}"> Version {{loop.index}}</label></li>
-            {% endfor %}
-            </ul>
-
-            <div class="actions">
-              <input type="submit" class="btn" value="Next">
+              <p style="text-align: center"><strong>Comparison {{loop.index}} of {{comparison_pairs|length}}</strong></p>
+              {% set cloop = loop %}
+              <ul class="compare">
+              {% for item in pair['items'] %}
+                <li>
+                  <img src="{{ url_for('static', filename='img/' + item + '.png') }}">
+                  <label><input type="radio" name="{{pair['key']}}" value="{{item}}"> Version {{loop.index}}</label></li>
+              {% endfor %}
+              </ul>
             </div>
+              <div class="actions">
+                <input type="submit" class="btn" value="Next">
+              </div>
+            
           </div>
         {% endfor %}
       </div>

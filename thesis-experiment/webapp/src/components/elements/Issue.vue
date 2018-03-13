@@ -12,7 +12,7 @@
         </span> {{item.like_count}}
       </span>
       <span class="icon-with-text">
-        <CommentIcon /> 0
+        <CommentIcon /> {{item.comment_count}}
       </span>
       <span class="icon-with-text" v-bind:class="{isAuthor}">
         <PersonIcon /> {{item.author.username}}

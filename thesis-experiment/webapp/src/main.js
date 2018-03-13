@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vue2TouchEvents from 'vue2-touch-events';
-import VueLocalStorage from 'vue-localstorage'
+import VueLocalStorage from 'vue-localstorage';
+import VueMoment from 'vue-moment';
 
 import Logo from '@/components/elements/Logo';
 import Button from '@/components/elements/Button';
@@ -13,6 +14,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Vue2TouchEvents);
 Vue.use(VueLocalStorage, { bind: true });
+Vue.use(VueMoment);
 
 Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);

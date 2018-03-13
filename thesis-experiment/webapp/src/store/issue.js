@@ -6,6 +6,8 @@ export default {
     issues_by_id: {},
     issues_by_slug: {},
     loaded_issues: false,
+    loaded_comments: {},
+    comments_by_issue_slug: {},
   },
   getters: {
   },
@@ -24,6 +26,10 @@ export default {
       });
       state.issue_ids = issues.map(issue => issue.id);
       state.loaded_issues = true;
+    },
+    setComments(state, { slug, comments }) {
+      state.comments_by_issue_slug[slug] = comments;
+      state.loaded_comments[slug] = true;
     },
   },
   actions: {
@@ -79,6 +85,25 @@ export default {
         apiPost(`issues/${issue.slug}/like/`, { liked: issue.user_liked }).then(() => {
           commit('setIssue', issue);
           resolve();
+        }).catch(reject);
+      });
+    },
+    getComments(context, { slug }) {
+      // Try to return already fetched data
+      if (context.state.loaded_comments[slug]) {
+        return new Promise((resolve) => {
+          resolve(context.state.comments_by_issue_slug[slug]);
+        });
+      }
+      // fetch new data
+      return context.dispatch('fetchComments', { slug });
+    },
+    fetchComments({ commit }, { slug }) {
+      return new Promise((resolve, reject) => {
+        apiGet(`issues/${slug}/comments/`).then((response) => {
+          // Update store and resolve promise
+          commit('setComments', { slug, comments: response.data });
+          resolve(response.data);
         }).catch(reject);
       });
     },

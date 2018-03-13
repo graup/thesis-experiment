@@ -6,11 +6,23 @@ import uuid
 import json
 
 from gcos import vignette, score_test
-from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random, get_top_preference, rationale_texts
+from mvs import get_shuffled_vignette, vignette as mvs_vignette
+from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random, get_top_preference, rationale_texts, num_combinations
 
 base_directory = os.path.dirname(os.path.realpath(__file__))
 
 app = Flask(__name__)
+
+steps = [
+    { 'name': 'start', 'count': 3 },
+    { 'name': 'gcos', 'count': len(vignette)*3 },
+    { 'name': 'mvs', 'count': len(mvs_vignette)+1 },
+    { 'name': 'comparison', 'count': num_combinations },
+    { 'name': 'post', 'count': 2 },
+]
+total_count = sum([s['count'] for s in steps])
+def count_until(n):
+    return sum([s['count'] for s in steps[:n]])
 
 def save_session(session):
     filename = '%s/data/%s.json' % (base_directory, session['user_id'])
@@ -33,7 +45,7 @@ def before_request():
 @app.route('/', methods=['GET', 'POST'])
 def start():
     "Welcome page"
-    context = {}
+    context = {'total_count': total_count, 'completed_count': 0}
 
     if request.method == 'POST':
         session['demographics'] = request.form
@@ -46,7 +58,7 @@ def start():
 
 @app.route('/pre-test', methods=['GET', 'POST'])
 def gcos():
-    "Pre-test"
+    "GCOS survey"
     if request.method == 'POST':
         ratings = defaultdict(lambda: defaultdict(dict))
         for key in request.form:
@@ -55,15 +67,28 @@ def gcos():
         session['test_scores'] = score_test(ratings)
         session['gcos_raw'] = ratings
         save_session(session)
+        return redirect(url_for('mvs'))
+
+    context = {'total_count': total_count, 'completed_count': count_until(1)}
+    context['vignette'] = vignette
+    return make_response(render_template('gcos.html', **context))
+
+@app.route('/pre-test-2', methods=['GET', 'POST'])
+def mvs():
+    "Volunteering survey"
+    if request.method == 'POST':
+        session['volunteering'] = request.form
+        save_session(session)
         return redirect(url_for('comparison'))
 
-    context = {'vignette': vignette}
-    return make_response(render_template('gcos.html', **context))
+    context = {'total_count': total_count, 'completed_count': count_until(2)}
+    context['vignette'] = get_shuffled_vignette(session['user_counter'])
+    return make_response(render_template('mvs.html', **context))
 
 @app.route('/comparison', methods=['GET', 'POST'])
 def comparison():
     "Comparison"
-    context = {}
+    context = {'total_count': total_count, 'completed_count': count_until(3)}
     if request.method == 'POST':
         session['comparisons'] = request.form
         save_session(session)
@@ -78,7 +103,7 @@ def comparison():
         comparison_pairs.append(pair)
 
     # repeat one pair for checking consistency/attention
-    bogus_item = dict(comparison_pairs[session['user_counter'] % len(comparison_pairs)])
+    bogus_item = dict(comparison_pairs[1])
     bogus_item['key'] += '_check'
     comparison_pairs.append(bogus_item)
     
@@ -91,7 +116,7 @@ def comparison():
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
     "Post-test survey"
-    context = {}
+    context = {'total_count': total_count, 'completed_count': count_until(4)}
 
     if request.method == 'POST':
         session['survey'] = request.form
@@ -99,9 +124,10 @@ def survey():
         save_session(session)
         return redirect(url_for('finish'))
 
-    context['winner'] = get_top_preference(session['comparisons'])
-    if context['winner']:
-        context['rationale_text'] = rationale_texts[context['winner']]
+    if 'comparisons' in session:
+        context['winner'] = get_top_preference(session['comparisons'])
+        if context['winner']:
+            context['rationale_text'] = rationale_texts[context['winner']]
 
     return make_response(render_template('survey.html', **context))
 
@@ -109,7 +135,8 @@ def survey():
 @app.route('/finish')
 def finish():
     "Finish "
-    context = {'code': str(uuid.uuid1())[:6].upper()}
+    context = {'total_count': total_count, 'completed_count': total_count}
+    context['code'] = str(session['user_id'])[:6].upper()
     return make_response(render_template('finish.html', **context))
 
 @app.context_processor

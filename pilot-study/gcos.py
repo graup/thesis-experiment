@@ -90,7 +90,7 @@ vignette = [
     "code": "ICA"
 },
 {
-    "prompt": "For a online study, you have to read and answer a set of questions. You are likely to:",
+    "prompt": "For an online study, you have to read and answer a set of questions. You are likely to:",
     "answers": [
         "Read every scenario and think about it thoroughly",
         "Answer everything as quickly as possible without thinking much",
