@@ -103,9 +103,9 @@ def comparison():
         comparison_pairs.append(pair)
 
     # repeat one pair for checking consistency/attention
-    bogus_item = dict(comparison_pairs[1])
+    bogus_item = dict(comparison_pairs[len(comparison_pairs)//2])  # take one from the middle
     bogus_item['key'] += '_check'
-    bogus_item['items'] = bogus_item['items'][::-1]  # reverse to catch people who just select the first item
+    bogus_item['items'] = bogus_item['items'][::-1]  # reverse to catch people who always select the first item
     comparison_pairs.append(bogus_item)
     
     context['comparison_pairs'] = comparison_pairs
