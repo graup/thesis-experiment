@@ -105,6 +105,7 @@ def comparison():
     # repeat one pair for checking consistency/attention
     bogus_item = dict(comparison_pairs[1])
     bogus_item['key'] += '_check'
+    bogus_item['items'] = bogus_item['items'][::-1]  # reverse to catch people who just select the first item
     comparison_pairs.append(bogus_item)
     
     context['comparison_pairs'] = comparison_pairs
@@ -126,8 +127,8 @@ def survey():
 
     if 'comparisons' in session:
         context['winner'] = get_top_preference(session['comparisons'])
-        if context['winner']:
-            context['rationale_text'] = rationale_texts[context['winner']]
+        #if context['winner']:
+        #    context['rationale_text'] = rationale_texts[context['winner']]
 
     return make_response(render_template('survey.html', **context))
 

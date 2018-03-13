@@ -176,7 +176,8 @@ label {
 }
 .progress .completed {
     height: 100%;
-    background-color: #097755;
+    background-color: #06865f;
+    background-image: linear-gradient(90deg, #0fc38c, #06865f);
 }
 .progress .status {
     position: absolute;
