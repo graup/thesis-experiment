@@ -9,8 +9,8 @@
 
     <ul class="menu-items" v-if="isAuthenticated">
       <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Ideas</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('feed')">My Ideas</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('feed')">FAQ</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('my-posts')">My Ideas</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('faq')">FAQ</a></li>
       <li><a class="menu-item" v-on:click="logout">Logout</a></li>
     </ul>
     <ul class="menu-items" v-if="!isAuthenticated">

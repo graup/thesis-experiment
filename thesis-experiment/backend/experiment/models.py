@@ -13,6 +13,7 @@ class Treatment(models.Model):
     label = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
 
+    objects = models.Manager()
     active_treatments = ActiveManager()
 
     def __str__(self):

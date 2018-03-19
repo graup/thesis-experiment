@@ -210,6 +210,11 @@ footer {
   margin: .5rem 0 0 0;
   font-size: 90%;
 }
+.form-group .help {
+  color: #aaa;
+  margin: .5rem 0 0 0;
+  font-size: 90%; 
+}
 
 .empty-state {
   height: 100px;
@@ -237,6 +242,9 @@ footer {
 
   max-height: 200px;
   box-sizing: border-box;
+}
+.button.loading .spinner {
+  width: auto;
 }
 
 .fade-up-enter-active, .fade-up-leave-active {

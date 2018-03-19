@@ -15,16 +15,19 @@
             <input id="username" class="form-input" type="text" v-model="username" required />
             <label class="form-label" for="username">Username</label>
             <div class="error" v-if="errors.username">{{errors.username.join(' ')}}</div>
+            <div class="help">Will appear next to your ideas and comments.</div>
           </div>
           <div class="form-group">
             <input id="email" class="form-input" type="text" v-model="email" required />
             <label class="form-label" for="email">Email</label>
             <div class="error" v-if="errors.email">{{errors.email.join(' ')}}</div>
+            <div class="help">Will be kept private.</div>
           </div>
           <div class="form-group">
             <input id="password" class="form-input" type="password" v-model="password" required />
             <label class="form-label" for="password">Password</label>
             <div class="error" v-if="errors.password">{{errors.password.join(' ')}}</div>
+            <div class="help">At least 8 characters, not entirely numeric.</div>
           </div>
           <div class="form-group">
             <input id="password2" class="form-input" type="password" v-model="password2" required />

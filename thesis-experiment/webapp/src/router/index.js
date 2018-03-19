@@ -4,8 +4,10 @@ import Start from '@/components/pages/Start';
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
 import Feed from '@/components/pages/Feed';
+import MyFeed from '@/components/pages/MyFeed';
 import IssueDetails from '@/components/pages/IssueDetails';
 import NewIssue from '@/components/pages/NewIssue';
+import FAQ from '@/components/pages/FAQ';
 
 Vue.use(Router);
 
@@ -25,6 +27,8 @@ export default new Router({
     { path: '/login', component: Login, meta: { unauth: true } },
     { path: '/signup', component: Signup, meta: { unauth: true } },
     { path: '/feed', component: Feed, meta: { auth: true } },
+    { path: '/faq', component: FAQ, meta: { auth: true } },
+    { path: '/my-posts', component: MyFeed, meta: { auth: true } },
     { path: '/issues/new', name: 'new-issue', component: NewIssue, meta: { auth: true } },
     {
       path: '/issues/:slug',

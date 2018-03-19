@@ -14,9 +14,12 @@
       <span class="icon-with-text">
         <CommentIcon /> {{item.comment_count}}
       </span>
-      <span class="icon-with-text" v-bind:class="{isAuthor}">
-        <PersonIcon /> {{item.author.username}}
+      <span class="icon-with-text">
+        <span class="date">{{item.created_date | moment("from", "now")}}</span>
+        <span v-bind:class="{isAuthor}"><PersonIcon /> {{item.author.username}}</span>
+        
       </span>
+      
     </div>
   </div>
 </template>
@@ -119,11 +122,15 @@ export default {
     }
   }
 
-  &.isAuthor svg {
+  .isAuthor svg {
     fill: #039e63;
   }
-  &.isAuthor {
+  .isAuthor {
     color: #039e63;
+  }
+  .date {
+    color: #777;
+    font-weight: 300;
   }
 }
 

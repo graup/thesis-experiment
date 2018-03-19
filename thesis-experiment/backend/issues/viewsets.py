@@ -42,6 +42,8 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = self.queryset
+        if self.request.method == "POST":
+            return qs
         # Add like count
         qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0)))
         # Add comment count

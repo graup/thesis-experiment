@@ -31,19 +31,19 @@ vignette = [
 # Integrated regulation
 {
     'text': "because this activity has become an integral part of my life",
-    'sclae': 'integrated'
+    'scale': 'integrated'
 },
 {
     'text': "because volunteering has become a part of who I am",
-    'sclae': 'integrated'
+    'scale': 'integrated'
 },
 {
     'text': "because it is one of the ways I live my life",
-    'sclae': 'integrated'
+    'scale': 'integrated'
 },
 {
     'text': "because volunteering is a suitable activity for me",
-    'sclae': 'integrated'
+    'scale': 'integrated'
 },
 # Identified regulation
 {
@@ -119,7 +119,8 @@ vignette = [
 
 attention_check = {
     'text': 'To show that you are concentrated, please answer this question with 5.',
-    'scale': ''
+    'scale': '',
+    'key': 'check'
 }
 
 def get_shuffled_vignette(seed):
