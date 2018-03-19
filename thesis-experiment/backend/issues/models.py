@@ -31,6 +31,9 @@ class Issue(models.Model):
     def __str__(self):
         return self.title
 
+    def get_comment_count(self):
+        return self.comment_set.count()
+    
     def get_like_count(self):
         return self.tag_set.filter(kind=0).count()
 

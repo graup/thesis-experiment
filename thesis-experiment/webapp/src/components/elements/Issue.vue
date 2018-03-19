@@ -59,7 +59,11 @@ export default {
         this.$props.item.like_count += 1;
       }
       this.$props.item.user_liked = !this.$props.item.user_liked;
-      this.$store.dispatch('likeIssue', { issue: this.$props.item });
+      this.$store.dispatch('likeIssue', { issue: this.$props.item }).then(
+        (issue) => {
+          this.$props.item = issue;
+        }
+      );
     },
   },
   components: {

@@ -84,7 +84,7 @@ export default {
       return new Promise((resolve, reject) => {
         apiPost(`issues/${issue.slug}/like/`, { liked: issue.user_liked }).then(() => {
           commit('setIssue', issue);
-          resolve();
+          resolve(issue);
         }).catch(reject);
       });
     },

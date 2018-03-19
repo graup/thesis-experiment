@@ -52,6 +52,11 @@ class IssueViewSet(viewsets.ModelViewSet):
         if self.request.user and self.request.user.is_authenticated:
             qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user)))
         return qs
+    
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.like_count = 0
+        instance.comment_count = 0
 
     @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
     def comments(self, request, **kwargs):
@@ -74,6 +79,8 @@ class IssueViewSet(viewsets.ModelViewSet):
 
         obj = self.get_object()
         obj.set_user_liked(self.request.user, self.request.data['liked'])
+        obj.like_count = obj.tag_set.filter(kind=0).count()
+        obj.comment_count = obj.comment_set.count()
         context = {
             'request': request
         }
