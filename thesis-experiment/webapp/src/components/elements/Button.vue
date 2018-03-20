@@ -1,6 +1,6 @@
 <template>
-  <div class="button" v-bind:class="{primary, loading}" v-on:click="click">
-    <span class="label">{{text}}</span>
+  <div class="button" v-bind:class="{primary, loading, icon}" v-on:click="click">
+    <span class="label"><slot>{{text}}</slot></span>
     <Spinner v-if="loading" size="18px" />
   </div>
 </template>
@@ -10,7 +10,7 @@ import Spinner from './Spinner';
 
 export default {
   name: 'Button',
-  props: ['text', 'primary', 'linkTo', 'loading'],
+  props: ['text', 'primary', 'icon', 'linkTo', 'loading'],
   methods: {
     click() {
       if (typeof this.$props.linkTo !== 'undefined') {
@@ -54,6 +54,10 @@ export default {
     }
   }
 
+  &.icon {
+    padding: 0 .5em;
+  }
+
   &.huge {
     font-size: 110%;
   }
@@ -62,6 +66,11 @@ export default {
     opacity: 1;
     transition: opacity .4s;
     white-space: nowrap;
+
+    svg {
+      fill: #fff;
+      vertical-align: middle;
+    }
   }
 
   max-width: 400px;

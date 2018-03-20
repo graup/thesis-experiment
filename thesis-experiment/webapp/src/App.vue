@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <side-menu />
-    <transition :name="transitionName" :duration="500">
+    <transition :name="transitionName">
       <router-view class="child-view" v-bind:class="{'menu-opened': isMenuOpened}" />
     </transition>
   </div>
@@ -85,7 +85,7 @@ a {
 /* buttons etc */
 .icon-button {
   font-size: 120%;
-  padding: 5px;
+  padding: 8px;
   cursor: pointer;
   line-height: 1;
 
@@ -153,14 +153,19 @@ footer {
 
 /* forms */
 .form-wrapper {
-  max-width: 30%;
   min-width: 300px;
+  width: 85%;
+  max-width: 400px;
   padding: 50px 2rem 50px 2rem;
   box-sizing: border-box;
-  margin: 50px auto;   
+  margin: 35px auto;   
   background-color: #ffffff;
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(50,50,93,.1),0 5px 5px rgba(0,0,0,.07);
+
+  &.form-wide {
+
+  }
 }
 
 .form-group {

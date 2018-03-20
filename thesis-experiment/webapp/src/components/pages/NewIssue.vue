@@ -11,7 +11,7 @@
         Tell us what you think!
       </p>
 
-      <div class="form-wrapper">
+      <div class="form-wrapper form-wide">
         <form action="" class="form">
           <div class="form-group">
             <input id="title" class="form-input" type="text" v-model="title" required />

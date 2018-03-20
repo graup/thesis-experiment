@@ -39,7 +39,13 @@
     </main>
     <footer>
       <div class="call-to-action">
-        <my-button text="Leave a comment" primary={true} link-to="" />
+        <div v-if="!commentMode">
+          <my-button text="Leave a comment" primary={true} v-on:click.native="toggleCommentMode()" />
+        </div>
+        <div v-if="commentMode" class="comment-form">
+          <textarea name="text" class="comment-text" ref="commentText" autofocus placeholder="Write a comment..."></textarea>
+          <my-button v-on:click.native="submitComment()" primary={true} icon={true}><SendIcon /></my-button>
+        </div>
       </div>
     </footer>
   </div>
@@ -48,9 +54,11 @@
 <script>
 import Spinner from '@/components/elements/Spinner';
 import ChevronLeftIcon from "icons/chevron-left";
+import SendIcon from "icons/send";
 import {navigationMixins} from "@/mixins";
 import Issue from "@/components/elements/Issue";
 import CommentList from "@/components/elements/CommentList";
+import autosize from 'autosize';
 
 export default {
   mixins: [navigationMixins],
@@ -60,7 +68,8 @@ export default {
       loading: false,
       issue: null,
       comments: [],
-      error: null
+      error: null,
+      commentMode: false,
     }
   },
   created () {
@@ -74,6 +83,7 @@ export default {
     Issue,
     Spinner,
     CommentList,
+    SendIcon,
   },
   methods: {
     fetchData () {
@@ -95,10 +105,37 @@ export default {
         this.loading = false;
       });
     },
+    submitComment() {
+      this.$data.commentMode = false;
+    },
+    toggleCommentMode() {
+      this.$data.commentMode = !this.$data.commentMode;
+      if (this.$data.commentMode) {
+        this.$nextTick(() => {
+          autosize(this.$refs.commentText);
+          this.$refs.commentText.focus()
+        });
+      }
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.comment-form {
+  display: flex;
+  align-items: center;
 
+  .comment-text {
+    flex: 1;
+    
+    padding: 5px;
+    margin-right: 1em;
+    border: none;
+    background-color: #fff;
+  }
+  .button {
+
+  }
+}
 </style>
