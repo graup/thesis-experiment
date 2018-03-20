@@ -51,7 +51,7 @@ body {
   color: #2c3e50;
   margin-top: 60px;
 
-  max-width: 400px; /* for testing mobile layout */
+  max-width: 420px; /* for testing mobile layout */
   margin: 0 auto;
 
   position: relative;

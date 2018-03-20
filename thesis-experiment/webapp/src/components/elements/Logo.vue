@@ -16,15 +16,15 @@ export default {
 .logo {
   display: inline-block;
 
-  height: 85px;
-  line-height: 85px;
+  height: 90px;
+  line-height: 90px;
 
-  margin: 2rem 0;
+  margin: 2.5rem 0;
 
   color: #43708F;
   font-family: 'Patua One', serif;
   font-weight: normal;
-  font-size: 35px; /*font-size: 42px;*/
+  font-size: 36px; /*font-size: 42px;*/
 
   span {
     line-height: 1;
@@ -40,7 +40,7 @@ export default {
 
   img {
     width: auto;
-    height: 65px; /*height: 85px;*/
+    height: 70px; /*height: 85px;*/
   }
 
   &.small {

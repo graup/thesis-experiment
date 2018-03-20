@@ -29,7 +29,6 @@ export default {
 .button {
   display: inline-block;
   border-radius: 4px;
-  font-size: 90%;
   line-height: 2.5;
   padding: 0 1.5em;
   font-weight: 600;

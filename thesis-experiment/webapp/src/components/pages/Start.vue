@@ -58,6 +58,7 @@ export default {
 .intro {
   padding: 0 2em;
   margin-bottom: 3rem;
+  font-size: 1.1em;
 }
 .message {
   margin: 3rem 1rem 0;
