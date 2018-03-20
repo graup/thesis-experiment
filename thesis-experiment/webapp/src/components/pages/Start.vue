@@ -5,13 +5,12 @@
       <app-logo instance-name="KAIST" />
 
       <p class="intro">
-        Join us in collecting important issues and ideas for the future of KAIST.
-        We need everyone’s contribution!
+        {{ $t('hello') }}
       </p>
 
       <div class="button-group vertical spaced" style="max-width: 200px;">
-        <my-button text="Sign up" primary={true} link-to="signup" />
-        <my-button text="Log in" link-to="login" />
+        <my-button :text="$t('signup')" link-to="signup" primary={true} />
+        <my-button :text="$t('login')" link-to="login" />
       </div>
 
       <div v-if="!touchDevice" class="message warning">
@@ -23,13 +22,29 @@
   </div>
 </template>
 
+<i18n>
+{
+  "en": {
+    "hello": "Join us in collecting important issues and ideas for the future of KAIST. We need everyone’s contribution!",
+    "signup": "Sign up",
+    "login": "Log in"
+  },
+  "ko": {
+    "hello": "KAIST의 미래를위한 중요한 이슈와 아이디어를 수집하십시오. 모든 사람의 공헌이 필요합니다!",
+    "signup": "회원 가입",
+    "login": "로그인"
+  }
+}
+</i18n>
+
 <script>
+import {localeMixin} from "@/mixins";
 
 export default {
+  mixins: [localeMixin],
   name: 'Start',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App. Does it work?',
       touchDevice: !!('ontouchstart' in window),
     };
   },

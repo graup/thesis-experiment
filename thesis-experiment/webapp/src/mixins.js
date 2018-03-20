@@ -1,3 +1,13 @@
+const localeMixin = {
+  data() { return { locale: 'en' }; },
+  watch: {
+    locale(val) {
+      this.$i18n.locale = val;
+    },
+  },
+};
+
+
 const navigationMixins = {
   computed: {
     isMenuOpened() {
@@ -30,7 +40,6 @@ const navigationMixins = {
       this.$store.commit('setMenuOpened', false);
     },
     logout() {
-      console.log("will log out");
       return this.$store.dispatch('logout').then(() => {
         this.$store.commit('setMenuOpened', false);
         this.$router.push('/');
@@ -43,4 +52,5 @@ const navigationMixins = {
 
 export {
   navigationMixins,
+  localeMixin,
 };

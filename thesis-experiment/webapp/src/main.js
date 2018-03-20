@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vue2TouchEvents from 'vue2-touch-events';
 import VueLocalStorage from 'vue-localstorage';
 import VueMoment from 'vue-moment';
+import VueI18n from 'vue-i18n';
 
 import Logo from '@/components/elements/Logo';
 import Button from '@/components/elements/Button';
@@ -15,6 +16,7 @@ Vue.config.productionTip = false;
 Vue.use(Vue2TouchEvents);
 Vue.use(VueLocalStorage, { bind: true });
 Vue.use(VueMoment);
+Vue.use(VueI18n);
 
 Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);
@@ -33,11 +35,17 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+const i18n = new VueI18n({
+  locale: 'ko',
+  fallbackLocale: 'en',
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App),
   localStorage: {
     completedTutorials: {
