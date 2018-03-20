@@ -26,10 +26,22 @@ class Treatment(models.Model):
 class Assignment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     treatment = models.ForeignKey(Treatment, on_delete=models.CASCADE)
-    assigned_date = models.DateField(auto_now_add=True)
+    assigned_date = models.DateTimeField(auto_now_add=True)
+
+    __treatment = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__treatment_id = self.treatment_id
 
     def __str__(self):
         return '%s - %s' % (self.user, self.treatment)
+
+    def save(self, *args, **kwargs):
+        if self.treatment_id != self.__treatment_id:
+            # Force creation of new item
+            self.pk = None
+        super().save(*args, **kwargs)
 
 
 class GcosResult(models.Model):

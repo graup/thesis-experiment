@@ -18,15 +18,16 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'get_short_name', 'active_treatment',)
+        fields = ('username', 'get_short_name', 'active_treatment',)
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
+    issue = serializers.PrimaryKeyRelatedField(queryset=Issue.objects)
 
     class Meta:
         model = Comment
-        fields = ('url', 'id', 'text', 'created_date', 'author', )
+        fields = ('url', 'id', 'text', 'created_date', 'author', 'issue', )
 
 
 class IssueSerializer(serializers.HyperlinkedModelSerializer):

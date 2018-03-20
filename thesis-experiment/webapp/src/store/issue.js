@@ -107,5 +107,16 @@ export default {
         }).catch(reject);
       });
     },
+    createComment({ dispatch }, { comment, slug }) {
+      return new Promise((resolve, reject) => {
+        apiPost('comments/', comment).then((response) => {
+          // Update store and resolve promise
+          //commit('setComments', { slug, comments: response.data });
+          // Reload comments
+          dispatch('fetchComments', { slug });
+          resolve(response.data);
+        }).catch(reject);
+      });
+    },
   },
 };

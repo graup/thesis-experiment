@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters, permissions
+from rest_framework import viewsets, filters, permissions, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
@@ -25,32 +25,32 @@ class LargeResultsSetPagination(LimitOffsetPagination):
     default_limit = 100
     max_limit = 1000
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Comment.objects
     serializer_class = CommentSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (IsAuthenticated,)
 
-class IssueViewSet(viewsets.ModelViewSet):
+class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Issue.objects
     serializer_class = IssueSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title',)
     pagination_class = LargeResultsSetPagination
     lookup_field = 'slug'
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         qs = self.queryset
         if self.request.method == "POST":
             return qs
         # Add like count
-        qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0)))
+        qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0), distinct=True))
         # Add comment count
-        qs = qs.annotate(comment_count=Count('comment'))
+        qs = qs.annotate(comment_count=Count('comment', distinct=True))
         # Add if user has liked this issue
         if self.request.user and self.request.user.is_authenticated:
-            qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user)))
+            qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user), distinct=True))
         return qs
     
     def perform_create(self, serializer):
@@ -88,7 +88,7 @@ class IssueViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
