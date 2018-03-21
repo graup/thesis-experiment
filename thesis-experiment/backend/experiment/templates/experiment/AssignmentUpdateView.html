@@ -11,6 +11,18 @@
 {% block content %}
 <div id="content-main">
 
+<div class="assignment-stats">
+  {% for t in stats %}
+  <div class="assignment" style="flex: {% widthratio t.display_ratio 1 100  %}">
+    <strong>{{t.label}}</strong><br>
+    N={{t.count}}
+    ({% widthratio t.ratio 1 100 %}%, target: {% widthratio t.target_assignment_ratio 1 100 %}%)
+  </div>
+  <div class="assignment-distance" style="flex: {% widthratio t.ratio_distance 1 100  %}">
+  </div>
+  {% endfor %}
+</div>
+
 <form method="post">{% csrf_token %}
 <div class="inline-group">
   <div class="tabular inline-related">
@@ -75,6 +87,29 @@
   }
   .assignment-table td ul li label:hover {
     background-color: #f0f0f0;
+  }
+
+  .assignment-stats {
+    width: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    margin-bottom: 20px;
+  }
+  .assignment-stats .assignment {
+    border-left: 4px solid #777;
+    padding: 10px;
+    font-size: 95%;
+    white-space: nowrap;
+  }
+  .assignment-stats .assignment-distance {
+    text-align: center;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      #f39696 10px,
+      #f39696 20px
+    );
   }
 </style>
 

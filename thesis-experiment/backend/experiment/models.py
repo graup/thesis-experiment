@@ -12,6 +12,7 @@ class Treatment(models.Model):
     name = models.SlugField(unique=True)
     label = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
+    target_assignment_ratio = models.FloatField(default=0)
 
     objects = models.Manager()
     active_treatments = ActiveManager()

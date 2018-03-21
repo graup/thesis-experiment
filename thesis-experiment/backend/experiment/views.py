@@ -3,13 +3,14 @@ from django.urls import reverse
 from django import forms
 from django.http import HttpResponseRedirect
 from .models import Assignment, Treatment
-from .treatments import get_default_treatment
+from .treatments import get_default_treatment, auto_assign_user, assignment_stats
 from django.contrib.auth.models import User
 from django.db.models import Max
 from django.contrib import admin
 
 class AssignmentForm(forms.ModelForm):
-    treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect)
+    treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect, required=False)
+    auto_assign = forms.BooleanField(required=False)
 
     class Meta:
         model = Assignment
@@ -41,13 +42,19 @@ class AssignmentUpdateView(TemplateView):
             context['formset'] = AssignmentFormSet(queryset=qs, initial=initials)
         # Add Django Admin context
         context.update(admin.site.each_context(self.request))
+        # Add stats
+        context.update(stats=assignment_stats())
         return context
 
     def post(self, form):
         context = self.get_context_data()
         formset = context['formset']
         if formset.is_valid():
-            formset.save()
+            for form in formset:
+                if form.cleaned_data['auto_assign']:
+                    auto_assign_user(form.cleaned_data['user'])
+                else:
+                    form.save()
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data())
