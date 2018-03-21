@@ -123,7 +123,9 @@ header {
   > :last-child {
     /* put a copy of the first item here to achieve equal margins */
     margin-left: auto;
-    visibility: hidden;
+    &:not(.visible) {
+      visibility: hidden;
+    }
   }
 
   @media (min-width: 600px) {

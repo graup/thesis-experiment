@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     checkNotifications() {
+      if (!this.isAuthenticated) return;
       console.log('checking for updates...');
       apiGet('users/me/updates/', {params: {since: this.lastChecked}}).then((resp) => {
         if (resp.data.length > 0) {

@@ -49,7 +49,7 @@ class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         # Add like count
         qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0), distinct=True))
         # Add comment count
-        qs = qs.annotate(comment_count=Count('comment', distinct=True))
+        qs = qs.annotate(comment_count=Count('comment', filter=Q(comment__deleted_date__isnull=True), distinct=True))
         # Add if user has liked this issue
         if self.request.user and self.request.user.is_authenticated:
             qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user), distinct=True))
@@ -84,7 +84,23 @@ class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         obj = self.get_object()
         obj.set_user_liked(self.request.user, self.request.data['liked'])
         obj.like_count = obj.tag_set.filter(kind=0).count()
-        obj.comment_count = obj.comment_set.count()
+        obj.comment_count = obj.comment_set.filter(deleted_date__isnull=True).count()
+        context = {
+            'request': request
+        }
+        serializer = IssueSerializer(obj, context=context)
+        return Response(serializer.data)
+    
+    @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
+    def flag(self, request, **kwargs):
+        self.kwargs = kwargs
+        if not self.request.user or not self.request.user.is_authenticated:
+            raise NotAuthenticated()
+
+        obj = self.get_object()
+        obj.flag(self.request.user, self.request.data['reason'])
+        obj.like_count = obj.tag_set.filter(kind=0).count()
+        obj.comment_count = obj.comment_set.filter(deleted_date__isnull=True).count()
         context = {
             'request': request
         }

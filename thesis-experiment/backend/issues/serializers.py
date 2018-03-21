@@ -18,7 +18,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'get_short_name', 'active_treatment',)
+        fields = ('id', 'username', 'get_short_name', 'active_treatment',)
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):

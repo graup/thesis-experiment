@@ -1,9 +1,12 @@
 <template>
   <div class="viewport feed has-header">
+    <Sheet ref="sheet">
+      <my-button v-on:click.native="flagIssue()" primary={true}>Flag inappropriate content</my-button>
+    </Sheet>
     <header>
       <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
       <div class="view-title">Idea Details</div>
-      <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
+      <div class="icon-button visible" v-on:click="showSheet()"><SubmenuIcon /></div>
     </header>
     <main class="content">
 
@@ -61,10 +64,12 @@
 <script>
 import Spinner from '@/components/elements/Spinner';
 import ChevronLeftIcon from "icons/chevron-left";
+import SubmenuIcon from "icons/flag-outline";
 import SendIcon from "icons/send";
 import {navigationMixins} from "@/mixins";
 import Issue from "@/components/elements/Issue";
 import CommentList from "@/components/elements/CommentList";
+import Sheet from "@/components/elements/Sheet";
 import autosize from 'autosize';
 import VuePullRefresh from 'vue-pull-refresh';
 
@@ -81,6 +86,7 @@ export default {
       commentMode: false,
       commentText: '',
       sendingComment: false,
+      sheetVisible: false,
     }
   },
   created () {
@@ -95,9 +101,21 @@ export default {
     Spinner,
     CommentList,
     SendIcon,
+    SubmenuIcon,
     VuePullRefresh,
+    Sheet,
   },
   methods: {
+    showSheet() {
+      this.$refs.sheet.show();
+    },
+    flagIssue() {
+      let reason = prompt('Why is this post inappropriate?');
+      this.$store.dispatch('flagIssue', { issue: this.issue, reason }).then(() => {
+        alert("Thank you for reporting this content.");
+        this.$refs.sheet.hide();
+      });
+    },
     onRefresh() {
       this.error = null;
       let slug = this.issue.slug || this.$props.slug;

@@ -12,10 +12,10 @@ export default {
   getters: {
   },
   mutations: {
-    setIssue(state, issue) {
+    setIssue(state, { issue }) {
       state.issues_by_id[issue.id] = issue;
     },
-    addIssue(state, issue) {
+    addIssue(state, { issue }) {
       state.issues_by_id[issue.id] = issue;
       state.issue_ids = [issue.id, ...state.issue_ids];
     },
@@ -60,7 +60,7 @@ export default {
       return new Promise((resolve, reject) => {
         apiGet(`issues/${slug}/`).then((response) => {
           // Update store and resolve promise
-          commit('setIssue', response.data);
+          commit('setIssue', { issue: response.data });
           resolve(response.data);
         }).catch(reject);
       });
@@ -78,7 +78,12 @@ export default {
       return new Promise((resolve, reject) => {
         apiPost('issues/', issue).then((response) => {
           // Update store and resolve promise
-          commit('addIssue', response.data);
+          commit('addIssue', {
+            issue: response.data,
+            meta: {
+              analytics: [['event', 'issue', 'create']],
+            },
+          });
           resolve(response.data);
         }).catch(reject);
       });
@@ -86,8 +91,26 @@ export default {
     likeIssue({ commit }, { issue }) {
       return new Promise((resolve, reject) => {
         apiPost(`issues/${issue.slug}/like/`, { liked: issue.user_liked }).then(() => {
-          commit('setIssue', issue);
+          commit('setIssue', {
+            issue,
+            meta: {
+              analytics: [['event', 'issue', issue.user_liked ? 'like' : 'unlike']],
+            },
+          });
           resolve(issue);
+        }).catch(reject);
+      });
+    },
+    flagIssue({ commit }, { issue, reason }) {
+      return new Promise((resolve, reject) => {
+        apiPost(`issues/${issue.slug}/flag/`, { reason }).then(() => {
+          commit('setIssue', {
+            issue,
+            meta: {
+              analytics: [['event', 'issue', 'flag']],
+            },
+          });
+          resolve();
         }).catch(reject);
       });
     },
@@ -110,11 +133,17 @@ export default {
         }).catch(reject);
       });
     },
-    createComment({ dispatch }, { comment, slug }) {
+    createComment({ dispatch, commit, state }, { comment, slug }) {
       return new Promise((resolve, reject) => {
         apiPost('comments/', comment).then((response) => {
           // Update store and resolve promise
-          //commit('setComments', { slug, comments: response.data });
+          commit('setComments', {
+            slug,
+            comments: [response.data, ...state.comments_by_issue_slug[slug]],
+            meta: {
+              analytics: [['event', 'comment', 'create']],
+            },
+          });
           // Reload comments
           dispatch('fetchComments', { slug });
           resolve(response.data);

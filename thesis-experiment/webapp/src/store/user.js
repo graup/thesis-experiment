@@ -60,7 +60,7 @@ export default {
       state.isAuthenticated = payload.isAuthenticated;
       state.user_loaded = false;
     },
-    setUser(state, user) {
+    setUser(state, { user }) {
       state.user = user;
       state.user_loaded = true;
     },
@@ -77,7 +77,15 @@ export default {
           }
           apiGet('users/me/').then((response) => {
             const user = response.data;
-            commit('setUser', user);
+            commit('setUser', {
+              user,
+              meta: {
+                analytics: [
+                  ['set', 'userId', user.id],
+                  ['set', 'userTreatment', user.active_treatment.name],
+                ],
+              },
+            });
             resolve(user);
           }).catch(reject);
         }
@@ -97,7 +105,6 @@ export default {
           payload.user.set('grant_type', 'password');
           payload.user.set('client_id', 'webapp');
           payload.requestOptions = { config: { headers: { 'Content-Type': 'multipart/form-data' } } };
-          console.log('send login', payload);
           dispatch('login', payload).then(resolve).catch(reject);
         }).catch(reject);
       });

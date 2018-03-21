@@ -23,12 +23,12 @@ export default new Router({
     });
   },
   routes: [
-    { path: '/', component: Start },
-    { path: '/login', component: Login, meta: { unauth: true } },
-    { path: '/signup', component: Signup, meta: { unauth: true } },
-    { path: '/feed', component: Feed, meta: { auth: true } },
-    { path: '/faq', component: FAQ, meta: { auth: true } },
-    { path: '/my-posts', component: MyFeed, meta: { auth: true } },
+    { path: '/', name: 'start', component: Start },
+    { path: '/login', name: 'login', component: Login, meta: { unauth: true } },
+    { path: '/signup', name: 'signup', component: Signup, meta: { unauth: true } },
+    { path: '/feed', name: 'feed', component: Feed, meta: { auth: true } },
+    { path: '/faq', name: 'faq', component: FAQ, meta: { auth: true } },
+    { path: '/my-posts', name: 'my-posts', component: MyFeed, meta: { auth: true } },
     { path: '/issues/new', name: 'new-issue', component: NewIssue, meta: { auth: true } },
     {
       path: '/issues/:slug',

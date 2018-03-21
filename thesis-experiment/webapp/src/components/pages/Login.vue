@@ -18,9 +18,10 @@
           <div class="form-group">
             <input id="password" class="form-input" type="password" v-model="password" required />
             <label class="form-label" for="password">Password</label>
+            <div class="error" v-if="error">{{error}}</div>
           </div>
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
-            <my-button text="Log in" primary={true} v-on:click.native.capture="login" />
+            <my-button text="Log in" primary={true} v-on:click.native.capture="login" v-bind:loading="loading" />
           </div>
         </form>
       </div>
@@ -41,7 +42,7 @@ export default {
     return {
       username: '',
       password: '',
-      errors: {},
+      error: false,
       loading: false,
     };
   },
@@ -53,6 +54,7 @@ export default {
   methods: {
     login() {
       this.$data.loading = true;
+      this.$data.error = false;
       const data = new FormData();
       data.set('username', this.$data.username);
       data.set('password', this.$data.password);
@@ -62,7 +64,7 @@ export default {
       this.$store.dispatch('login', { user: data, requestOptions }).then(() => {
         this.$router.push('feed');
       }).catch(error => {
-        this.$data.errors = error.response.data;
+        this.$data.error = error.response.data.error_description;
         this.$data.loading = false;
       });
     },

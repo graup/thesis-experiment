@@ -4,6 +4,7 @@ import VueLocalStorage from 'vue-localstorage';
 import VueMoment from 'vue-moment';
 import VueI18n from 'vue-i18n';
 import Toasted from 'vue-toasted';
+import VueAnalytics from 'vue-analytics';
 
 import Logo from '@/components/elements/Logo';
 import Button from '@/components/elements/Button';
@@ -13,6 +14,14 @@ import router from './router';
 import store from './store';
 
 Vue.config.productionTip = false;
+
+Vue.use(VueAnalytics, {
+  id: process.env.GA_ID,
+  router,
+  autoTracking: {
+    pageviewOnLoad: false,
+  },
+});
 
 Vue.use(Vue2TouchEvents);
 Vue.use(VueLocalStorage, { bind: true });

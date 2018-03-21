@@ -46,6 +46,11 @@ class Issue(models.Model):
             Tag.objects.filter(issue=self, author=user, kind=0).delete()
         self.user_liked = liked
 
+    def flag(self, user, reason):
+        tag = Tag(issue=self, author=user, kind=1, data=reason)
+        tag.save()
+        return tag
+
     class Meta:
         ordering = ('-created_date',)
         verbose_name = _("issue")
@@ -61,6 +66,7 @@ class Tag(models.Model):
     kind = models.IntegerField(default=0, choices=KIND_CHOICES)
     value = models.IntegerField(default=1)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    data = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return '<%s> %ss <%s>' % (self.author, self.get_kind_display(), self.issue)
