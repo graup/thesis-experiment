@@ -9,6 +9,8 @@ from .models import Issue
 from rest_framework.pagination import LimitOffsetPagination
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
+from datetime import datetime
+import pytz
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
@@ -60,6 +62,7 @@ class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
 
     @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
     def comments(self, request, **kwargs):
+        """Show non-deleted comments for this issue"""
         self.kwargs = kwargs
         if not self.request.user or not self.request.user.is_authenticated:
             raise NotAuthenticated()
@@ -68,7 +71,8 @@ class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         context = {
             'request': request
         }
-        serializer = CommentSerializer(obj.comment_set, many=True, context=context)
+        qs = obj.comment_set.filter(deleted_date__isnull=True)
+        serializer = CommentSerializer(qs, many=True, context=context)
         return Response(serializer.data)
     
     @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
@@ -102,4 +106,27 @@ class UserViewSet(viewsets.GenericViewSet):
             'request': request
         }
         serializer = UserSerializer(obj, context=context)
+        return Response(serializer.data)
+    
+    @list_route(url_path='me/updates', methods=['get'])
+    def me_updates(self, request, pk=None):
+        if not self.request.user or not self.request.user.is_authenticated:
+            raise NotAuthenticated()
+
+        since_ts = int(request.query_params['since'])
+        since_dt = datetime.utcfromtimestamp(since_ts/1000.0).replace(tzinfo=pytz.utc)
+        
+        # Find issues with new comments
+        issues = Issue.objects.filter(
+            author=self.request.user,
+            comment__created_date__gte=since_dt,
+            comment__deleted_date__isnull=True
+        ).exclude(
+            comment__author=self.request.user
+        )
+
+        context = {
+            'request': request
+        }
+        serializer = IssueSerializer(issues, many=True, context=context)
         return Response(serializer.data)

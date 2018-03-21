@@ -31,6 +31,9 @@ export default {
       state.comments_by_issue_slug[slug] = comments;
       state.loaded_comments[slug] = true;
     },
+    markCommentsDirty(state, { slug }) {
+      state.loaded_comments[slug] = false;
+    },
   },
   actions: {
     getIssue(context, payload) {

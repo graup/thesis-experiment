@@ -44,7 +44,7 @@
     <footer>
       <div class="call-to-action">
         <div v-if="!commentMode">
-          <p v-if="user.active_treatment.name=='orientation_autonomy'">
+          <p v-if="user.active_treatment && user.active_treatment.name=='orientation_autonomy'">
             Let's share our diverse viewpoints! 
           </p>
           <my-button text="Leave a comment" primary={true} v-on:click.native="toggleCommentMode()" />

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <NotificationCenter />
     <side-menu />
     <transition :name="transitionName">
       <router-view class="child-view" v-bind:class="{'menu-opened': isMenuOpened}" />
@@ -10,6 +11,7 @@
 <script>
 import 'normalize.css';
 import SideMenu from '@/components/elements/SideMenu';
+import NotificationCenter from '@/components/elements/NotificationCenter';
 import {navigationMixins} from "@/mixins";
 
 export default {
@@ -33,6 +35,7 @@ export default {
   },
   components: {
     'side-menu': SideMenu,
+    NotificationCenter,
   },
 };
 </script>
@@ -295,5 +298,29 @@ footer {
 
 .viewport.menu-opened > * {
   transform: translateX(200px);
+}
+
+/* toasts */
+.toasted-container.top-center {
+  width: 85vw;
+  max-width: 350px;
+}
+.toasted-container .toasted {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.toasted.primary {
+  font-weight: normal;
+  padding: 10px 12px;
+}
+.toasted-container .toasted .action {
+  margin: 0;
+  padding: 0;
+}
+.toasted.outline .action {
+  color: #386b8d;
 }
 </style>

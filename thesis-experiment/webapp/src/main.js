@@ -3,6 +3,7 @@ import Vue2TouchEvents from 'vue2-touch-events';
 import VueLocalStorage from 'vue-localstorage';
 import VueMoment from 'vue-moment';
 import VueI18n from 'vue-i18n';
+import Toasted from 'vue-toasted';
 
 import Logo from '@/components/elements/Logo';
 import Button from '@/components/elements/Button';
@@ -17,6 +18,13 @@ Vue.use(Vue2TouchEvents);
 Vue.use(VueLocalStorage, { bind: true });
 Vue.use(VueMoment);
 Vue.use(VueI18n);
+
+Vue.use(Toasted, {
+  theme: 'primary',
+  duration: 10000, // 10s
+  position: 'top-center',
+  singleton: true,
+});
 
 Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);
