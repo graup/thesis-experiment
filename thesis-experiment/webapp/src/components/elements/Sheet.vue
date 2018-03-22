@@ -67,6 +67,9 @@ export default {
     padding: 20px;
     text-align: center;
 
+    max-height: 70vh;
+    overflow: scroll;
+
     transform: translateY(100%);
     transition: all .25s;
   }

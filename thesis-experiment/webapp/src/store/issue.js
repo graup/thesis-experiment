@@ -81,7 +81,7 @@ export default {
           commit('addIssue', {
             issue: response.data,
             meta: {
-              analytics: [['event', 'issue', 'create']],
+              analytics: [['event', 'issue', 'create', response.data.slug]],
             },
           });
           resolve(response.data);
@@ -94,7 +94,7 @@ export default {
           commit('setIssue', {
             issue,
             meta: {
-              analytics: [['event', 'issue', issue.user_liked ? 'like' : 'unlike']],
+              analytics: [['event', 'issue', issue.user_liked ? 'like' : 'unlike', issue.slug]],
             },
           });
           resolve(issue);
@@ -107,7 +107,7 @@ export default {
           commit('setIssue', {
             issue,
             meta: {
-              analytics: [['event', 'issue', 'flag']],
+              analytics: [['event', 'issue', 'flag', issue.slug]],
             },
           });
           resolve();
@@ -141,7 +141,7 @@ export default {
             slug,
             comments: [response.data, ...state.comments_by_issue_slug[slug]],
             meta: {
-              analytics: [['event', 'comment', 'create']],
+              analytics: [['event', 'comment', 'create', slug]],
             },
           });
           // Reload comments
