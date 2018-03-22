@@ -314,7 +314,7 @@ footer {
   flex-direction: column;
   align-items: flex-start;
 }
-.toasted.primary {
+.toasted-container .toasted.primary {
   font-weight: normal;
   padding: 10px 12px;
 }
@@ -322,7 +322,5 @@ footer {
   margin: 0;
   padding: 0;
 }
-.toasted.outline .action {
-  color: #386b8d;
-}
+
 </style>
