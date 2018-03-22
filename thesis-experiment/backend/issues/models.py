@@ -18,6 +18,15 @@ class Category(models.Model):
         verbose_name_plural = _("categories")
 
 
+class Location(models.Model):
+    lat = models.FloatField(null=True, blank=True)
+    lon = models.FloatField(null=True, blank=True)
+    name = models.CharField(max_length=250)
+    external_id = models.CharField(max_length=250, db_index=True)
+
+    def __str__(self):
+        return self.name
+
 class Issue(models.Model):
     "A user-generated issue"
     title = models.CharField(max_length=250)
@@ -27,6 +36,7 @@ class Issue(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     categories = models.ManyToManyField(Category)
     slug = AutoSlugField(populate_from='title', unique=True)
+    location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title

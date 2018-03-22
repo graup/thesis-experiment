@@ -51,7 +51,7 @@
           <div class="form-group">
             <p>Attachments</p>
             <my-button text="Location" v-on:click.native.capture="showNearPlaces" icon={true}><LocationIcon /></my-button>
-            {{location}}
+            {{location.name}}
           </div>
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
             <my-button text="Continue" primary={true} v-on:click.native.capture="createIssue" />
@@ -84,7 +84,7 @@ export default {
     return {
       title: '',
       text: '',
-      location: '',
+      location: {},
       categories: [1],
       errors: {},
       loading: false,
@@ -95,7 +95,14 @@ export default {
   methods: {
     createIssue() {
       this.$data.loading = true;
-      const data = { title: this.$data.title, text: this.$data.text, categories: this.$data.categories };
+      let data = {
+        title: this.$data.title,
+        text: this.$data.text,
+        categories: this.$data.categories,
+      };
+      if (Object.keys(this.$data.location).length) {
+        data.location = this.$data.location;
+      }
       this.$store.dispatch('createIssue', { issue: data }).then((issue) => {
         this.$router.push({ name: 'issue-detail', params: { slug: issue.slug, item: issue }});
       }).catch(error => {
@@ -136,7 +143,12 @@ export default {
       }
     },
     selectPlace(place) {
-      this.location = place.tags.name;
+      this.location = {
+        'name': place.tags.name,
+        'external_id': place.id,
+        'lat': place.center.lat,
+        'lon': place.center.lon,
+      };
       this.$refs.sheet.hide();
     },
   },

@@ -112,7 +112,7 @@ header {
   .view-title {
     /*flex: 1;*/
     text-align: center;
-    line-height: 45px;
+    line-height: 50px;
     font-weight: bold;
     text-transform: uppercase;
   }
@@ -138,7 +138,7 @@ header {
 }
 .viewport.has-header {
   main {
-    margin-top: 45px;
+    margin-top: 50px;
   }
 }
 

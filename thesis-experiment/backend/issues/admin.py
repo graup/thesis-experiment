@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models.functions import Now
 from django.urls import reverse
 from django.utils.safestring import mark_safe 
-from .models import Category, Issue, Comment, Tag
+from .models import Category, Issue, Comment, Tag, Location
 
 admin.site.register(Category, admin.ModelAdmin)
 
@@ -53,3 +53,4 @@ class IssueAdmin(admin.ModelAdmin):
         CommentInline,
     ]
 admin.site.register(Issue, IssueAdmin)
+admin.site.register(Location, admin.ModelAdmin)

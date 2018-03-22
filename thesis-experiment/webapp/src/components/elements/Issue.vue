@@ -4,6 +4,11 @@
     <div class="issue-detail" v-if="expanded">
       <p class="issue-text">{{item.text}}</p>
     </div>
+    <div class="issue-location" v-if="item.location && expanded">
+      <LocationIcon /> {{item.location.name}}
+      <iframe class="map" width="100%" height="150" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+      :src="'http://www.openstreetmap.org/export/embed.html?&marker='+item.location.lat+'%2C'+item.location.lon+'&layers=ND&bbox='+location_bbox.join('%2C')"></iframe>
+    </div>
     <div class="issue-stats">
       <span class="icon-with-text" v-on:click.capture.stop="toggleLike">
         <span class="like-container" v-bind:class="{liked: item.user_liked}">
@@ -28,9 +33,11 @@
 import HeartIcon from 'icons/heart-outline';
 import HeartFilledIcon from 'icons/heart';
 import CommentIcon from 'icons/comment-outline';
+import LocationIcon from "icons/map-marker";
 import PersonIcon from 'icons/account-circle';
 import {completeTutorial} from "@/utils/tutorials";
 import {navigationMixins} from "@/mixins";
+import {getBBox} from "@/utils/geo";
 
 export default {
   mixins: [navigationMixins],
@@ -41,6 +48,9 @@ export default {
     }
   },
   computed: {
+    location_bbox() {
+      return getBBox(this.$props.item.location.lat, this.$props.item.location.lon, 200);
+    },
     isAuthor() {
       return this.user.username == this.$props.item.author.username;
     }
@@ -71,6 +81,7 @@ export default {
     HeartFilledIcon,
     CommentIcon,
     PersonIcon,
+    LocationIcon,
   },
 };
 </script>
@@ -104,6 +115,27 @@ export default {
 
   :last-child {
     margin-left: auto;
+  }
+}
+.issue-location {
+  border-top: 1px solid #eee;
+  padding: .75em;
+  line-height: 1;
+  font-size: .95em;
+
+  .map {
+    margin-top: .5em;
+  }
+
+  .material-design-icon {
+    margin-right: -3px;
+    svg {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      transform: translateY(-2px);
+      fill: #386b8d;
+    }
   }
 }
 

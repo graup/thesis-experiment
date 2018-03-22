@@ -19,6 +19,23 @@ function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
+function getCoordOffset(what, lat, lon, offset) {
+  const earthRadius = 6378137;
+  const coord = [lat, lon];
+  const radOff = what === 0 ? offset / earthRadius : offset / (earthRadius * Math.cos(Math.PI * coord[0] / 180));
+  return coord[what] + radOff * (180 / Math.PI);
+}
+
+function getBBox(lat, lon, area) {
+  const offset = area / 2;
+  return [
+    getCoordOffset(1, lat, lon, -offset),
+    getCoordOffset(0, lat, lon, -offset),
+    getCoordOffset(1, lat, lon, offset),
+    getCoordOffset(0, lat, lon, offset),
+  ]; // 0 = minlon, 1 = minlat, 2 = maxlon, 3 = maxlat
+}
+
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = deg2rad(lat2-lat1);
@@ -50,4 +67,5 @@ const getPlacesAroundPoint = (lat, lon) =>
 
 export {
   getPlacesAroundPoint,
+  getBBox
 };
