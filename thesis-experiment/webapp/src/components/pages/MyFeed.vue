@@ -22,8 +22,16 @@
 
         <IssueList v-bind:items="issues" v-on::click.native="completeTutorial('feed')" />
 
+        <div class="empty-state" v-if="!loading && !issues.length">
+          Nothing yet. <br>
+          Post your first idea now!
+        </div>
+
       </vue-pull-refresh>
     </main>
+    <footer>
+      <FeedCallToAction treatment="user.active_treatment.name=='orientation_autonomy'" />
+    </footer>
   </div>
 </template>
 
@@ -33,6 +41,7 @@ import ErrorIcon from "icons/cloud-off-outline";
 import Spinner from '@/components/elements/Spinner';
 import VuePullRefresh from 'vue-pull-refresh';
 import IssueList from "@/components/elements/IssueList";
+import FeedCallToAction from "@/components/elements/FeedCallToAction";
 import {navigationMixins} from "@/mixins";
 
 export default {
@@ -78,6 +87,7 @@ export default {
     IssueList,
     VuePullRefresh,
     Spinner,
+    FeedCallToAction,
   },
 };
 </script>
