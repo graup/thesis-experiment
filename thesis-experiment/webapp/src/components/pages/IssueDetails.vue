@@ -111,6 +111,7 @@ export default {
     },
     flagIssue() {
       let reason = prompt('Why is this post inappropriate?');
+      if (!reason) return;
       this.$store.dispatch('flagIssue', { issue: this.issue, reason }).then(() => {
         alert("Thank you for reporting this content.");
         this.$refs.sheet.hide();
