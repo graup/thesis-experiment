@@ -42,7 +42,7 @@ export default {
         this.lastChecked = (new Date()).getTime();
         setTimeout(() => {
           this.checkNotifications();
-        }, 20000);
+        }, 10000);
       }).catch((error) => {
         // Back off a little bit, but try again later
         console.error(error);

@@ -12,7 +12,7 @@
 
         <form action="" class="form">
           <div class="form-group">
-            <input id="username" class="form-input" type="text" v-model="username" required autocorrect="off" autocapitalize="none" />
+            <input id="username" class="form-input" type="text" v-model="username" required autocorrect="off" autocapitalize="off" />
             <label class="form-label" for="username">Username</label>
             <div class="error" v-if="errors.username">{{errors.username.join(' ')}}</div>
             <div class="help">Will appear next to your ideas and comments.</div>

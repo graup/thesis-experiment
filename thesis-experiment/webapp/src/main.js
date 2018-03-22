@@ -39,7 +39,7 @@ Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);
 
 router.beforeEach((to, from, next) => {
-  console.log('Route transition', from.path, '->', to.path);
+  //console.log('Route transition', from.path, '->', to.path);
   const authRequired = to.matched.some(route => route.meta.auth);
   const unauthRequired = to.matched.some(route => route.meta.unauth);
   const authed = store.state.user.isAuthenticated;
