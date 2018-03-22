@@ -12,13 +12,13 @@
 
         <form action="" class="form">
           <div class="form-group">
-            <input id="username" class="form-input" type="text" v-model="username" required />
+            <input id="username" class="form-input" type="text" v-model="username" required autocorrect="off" autocapitalize="none" />
             <label class="form-label" for="username">Username</label>
             <div class="error" v-if="errors.username">{{errors.username.join(' ')}}</div>
             <div class="help">Will appear next to your ideas and comments.</div>
           </div>
           <div class="form-group">
-            <input id="email" class="form-input" type="text" v-model="email" required />
+            <input id="email" class="form-input" type="email" v-model="email" required />
             <label class="form-label" for="email">Email</label>
             <div class="error" v-if="errors.email">{{errors.email.join(' ')}}</div>
             <div class="help">Will be kept private.</div>

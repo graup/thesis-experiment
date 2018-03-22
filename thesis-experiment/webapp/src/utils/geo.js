@@ -1,6 +1,9 @@
 import { apiGet } from './api';
 
-let overpass_api_url = 'https://overpass-api.de/api/interpreter';
+const searchDistance = 700;
+const searchCenter = [36.3708, 127.3626];
+
+const overpassApiUrl = 'https://overpass-api.de/api/interpreter';
 
 const overpassScript = (lat, lon, distance) => `
 [timeout:5][out:json];
@@ -22,8 +25,8 @@ function deg2rad(deg) {
 function getCoordOffset(what, lat, lon, offset) {
   const earthRadius = 6378137;
   const coord = [lat, lon];
-  const radOff = what === 0 ? offset / earthRadius : offset / (earthRadius * Math.cos(Math.PI * coord[0] / 180));
-  return coord[what] + radOff * (180 / Math.PI);
+  const radOff = what === 0 ? offset / earthRadius : offset / (earthRadius * Math.cos((Math.PI * coord[0]) / 180));
+  return coord[what] + (radOff * (180 / Math.PI));
 }
 
 function getBBox(lat, lon, area) {
@@ -38,13 +41,13 @@ function getBBox(lat, lon, area) {
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
-  const dLat = deg2rad(lat2-lat1);
-  const dLon = deg2rad(lon2-lon1); 
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2)
-  ; 
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    (Math.sin(dLat / 2) * Math.sin(dLat / 2)) +
+    (Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2))
+  ;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in km
   return d;
@@ -59,7 +62,8 @@ const sortByDistance = (places, lat, lon) =>
 
 const getPlacesAroundPoint = (lat, lon) =>
   new Promise((resolve, reject) => {
-    apiGet(overpass_api_url, { params: { data: overpassScript(lat, lon, 300) } }).then((resp) => {
+    const params = { data: overpassScript(searchCenter[0], searchCenter[1], searchDistance) };
+    apiGet(overpassApiUrl, { params }).then((resp) => {
       const places = sortByDistance(resp.data.elements, lat, lon);
       resolve(places);
     }).catch(reject);
@@ -67,5 +71,5 @@ const getPlacesAroundPoint = (lat, lon) =>
 
 export {
   getPlacesAroundPoint,
-  getBBox
+  getBBox,
 };
