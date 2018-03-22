@@ -51,6 +51,7 @@
           <div class="form-group">
             <p>Attachments</p>
             <my-button text="Location" v-on:click.native.capture="showNearPlaces" icon={true}><LocationIcon /></my-button>
+            {{location}}
           </div>
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
             <my-button text="Continue" primary={true} v-on:click.native.capture="createIssue" />
@@ -83,6 +84,7 @@ export default {
     return {
       title: '',
       text: '',
+      location: '',
       categories: [1],
       errors: {},
       loading: false,
@@ -134,7 +136,7 @@ export default {
       }
     },
     selectPlace(place) {
-      console.log('selected', place);
+      this.location = place.tags.name;
       this.$refs.sheet.hide();
     },
   },
