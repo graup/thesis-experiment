@@ -6,8 +6,7 @@
     </div>
     <div class="issue-location" v-if="item.location && expanded">
       <LocationIcon /> {{item.location.name}}
-      <iframe class="map" width="100%" height="150" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-      :src="'http://www.openstreetmap.org/export/embed.html?&marker='+item.location.lat+'%2C'+item.location.lon+'&layers=ND&bbox='+location_bbox.join('%2C')"></iframe>
+      <div class="map" :style="'background-image: url(http://staticmap.openstreetmap.de/staticmap.php?center='+item.location.lat+'%2C'+item.location.lon+'&zoom=16&size=400x200&maptype=mapnik&markers='+item.location.lat+'%2C'+item.location.lon+'%2Col-marker-blue)'" />
     </div>
     <div class="issue-stats">
       <span class="icon-with-text" v-on:click.capture.stop="toggleLike">
@@ -125,6 +124,9 @@ export default {
 
   .map {
     margin-top: .5em;
+    width: 100%;
+    height: 150px;
+    background-position: center center;
   }
 
   .material-design-icon {
