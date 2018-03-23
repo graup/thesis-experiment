@@ -3,6 +3,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model # If used custom user model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from experiment.treatments import auto_assign_user
 
 User = get_user_model()
 
@@ -30,5 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        auto_assign_user(user)
 
         return user
