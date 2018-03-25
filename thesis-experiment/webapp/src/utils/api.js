@@ -8,7 +8,12 @@ function apiPost(url, params) {
   return client.post(url, params);
 }
 
+function apiDelete(url, params) {
+  return client.delete(url, params);
+}
+
 export {
   apiGet,
   apiPost,
+  apiDelete,
 };

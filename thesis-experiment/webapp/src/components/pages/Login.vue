@@ -2,7 +2,7 @@
   <div class="viewport hello has-header">
     <header>
       <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
-      <div class="view-title">Log in</div>
+      <div class="view-title">{{$t('login')}}</div>
       <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
     </header>
 
@@ -13,15 +13,15 @@
         <form action="" class="form">
           <div class="form-group">
             <input id="username" class="form-input" type="text" v-model="username" required />
-            <label class="form-label" for="username">Username or email</label>
+            <label class="form-label" for="username">{{$t('username-email')}}</label>
           </div>
           <div class="form-group">
             <input id="password" class="form-input" type="password" v-model="password" required />
-            <label class="form-label" for="password">Password</label>
+            <label class="form-label" for="password">{{$t('password')}}</label>
             <div class="error" v-if="error">{{error}}</div>
           </div>
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
-            <my-button text="Log in" primary={true} v-on:click.native.capture="login" v-bind:loading="loading" />
+            <my-button :text="$t('login')" primary={true} v-on:click.native.capture="login" v-bind:loading="loading" />
           </div>
         </form>
       </div>
@@ -30,6 +30,23 @@
     <footer></footer>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "username-email": "Username or email",
+    "password": "Password",
+    "login": "Log in",
+    "login-button": "Log in"
+  },
+  "ko": {
+    "username-email": "아이디 또는 이메일",
+    "password": "비밀먼호",
+    "login": "로그인",
+    "login-button": "로그인하기"
+  }
+}
+</i18n>
 
 <script>
 import ChevronLeftIcon from "icons/chevron-left";

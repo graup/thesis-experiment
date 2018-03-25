@@ -2,29 +2,27 @@
   <div class="viewport feed has-header" v-touch:swipe.right="showMenu" v-touch:swipe.left="hideMenu">
     <header>
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
-      <div class="view-title">My Ideas</div>
+      <div class="view-title">{{$t('my-ideas')}}</div>
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
     </header>
     <main class="content">
-      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: 'Pull to reload', readyLabel: 'Release to reload', loadingLabel: 'Loading...', pullDownHeight: 60}">
+      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: $t('pull-to-reload'), readyLabel: $t('release-to-reload'), loadingLabel: $t('loading'), pullDownHeight: 60}">
 
         <transition name="fade-up">
-          <div class="loading" v-if="loading">
+          <div class="big-loading" v-if="loading">
             <Spinner />
-            Loading...
+            {{$t('loading')}}
           </div>
-          <div class="loading loading-error" v-if="error">
+          <div class="big-loading loading-error" v-if="error">
             <ErrorIcon /><br>
-            An error occured while loading.<br>
-            Try to reload this page.
+            <span v-html="$t('loading-error')"></span>
           </div>
         </transition>
 
         <IssueList v-bind:items="issues" v-on::click.native="completeTutorial('feed')" />
 
-        <div class="empty-state" v-if="!loading && !issues.length">
-          Nothing yet. <br>
-          Post your first idea now!
+        <div class="empty-state" v-if="!loading && !issues.length" v-html="$t('empty-state')">
+          
         </div>
 
       </vue-pull-refresh>
@@ -34,6 +32,22 @@
     </footer>
   </div>
 </template>
+
+<i18n src='../../locales.json'></i18n>
+<i18n>
+{
+  "en": {
+    "my-ideas": "My Ideas",
+    "loading-error": "An error occurred while loading.<br>Try to reload this page.",
+    "empty-state": "Nothing yet. <br>Post your first idea now!"
+  },
+  "ko": {
+    "my-ideas": "내 아이디어",
+    "loading-error": "로드하는 동안 오류가 발생했습니다.<br>이 페이지를 새로 고침해보십시오.",
+    "empty-state": "아직 없습니다. <br> 지금 바로 첫 번째 아이디어를 게시하십시오!"
+  }
+}
+</i18n>
 
 <script>
 import MenuIcon from "icons/menu";

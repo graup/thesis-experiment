@@ -115,4 +115,22 @@ export default {
 
   }
 }
+
+.button-icon {
+  svg {
+    width: 20px;
+    height: 20px;
+    transform: translateY(-2px);
+  }
+}
+
+.button-list .button {
+  border: 1px solid #bbb;
+  background-color: #fff;
+  color: #333;
+
+  svg {
+    fill: #666;
+  }
+}
 </style>

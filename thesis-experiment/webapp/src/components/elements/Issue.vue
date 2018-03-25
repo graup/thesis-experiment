@@ -1,5 +1,23 @@
 <template>
   <div class="issue" v-bind:class="{expanded}">
+
+    <Sheet ref="sheet">
+      <div class="button-list">
+        <my-button v-on:click.native="flagIssue()"><FlagIcon class="button-icon" /> {{$t('report-issue')}}</my-button>
+        <my-button v-on:click.native="deleteIssue()" v-if="isAuthor"><DeleteIcon class="button-icon" /> {{$t('delete-issue')}}</my-button>
+      </div>
+    </Sheet>
+
+    <div class="issue-header" v-if="expanded">
+      <span class="actions">
+        <span v-on:click="showSheet"><SubmenuIcon fillColor="#888" /></span>
+      </span>
+      
+      <span class="icon-with-text">
+        <span v-bind:class="{isAuthor}"><PersonIcon /> {{item.author.username}}</span>
+        <span class="date">{{item.created_date | moment("from", "now")}}</span>
+      </span>
+    </div>
     <h2 class="issue-title" v-on:click="gotoDetails">{{item.title}}</h2>
     <div class="issue-detail" v-if="expanded">
       <p class="issue-text">{{item.text}}</p>
@@ -15,18 +33,32 @@
           <HeartFilledIcon fillColor="red" /> 
         </span> {{item.like_count}}
       </span>
-      <span class="icon-with-text">
+      <span class="icon-with-text" v-on:click.capture.stop="gotoDetails">
         <CommentIcon /> {{item.comment_count}}
-      </span>
-      <span class="icon-with-text">
-        <span class="date">{{item.created_date | moment("from", "now")}}</span>
-        <span v-bind:class="{isAuthor}"><PersonIcon /> {{item.author.username}}</span>
-        
-      </span>
-      
+      </span>     
+      <span></span>
     </div>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "issue-deleted": "The ideas was successfully deleted.",
+    "issue-reported": "Thank you for reporting this content.",
+    "report-issue": "Report inappropriate content",
+    "delete-issue": "Delete idea",
+    "report-reason": "Why is this post inappropriate?"
+  },
+  "ko": {
+    "issue-deleted": "아이디어는 성공적으로 삭제되었습니다.",
+    "issue-reported": "신고해주셔서 감사합니다.",
+    "report-issue": "부적절한 콘텐츠 신고하기",
+    "delete-issue": "아이디어 삭제하기",
+    "report-reason": "이 게시물이 부적절한 이유는 무엇입니까?"
+  }
+}
+</i18n>
 
 <script>
 import HeartIcon from 'icons/heart-outline';
@@ -34,6 +66,12 @@ import HeartFilledIcon from 'icons/heart';
 import CommentIcon from 'icons/comment-outline';
 import LocationIcon from "icons/map-marker";
 import PersonIcon from 'icons/account-circle';
+import SubmenuIcon from "icons/dots-horizontal";
+import FlagIcon from "icons/flag";
+import DeleteIcon from "icons/delete";
+import Sheet from "@/components/elements/Sheet";
+
+
 import {completeTutorial} from "@/utils/tutorials";
 import {navigationMixins} from "@/mixins";
 import {getBBox} from "@/utils/geo";
@@ -74,6 +112,26 @@ export default {
         }
       );
     },
+    showSheet() {
+      this.$refs.sheet.show();
+    },
+    flagIssue() {
+      let reason = prompt(this.$t('report-reason'));
+      if (!reason) return;
+      this.$store.dispatch('flagIssue', { issue: this.$props.item, reason }).then(() => {
+        alert(this.$t('issue-reported'));
+        this.$refs.sheet.hide();
+      });
+    },
+    deleteIssue() {
+      this.$store.dispatch('deleteIssue', { issue: this.$props.item }).then(() => {
+        this.$refs.sheet.hide();
+        this.gotoRoute({name: 'my-posts'});
+        this.$toasted.show(this.$t('issue-deleted'), {duration: 3000});
+      }).catch(error => {
+        alert('Failed. ' + error.response.data.detail);
+      })
+    },
   },
   components: {
     HeartIcon,
@@ -81,6 +139,10 @@ export default {
     CommentIcon,
     PersonIcon,
     LocationIcon,
+    SubmenuIcon,
+    Sheet,
+    FlagIcon,
+    DeleteIcon,
   },
 };
 </script>
@@ -114,6 +176,13 @@ export default {
 
   :last-child {
     margin-left: auto;
+  }
+}
+.issue-header {
+  padding: .75em .75em 0;
+
+  .actions {
+    float: right;
   }
 }
 .issue-location {

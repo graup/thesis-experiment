@@ -13,9 +13,8 @@
         <my-button :text="$t('login')" link-to="login" />
       </div>
 
-      <div v-if="!touchDevice" class="message warning">
-        This application is designed for use on mobile devices.<br>
-        Please visit this web site on a mobile device.
+      <div v-if="!touchDevice" class="message warning" v-html="mobile-browser-advice">
+        
       </div>
     </main>
     <footer></footer>
@@ -27,12 +26,14 @@
   "en": {
     "hello": "Join us in collecting important issues and ideas for the future of KAIST. We need everyone’s contribution!",
     "signup": "Sign up",
-    "login": "Log in"
+    "login": "Log in",
+    "mobile-browser-advice": "This application is designed for use on mobile devices.<br>Please visit this web site on a mobile device."
   },
   "ko": {
     "hello": "KAIST의 미래를위한 중요한 이슈와 아이디어를 수집하십시오. 모든 사람의 공헌이 필요합니다!",
     "signup": "회원 가입",
-    "login": "로그인"
+    "login": "로그인",
+    "mobile-browser-advice": "이 응용 프로그램은 모바일 장치에서 사용하도록 설계되었습니다. <br> 모바일 장치에서이 웹 사이트를 방문하십시오."
   }
 }
 </i18n>

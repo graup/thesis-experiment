@@ -8,17 +8,38 @@
     </div>
 
     <ul class="menu-items" v-if="isAuthenticated">
-      <li><a class="menu-item" v-on:click="gotoRoute('feed')">Recent Ideas</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('my-posts')">My Ideas</a></li>
-      <li><a class="menu-item" v-on:click="gotoRoute('faq')">FAQ</a></li>
-      <li><a class="menu-item" v-on:click="logout">Logout</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('feed')">{{$t('recent-ideas')}}</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('my-posts')">{{$t('my-ideas')}}</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('faq')">{{$t('faq')}}</a></li>
+      <li><a class="menu-item" v-on:click="logout">{{$t('logout')}}</a></li>
     </ul>
     <ul class="menu-items" v-if="!isAuthenticated">
-      <li><a class="menu-item" v-on:click="$router.push('login')">Log in</a></li>
-      <li><a class="menu-item" v-on:click="$router.push('signup')">Sign up</a></li>
+      <li><a class="menu-item" v-on:click="$router.push('login')">{{$t('login')}}</a></li>
+      <li><a class="menu-item" v-on:click="$router.push('signup')">{{$t('signup')}}</a></li>
     </ul>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "recent-ideas": "Recent Ideas",
+    "my-ideas": "My Ideas",
+    "faq": "FAQ",
+    "logout": "Log out",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "ko": {
+    "recent-ideas": "최근 아이디어",
+    "my-ideas": "내 아이디어",
+    "faq": "FAQ",
+    "logout": "로그아웃",
+    "login": "로그인",
+    "signup": "회원가입"
+  }
+}
+</i18n>
 
 <script>
 import {navigationMixins} from "@/mixins";

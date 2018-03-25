@@ -130,9 +130,9 @@ header {
 
   @media (min-width: 600px) {
     /* debugging on desktop */
-    max-width: 400px;
+    max-width: 420px;
     left: 50%;
-    margin-left: -200px;
+    margin-left: -210px;
   }
 
 }
@@ -191,6 +191,7 @@ footer {
   transition: transform 150ms ease-out, font-size 150ms ease-out;
 }
 
+
 :focus + .form-label,
 :valid + .form-label {
   transform: translateY(-125%);
@@ -239,7 +240,7 @@ footer {
   text-shadow: 0 1px 1px #fff;
 }
 
-.loading {
+.big-loading {
   text-align: center;
   font-size: 90%;
   padding: 3rem 0;

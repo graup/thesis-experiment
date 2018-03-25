@@ -2,29 +2,23 @@
   <div class="viewport feed has-header" v-touch:swipe.right="showMenu" v-touch:swipe.left="hideMenu">
     <header>
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
-      <div class="view-title">Recent Ideas</div>
+      <div class="view-title">{{$t('recent-ideas')}}</div>
       <div class="icon-button" v-on:click="toggleMenu"><MenuIcon /></div>
     </header>
     <main class="content">
-      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: 'Pull to reload', readyLabel: 'Release to reload', loadingLabel: 'Loading...', pullDownHeight: 60}">
+      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: $t('pull-to-reload'), readyLabel: $t('release-to-reload'), loadingLabel: $t('loading'), pullDownHeight: 60}">
 
-        <div class="tutorial-message" v-if="tutorial_feed">
-          <strong>Welcome to Many Ideas for KAIST!</strong><br>
-          We're happy to have you here.
-          On this page, you can see posts by other members.
-          Do you see anything you are interested in?<br>
-          Try tapping on a post.
+        <div class="tutorial-message" v-if="tutorial_feed" v-html="$t('tutorial-welcome')">
         </div>
 
         <transition name="fade-up">
-          <div class="loading" v-if="loading">
+          <div class="big-loading" v-if="loading">
             <Spinner />
-            Loading...
+            {{$t('loading')}}
           </div>
-          <div class="loading loading-error" v-if="error">
+          <div class="big-loading loading-error" v-if="error">
             <ErrorIcon /><br>
-            An error occured while loading.<br>
-            Try to reload this page.
+            <span v-html="$t('loading-error')"></span>
           </div>
         </transition>
 
@@ -37,6 +31,22 @@
     </footer>
   </div>
 </template>
+
+<i18n src='../../locales.json'></i18n>
+<i18n>
+{
+  "en": {
+    "recent-ideas": "Recent Ideas",
+    "loading-error": "An error occurred while loading.<br>Try to reload this page.",
+    "tutorial-welcome": "<strong>Welcome to Many Ideas for KAIST!</strong><br>We're happy to have you here. On this page, you can see ideas by other members. Do you see anything you are interested in?<br>Try tapping on a post."
+  },
+  "ko": {
+    "recent-ideas": "최근 아이디어",
+    "loading-error": "로드하는 동안 오류가 발생했습니다.<br>이 페이지를 새로 고침해보십시오.",
+    "tutorial-welcome": "<strong>KAIST를위한 Many Ideas 오신 것을 환영합니다!</strong> <br> We're happy to have you here. 이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있습니까? <br> 게시물을 두드려보십시오."
+  }
+}
+</i18n>
 
 <script>
 import MenuIcon from "icons/menu";

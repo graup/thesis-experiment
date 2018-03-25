@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from '../utils/api';
+import { apiGet, apiPost, apiDelete } from '../utils/api';
 
 export default {
   state: {
@@ -12,8 +12,12 @@ export default {
   getters: {
   },
   mutations: {
-    setIssue(state, { issue }) {
+    setIssue(state, { issue, deleted }) {
       state.issues_by_id[issue.id] = issue;
+      if (deleted) {
+        state.issues_by_id[issue.id] = null;
+        state.issue_ids = state.issue_ids.filter(i => i !== issue.id);
+      }
     },
     addIssue(state, { issue }) {
       state.issues_by_id[issue.id] = issue;
@@ -98,6 +102,20 @@ export default {
             },
           });
           resolve(issue);
+        }).catch(reject);
+      });
+    },
+    deleteIssue({ commit }, { issue }) {
+      return new Promise((resolve, reject) => {
+        apiDelete(`issues/${issue.slug}/`).then(() => {
+          commit('setIssue', {
+            issue,
+            deleted: true,
+            meta: {
+              analytics: [['event', 'issue', 'delete', issue.slug]],
+            },
+          });
+          resolve();
         }).catch(reject);
       });
     },

@@ -13,6 +13,8 @@ import App from './App';
 import router from './router';
 import store from './store';
 
+require('formdata-polyfill');
+
 Vue.config.productionTip = false;
 
 Vue.use(VueAnalytics, {
@@ -53,7 +55,7 @@ router.beforeEach((to, from, next) => {
 });
 
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: 'ko',
   fallbackLocale: 'en',
 });
 

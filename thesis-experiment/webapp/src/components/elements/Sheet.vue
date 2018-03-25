@@ -37,10 +37,11 @@ export default {
   right: 0;
   bottom: 0;
   
-  z-index: -999;
+  pointer-events: none;
+  z-index: 9999;
 
   &.visible {
-    z-index: 9999;
+    pointer-events: all;
   }
 
   .darken {
@@ -75,6 +76,19 @@ export default {
   }
   &.visible .content {
     transform: translateY(0%);
+  }
+}
+
+.button-list {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

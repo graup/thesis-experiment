@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import *
@@ -33,7 +33,7 @@ class CommentViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     pagination_class = LargeResultsSetPagination
     permission_classes = (IsAuthenticated,)
 
-class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
+class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Issue.objects
     serializer_class = IssueSerializer
     filter_backends = (filters.SearchFilter,)
@@ -59,6 +59,11 @@ class IssueViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         instance = serializer.save()
         instance.like_count = 0
         instance.comment_count = 0
+
+    def perform_destroy(self, instance):
+        if self.request.user != instance.author and not self.request.user.is_superuser: 
+            raise PermissionDenied()
+        instance.delete()
 
     @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
     def comments(self, request, **kwargs):

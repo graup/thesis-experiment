@@ -1,60 +1,59 @@
 <template>
   <div class="viewport post-issue has-header">
     <Sheet ref="sheet">
-      <div class="loading" v-if="locationLoading">
+      <div class="big-loading" v-if="locationLoading">
         <Spinner />
-        Finding places near you...
+        {{$t('searching-places')}}
       </div>
       
       <div v-if="errors.location">
         <p class="error">{{errors.location.join(' ')}}</p>
-        <my-button text="Try again" v-on:click.native.capture="showNearPlaces" />
-        <my-button text="Cancel" v-on:click.native.capture="$refs.sheet.hide()" primary={true} />
+        <my-button :text="$t('try-again')" v-on:click.native.capture="showNearPlaces" />
+        <my-button :text="$t('cancel')" v-on:click.native.capture="$refs.sheet.hide()" primary={true} />
       </div>
 
       <div v-if="nearPlaces.length">
-        <p>Select a place related to this idea</p>
+        <p>{{$t('select-place')}}</p>
         <ul class="near-places-list">
           <li v-for="place in nearPlaces" v-bind:key="place.id" v-on:click="selectPlace(place)">
             <span class="distance">{{Math.round(place.distance*1000)}}m</span>
             {{place.tags.name}}
           </li>
         </ul>
-        <my-button text="Cancel" v-on:click.native.capture="$refs.sheet.hide()" primary={true} />
+        <my-button :text="$t('cancel')" v-on:click.native.capture="$refs.sheet.hide()" primary={true} />
       </div>
     </Sheet>
 
 
     <header>
       <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
-      <div class="view-title">New Idea</div>
+      <div class="view-title">{{$t('new-idea')}}</div>
       <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
     </header>
     <main class="content">
       <p class="intro">
-        Everybody has great ideas that our community can benefit from.
-        Tell us what you think!
+        {{$t('intro-text')}}
       </p>
 
       <div class="form-wrapper form-wide">
         <form action="" class="form">
           <div class="form-group">
             <input id="title" class="form-input" type="text" v-model="title" required />
-            <label class="form-label" for="title">Title</label>
+            <label class="form-label" for="title">{{$t('title-label')}}</label>
             <div class="error" v-if="errors.title">{{errors.title.join(' ')}}</div>
           </div>
           <div class="form-group">
-            <textarea id="text" class="form-input" v-model="text" required></textarea>
-            <label class="form-label" for="text">Description</label>
+            <textarea id="text" class="form-input" v-model="text" required :placeholder="$t('description-placeholder')"></textarea>
+            <label class="form-label" for="text">{{$t('description-label')}}</label>
             <div class="error" v-if="errors.text">{{errors.text.join(' ')}}</div>
           </div>
           <div class="form-group">
-            <p>Attachments</p>
+            <p class="like-form-label">{{$t('attachments-label')}}</p>
             <my-button text="Location" v-on:click.native.capture="showNearPlaces" icon={true}><LocationIcon /></my-button>
             {{location.name}}
           </div>
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
-            <my-button text="Continue" primary={true} v-on:click.native.capture="createIssue" />
+            <my-button :text="$t('post-idea-button')" primary={true} v-on:click.native.capture="createIssue" />
           </div>
         </form>
       </div>
@@ -63,6 +62,37 @@
     <footer></footer>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "new-idea": "New Idea",
+    "intro-text": "What is your idea to make KAIST a better place? It could be about facilities, organization, social problems, ...",
+    "title-label": "What's your idea in one sentence?",
+    "description-label": "Describe your idea in a bit more detail.",
+    "description-placeholder": "For example, explain some reasons or expected outcomes.",
+    "attachments-label": "Attachments (optional)",
+    "post-idea-button": "Post Idea",
+    "select-place": "Select a place related to this idea",
+    "searching-places": "Finding places near you...",
+    "cancel": "Cancel",
+    "try-again": "Try again"
+  },
+  "ko": {
+    "new-idea": "새로운 아이디어",
+    "intro-text": "KAIST를 더 좋은 곳으로 만드는 당신의 생각은 무엇입니까? 그것은 시설, 조직, 사회 문제에 관한 것일 수 있습니다 ...",
+    "title-label": "한 문장으로 아이디어는 무엇입니까?",
+    "description-label": "아이디어를 좀 더 자세하게 설명하십시오.",
+    "description-placeholder": "예를 들어, 이유 또는 예상 결과를 설명하십시오.",
+    "attachments-label": "첨부 정보 (선택 사항)",
+    "post-idea-button": "아이디어 게시기",
+    "select-place": "이 아이디어와 관련된 장소를 선택하십시오.",
+    "searching-places": "근처에있는 장소를 찾는 중...",
+    "cancel": "취소",
+    "try-again": "다시 찾아보기"
+  }
+}
+</i18n>
 
 <script>
 import ChevronLeftIcon from "icons/chevron-left";

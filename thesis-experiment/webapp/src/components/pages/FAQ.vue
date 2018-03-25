@@ -30,6 +30,12 @@
   </div>
 </template>
 
+<i18n>
+{
+
+}
+</i18n>
+
 <script>
 import MenuIcon from "icons/menu";
 import {navigationMixins} from "@/mixins";

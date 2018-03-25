@@ -1,41 +1,33 @@
 <template>
   <div class="viewport feed has-header">
-    <Sheet ref="sheet">
-      <my-button v-on:click.native="flagIssue()" primary={true}>Flag inappropriate content</my-button>
-    </Sheet>
     <header>
       <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
-      <div class="view-title">Idea Details</div>
-      <div class="icon-button visible" v-on:click="showSheet()"><SubmenuIcon /></div>
+      <div class="view-title">{{$t('issue-details')}}</div>
+      <div class="icon-button" v-on:click="gotoRoute('/feed')"><ChevronLeftIcon /></div>
     </header>
     <main class="content">
 
-      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: 'Pull to reload', readyLabel: 'Release to reload', loadingLabel: 'Loading...', pullDownHeight: 60}">
+      <vue-pull-refresh :on-refresh="onRefresh" :config="{startLabel: $t('pull-to-reload'), readyLabel: $t('release-to-reload'), loadingLabel: $t('loading'), pullDownHeight: 60}">
 
         <transition name="fade-up">
-          <div class="loading" v-if="loading">
+          <div class="big-loading" v-if="loading">
             <Spinner />
-            Loading...
+            {{$t('loading')}}
           </div>
         </transition>
 
         <div v-if="issue">
           <div class="tutorial-message" v-if="issue.author.username!=user.username">
-            Here you can see details about the idea and comments that other people left.
-            If you agree with this issue, how about showing your support by tapping the heart?
-            If you have another opinion, try writing a short comment.
+            {{$t('tutorial-issue-details')}}
           </div>
 
           <div class="tutorial-message" v-if="issue.author.username==user.username && !comments.length && issue.like_count<=1">
-            This is your idea! Good job. Let's wait until other members give their opinion.
+            {{$t('tutorial-your-idea')}}
           </div>
           
           <Issue v-bind:item="issue" expanded="true" />
         
-          <div class="empty-state" v-if="!comments.length">
-            No comments yet. <br>
-            You can be the first!
-          </div>
+          <div class="empty-state" v-if="!comments.length" v-html="$t('no-comments')"></div>
 
           <CommentList v-bind:items="comments" />
 
@@ -48,9 +40,9 @@
       <div class="call-to-action">
         <div v-if="!commentMode">
           <p v-if="user.active_treatment && user.active_treatment.name=='orientation_autonomy'">
-            Let's share our diverse viewpoints! 
+            {{$t('comment-cta-treatment')}} 
           </p>
-          <my-button text="Leave a comment" primary={true} v-on:click.native="toggleCommentMode()" />
+          <my-button :text="$t('comment-cta')" primary={true} v-on:click.native="toggleCommentMode()" />
         </div>
         <div v-if="commentMode" class="comment-form">
           <textarea name="text" class="comment-text" ref="commentText" autofocus placeholder="Write a comment..." v-model="commentText"></textarea>
@@ -61,15 +53,36 @@
   </div>
 </template>
 
+<i18n src='../../locales.json'></i18n>
+<i18n>
+{
+  "en": {
+    "issue-details": "Idea Details",
+    "tutorial-issue-details": "Here you can see details about the idea and comments that other people left. If you agree with this issue, how about showing your support by tapping the heart? If you have another opinion, try writing a short comment.",
+    "tutorial-your-idea": "This is your idea! Good job. Let's wait until other members give their opinion.",
+    "no-comments": "No comments yet. <br>You can be the first!",
+    "comment-cta-treatment": "Let's share our diverse viewpoints!",
+    "comment-cta": "Leave a comment"
+  },
+  "ko": {
+    "issue-details": "아이디어 정보",
+    "tutorial-issue-details": "여기에서 다른 사람들이 남긴 아이디어와 의견에 대한 세부 정보를 볼 수 있습니다. 이 문제에 동의하는 경우 마음을 가볍게 두드리는 방법으로 지원을 표시하는 방법은 무엇입니까? 다른 의견이 있으면 간단한 설명을 적어보십시오.",
+    "tutorial-your-idea": "당신의 아이디어입니다! 수고했습니다. 다른 회원들이 의견을 나눌 때까지 기다려 봅시다.",
+    "no-comments": "아직 코멘트가 없습니다. <br> 당신은 첫 번째가 될 수 있습니다!",
+    "comment-cta-treatment": "다양한 관점을 공유합시다!",
+    "comment-cta": "코멘트를 남기기"
+  }
+}
+</i18n>
+
 <script>
 import Spinner from '@/components/elements/Spinner';
 import ChevronLeftIcon from "icons/chevron-left";
-import SubmenuIcon from "icons/flag-outline";
+import SubmenuIcon from "icons/dots-horizontal";
 import SendIcon from "icons/send";
 import {navigationMixins} from "@/mixins";
 import Issue from "@/components/elements/Issue";
 import CommentList from "@/components/elements/CommentList";
-import Sheet from "@/components/elements/Sheet";
 import autosize from 'autosize';
 import VuePullRefresh from 'vue-pull-refresh';
 
@@ -86,7 +99,6 @@ export default {
       commentMode: false,
       commentText: '',
       sendingComment: false,
-      sheetVisible: false,
     }
   },
   created () {
@@ -103,20 +115,9 @@ export default {
     SendIcon,
     SubmenuIcon,
     VuePullRefresh,
-    Sheet,
   },
   methods: {
-    showSheet() {
-      this.$refs.sheet.show();
-    },
-    flagIssue() {
-      let reason = prompt('Why is this post inappropriate?');
-      if (!reason) return;
-      this.$store.dispatch('flagIssue', { issue: this.issue, reason }).then(() => {
-        alert("Thank you for reporting this content.");
-        this.$refs.sheet.hide();
-      });
-    },
+
     onRefresh() {
       this.error = null;
       let slug = this.issue.slug || this.$props.slug;
@@ -190,8 +191,6 @@ export default {
     border: none;
     background-color: #fff;
   }
-  .button {
 
-  }
 }
 </style>

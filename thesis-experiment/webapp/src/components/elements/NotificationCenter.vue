@@ -31,7 +31,7 @@ export default {
           });
           this.$toasted.show(this.$t('new-comments'), {
             action: {
-              text : 'Go to idea',
+              text: this.$t('go-to-issue'),
               onClick: (e, toastObject) => {
                 toastObject.goAway(0);
                 this.$router.push({ name: 'issue-detail', params: { slug: resp.data[0].slug }});
@@ -60,10 +60,12 @@ export default {
 <i18n>
 {
   "en": {
-    "new-comments": "There are new comments on your idea."
+    "new-comments": "There are new comments on your idea.",
+    "go-to-issue": "Go to idea"
   },
   "ko": {
-    "new-comments": "당신의 아이디어에 대한 새로운 코멘트가 있습니다."
+    "new-comments": "당신의 아이디어에 대한 새로운 코멘트가 있습니다.",
+    "go-to-issue": "아이디어로 이동하기"
   }
 }
 </i18n>
