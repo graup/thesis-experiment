@@ -109,6 +109,8 @@ header {
   z-index: 99;
   transition: all .2s;
 
+  user-select: none;
+
   .view-title {
     /*flex: 1;*/
     text-align: center;

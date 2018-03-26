@@ -51,14 +51,16 @@
     "issue-reported": "Thank you for reporting this content.",
     "report-issue": "Report inappropriate content",
     "delete-issue": "Delete idea",
-    "report-reason": "Why is this post inappropriate?"
+    "report-reason": "Why is this post inappropriate?",
+    "delete-confirm": "Are you sure you want to delete this idea?"
   },
   "ko": {
     "issue-deleted": "아이디어가 성공적으로 삭제되었습니다.",
     "issue-reported": "신고해주셔서 감사합니다.",
     "report-issue": "부적절한 콘텐츠 신고하기",
     "delete-issue": "아이디어 삭제하기",
-    "report-reason": "이 게시물이 부적절한 이유는 무엇입니까?"
+    "report-reason": "이 게시물이 부적절한 이유는 무엇입니까?",
+    "delete-confirm": "이 아이디어를 삭제 하시겠습니까?"
   }
 }
 </i18n>
@@ -127,6 +129,8 @@ export default {
       });
     },
     deleteIssue() {
+      let check = confirm(this.$t('delete-confirm'));
+      if (!check) return;
       this.$store.dispatch('deleteIssue', { issue: this.$props.item }).then(() => {
         this.$refs.sheet.hide();
         this.gotoRoute({name: 'my-posts'});

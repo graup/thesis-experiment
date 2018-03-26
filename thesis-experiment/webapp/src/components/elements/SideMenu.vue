@@ -83,6 +83,8 @@ export default {
   background-color: #333;
   color: #fff;
 
+  user-select: none;
+
   text-align: center;
 
   transition: all .5s cubic-bezier(.55,0,.1,1);
@@ -91,6 +93,7 @@ export default {
   &.opened {
     transform: translateX(0%);
   }
+
 }
 
 .menu-items {
