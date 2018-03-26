@@ -36,7 +36,10 @@
       <span class="icon-with-text" v-on:click.capture.stop="gotoDetails">
         <CommentIcon /> {{item.comment_count}}
       </span>     
-      <span></span>
+      <span class="icon-with-text">
+        <span class="date" v-if="!expanded">{{item.created_date | moment("from", "now")}}</span>
+        <span v-bind:class="{isAuthor}" v-if="!expanded"><PersonIcon /> {{item.author.username}}</span>
+      </span>
     </div>
   </div>
 </template>
@@ -44,14 +47,14 @@
 <i18n>
 {
   "en": {
-    "issue-deleted": "The ideas was successfully deleted.",
+    "issue-deleted": "The idea was successfully deleted.",
     "issue-reported": "Thank you for reporting this content.",
     "report-issue": "Report inappropriate content",
     "delete-issue": "Delete idea",
     "report-reason": "Why is this post inappropriate?"
   },
   "ko": {
-    "issue-deleted": "아이디어는 성공적으로 삭제되었습니다.",
+    "issue-deleted": "아이디어가 성공적으로 삭제되었습니다.",
     "issue-reported": "신고해주셔서 감사합니다.",
     "report-issue": "부적절한 콘텐츠 신고하기",
     "delete-issue": "아이디어 삭제하기",

@@ -80,16 +80,16 @@
   },
   "ko": {
     "new-idea": "새로운 아이디어",
-    "intro-text": "KAIST를 더 좋은 곳으로 만드는 당신의 생각은 무엇입니까? 그것은 시설, 조직, 사회 문제에 관한 것일 수 있습니다 ...",
-    "title-label": "한 문장으로 아이디어는 무엇입니까?",
+    "intro-text": "KAIST를 더 좋은 곳으로 만드는 당신의 생각은 무엇입니까? 시설, 조직, 사회 문제 등...",
+    "title-label": "당신의 아이디어를 한 문장 이내로 나타내주세요.",
     "description-label": "아이디어를 좀 더 자세하게 설명하십시오.",
     "description-placeholder": "예를 들어, 이유 또는 예상 결과를 설명하십시오.",
     "attachments-label": "첨부 정보 (선택 사항)",
-    "post-idea-button": "아이디어 게시기",
+    "post-idea-button": "아이디어 게시하기",
     "select-place": "이 아이디어와 관련된 장소를 선택하십시오.",
     "searching-places": "근처에있는 장소를 찾는 중...",
     "cancel": "취소",
-    "try-again": "다시 찾아보기"
+    "try-again": "다시 시도"
   }
 }
 </i18n>

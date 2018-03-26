@@ -41,9 +41,9 @@
     "tutorial-welcome": "<strong>Welcome to Many Ideas for KAIST!</strong><br>We're happy to have you here. On this page, you can see ideas by other members. Do you see anything you are interested in?<br>Try tapping on a post."
   },
   "ko": {
-    "recent-ideas": "최근 아이디어",
-    "loading-error": "로드하는 동안 오류가 발생했습니다.<br>이 페이지를 새로 고침해보십시오.",
-    "tutorial-welcome": "<strong>KAIST를위한 Many Ideas 오신 것을 환영합니다!</strong> <br> We're happy to have you here. 이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있습니까? <br> 게시물을 두드려보십시오."
+    "recent-ideas": "최근 제안된 아이디어",
+    "loading-error": "로딩 중 오류가 발생했습니다.<br>이 페이지를 새로고침 해보십시오.",
+    "tutorial-welcome": "<strong>KAIST를 위한 Many Ideas에 오신 것을 환영합니다!</strong> <br> We're happy to have you here. 이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있습니까? <br> 게시물을 클릭해보십시오."
   }
 }
 </i18n>
