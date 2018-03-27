@@ -43,7 +43,7 @@
   "ko": {
     "recent-ideas": "최근 제안된 아이디어",
     "loading-error": "로딩 중 오류가 발생했습니다.<br>이 페이지를 새로고침 해보십시오.",
-    "tutorial-welcome": "<strong>KAIST를 위한 Many Ideas에 오신 것을 환영합니다!</strong> <br> We're happy to have you here. 이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있습니까? <br> 게시물을 클릭해보십시오."
+    "tutorial-welcome": "<strong>KAIST를 위한 Many Ideas에 오신 것을 환영합니다!</strong> <br> 들어와 주셔서 감사합니다.  이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요."
   }
 }
 </i18n>

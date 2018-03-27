@@ -17,8 +17,8 @@
     "cta-button-text": "Share your idea"
   },
   "ko": {
-    "cta-lead-text": "우리 지역 사회를 더 좋은 곳으로 만드십시오!",
-    "cta-lead-text-treatment": "당신의 기여가 필요합니다!",
+    "cta-lead-text": "우리 지역 사회를 더 좋은 곳으로 만드세요!",
+    "cta-lead-text-treatment": "당신의 참여가 필요합니다!",
     "cta-sub-text-treatment": "오늘 24 명의 사람들이 참여했습니다.<br>당신의 아이디어는 소중합니다.",
     "cta-button-text": "당신의 아이디어 공유하기"
   }

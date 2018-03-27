@@ -65,7 +65,7 @@
     "email": "이메일",
     "email-help": "비공개로 유지됩니다.",
     "password": "비밀번호",
-    "password-help": "최소 8 문자를 포함하고, 전부 숫자로 되지 않도록 하세요.",
+    "password-help": "최소 8 문자를 포함하고, 숫자가 아닌 문자를 하나 이상 포함해 주시기 바랍니다.",
     "repeat-password": "비밀번호 확인",
     "sign-up-button": "가입하기",
     "passwords-dont-match": "비밀번호가 일치하지 않습니다."

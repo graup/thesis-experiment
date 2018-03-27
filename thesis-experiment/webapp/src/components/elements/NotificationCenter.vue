@@ -64,7 +64,7 @@ export default {
     "go-to-issue": "Go to idea"
   },
   "ko": {
-    "new-comments": "당신의 아이디어에 대한 새로운 코멘트가 있습니다.",
+    "new-comments": "당신의 아이디어에 대한 새로운 댓글이 있습니다.",
     "go-to-issue": "아이디어로 이동하기"
   }
 }
