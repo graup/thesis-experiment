@@ -35,9 +35,16 @@ def shuffle_pair_random(pair):
         pair = list(pair[::-1])
     return pair, order
 
-def get_top_preference(comparisons):
+def get_preference_counts(comparisons, include=None):
     prefs = list(comparisons.values())
     counts = dict([x, prefs.count(x)] for x in set(prefs))
+    if include is not None:
+        # select subset
+        counts = {key: counts.get(key, 0) for key in include}
+    return counts
+
+def get_top_preference(comparisons, include=None):
+    counts = get_preference_counts(comparisons, include)
     highscore = max(counts.values())
     winners = [condition for condition, count in counts.items() if count == highscore]
     winner = None

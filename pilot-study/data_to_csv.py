@@ -1,8 +1,8 @@
 import json
 import glob, os
 import csv
-from experiment import get_top_preference, orderings, conditions
-from gcos import normalize_score
+from experiment import get_top_preference, get_preference_counts, orderings, conditions
+from gcos import normalize_score, vignette as gcos_vignette
 from mvs import vignette as mvs_vignette
 from itertools import combinations
 from operator import itemgetter
@@ -15,7 +15,10 @@ csvfile2 =  open('data/data.csv', 'w', newline='')
 writer2 = csv.writer(csvfile2, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)     
 
 csvfile3 =  open('data/uncoded.csv', 'w', newline='')
-writer3 = csv.writer(csvfile3, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)  
+writer3 = csv.writer(csvfile3, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL) 
+
+csvfile4 =  open('data/raw_answers.csv', 'w', newline='')
+writer4 = csv.writer(csvfile4, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)    
     
 #header = ['subject', 'duration', 'test_A', 'test_C', 'test_I', 'item_1', 'item_2', 'result', 'order', 'pair_order']
 pairs = list(combinations(conditions, 2))
@@ -29,6 +32,11 @@ writer.writerow(header)
 
 test_score_categories = []
 
+raw_score_header = ['mvs_check', 'comp_check']
+raw_score_header += ['mvs_%d_%s' % (i, mvs_vignette[i]['scale']) for i in range(len(mvs_vignette))]
+raw_score_header += ['gcos_%d_%s' % (q, gcos_vignette[q]['code'][a] if gcos_vignette[q]['code']!=None else 'check') for a in range(3) for q in range(len(gcos_vignette))]
+raw_score_header += ['test_A', 'test_C', 'test_I',] + mvs_scales + ['preferred', 'preferred_simple', 'pref_A_over_C', 'pref_I_over_BL', 'pref_C_over_I', 'pref_A_over_I']
+writer4.writerow(raw_score_header)
 
 data_header = ['duration', 'order', 'pair_order'] + \
     mvs_scales + \
@@ -41,6 +49,7 @@ writer2.writerow(data_header)
 
 for filename in glob.glob("data/*.json"):
     row = []
+    row_raw = []
     with open(filename) as data_file:    
         data = json.load(data_file)
         if not 'comparisons' in data:
@@ -70,6 +79,14 @@ for filename in glob.glob("data/*.json"):
         
         mvs_check = int(data['volunteering']['mvs_check']) >= 4
         row.append(int(mvs_check))
+
+        # raw test responses
+        for i in range(len(mvs_vignette)):
+            row_raw.append(data['volunteering']['mvs_%d' % i])
+
+        for q in range(len(gcos_vignette)):
+            for a in range(3):
+                row_raw.append(data['gcos_raw'][str(q)][str(a)])
         
 
         # find attention check in comparisons
@@ -95,6 +112,25 @@ for filename in glob.glob("data/*.json"):
         test_scores_values_norm = [normalize_score(score) for score in test_scores_values]
 
         demographics = data.get('demographics', {})
+
+        # see if A over C
+        prefs = get_preference_counts(data['comparisons'])
+        try:
+            pref_a_over_c = prefs['A'] > prefs['C']
+        except KeyError:
+            pref_a_over_c = False
+        try:
+            pref_i_over_bl = prefs['I'] > prefs['BL']
+        except KeyError:
+            pref_i_over_bl = False
+        try:
+            pref_c_over_i = prefs['C'] > prefs['I']
+        except KeyError:
+            pref_c_over_i = False
+        try:
+            pref_a_over_i = prefs['A'] > prefs['I']
+        except KeyError:
+            pref_a_over_i = False
         
         vol_freq = min(2, int(data['volunteering']['frequency']))+1
         row = row + test_scores_values + [duration, order, str(vol_freq)]
@@ -122,6 +158,13 @@ for filename in glob.glob("data/*.json"):
 
         #writer3.writerow([survey.get('result_reason'), survey.get('open')])
         writer3.writerow([survey.get('result_reason')])
+        writer4.writerow(
+            [int(mvs_check), int(check_passed)] +
+            row_raw + test_scores_values + [mvs_scale_scores[key] for key in mvs_scales] +
+            
+            [get_top_preference(data['comparisons']),
+            get_top_preference(data['comparisons'], ['A', 'C', 'I', 'BL']),
+            pref_a_over_c, pref_i_over_bl, pref_c_over_i, pref_a_over_i])
 
 print('Labels for test (category column)', test_score_categories)
 print('Conditions: ', conditions)

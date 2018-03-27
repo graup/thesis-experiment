@@ -8,7 +8,7 @@ mvs_scales_short = rev(c('intrs', 'ingr', 'iden', 'intrj', 'ext', 'amot'))
 mvs_scales = rev(c('intrinsic', 'identified', 'external', 'amotivation'))
 mvs_scales_short = rev(c('intrs', 'iden', 'ext', 'amot'))
 
-measure = 'volunteer'
+measure = 'gcos'
 
 if (measure == 'mvs') {
   scales = mvs_scales
