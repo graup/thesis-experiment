@@ -8,7 +8,7 @@ mvs_scales_short = rev(c('intrs', 'ingr', 'iden', 'intrj', 'ext', 'amot'))
 mvs_scales = rev(c('intrinsic', 'identified', 'external', 'amotivation'))
 mvs_scales_short = rev(c('intrs', 'iden', 'ext', 'amot'))
 
-measure = 'gcos'
+measure = 'mvs'
 
 if (measure == 'mvs') {
   scales = mvs_scales
@@ -31,15 +31,17 @@ draw_arrows = TRUE
 
 # Pairwise preferences
 prefs = read.csv("data/preferences.csv", sep=";", header=T)
-prefs = prefs[prefs$duration>=180,]  # filter out very quick responses
-prefs = prefs[prefs$comp_check=='1',]  # filter out failing the check
-prefs = prefs[prefs$mvs_check=='1',]  # filter out failing the check
+prefs = prefs[prefs$duration>=180,]  # filter out very quick responses, down to 141
+prefs = prefs[prefs$comp_check=='1',]  # filter out failing the check, down to 120
+prefs = prefs[prefs$mvs_check=='1',]  # filter out failing the check, down to 117
+prefs = prefs[prefs$gcos_check=='1',]  # filter out failing the check, down to 108
 factor_cols <- c("volunteering_freq")
 prefs[factor_cols] <- lapply(prefs[factor_cols], factor)
 
 # Create new factors to bin test scores into low (1) and high (2) based on mean
 scales_high = unlist(lapply(scales, function(key) paste(key, '_high', sep="")))
 
+library(plyr)
 method = 'quartiles'
 if (method == 'median') {
   prefs[scales_high] <- lapply(prefs[scales], function(col) {
@@ -78,7 +80,7 @@ dsgnmat <- llbt.design(prefs, nitems = length(objnames),
 ##formula = as.formula(paste('y ~ (', paste(objnames, collapse='+'), ') + (', paste(objnames, collapse='+'), '):(', paste(scales_high, collapse="+"), '):(', paste(scales_high, collapse="+"), ')'))
 formula = as.formula(paste('y ~ (', paste(objnames, collapse='+'), ') + (', paste(objnames, collapse='+'), '):(', paste(scales_high, collapse="+"),')'))
 res <- gnm(formula, eliminate = mu, family='poisson', data=dsgnmat)
-#summary(res)
+summary(res)
 # signficant: strongly: intrinsic_high, amotivation_high. weakly: integrated_high
 # 
 # correlation directions
@@ -105,6 +107,7 @@ summary(res)
 attr(res$data, 'objnames') <- objnames
 wmat_o<-llbt.worth(res)
 colnames(wmat_o) <- c('overall')
+
 
 # model for each subscale for plotting
 wmat_for_scale <- function(scale) {
@@ -175,7 +178,7 @@ plot.wmat(wmat_all, ylab='Worth estimate', main="") #, ylim=c(0, max(max(wmat_al
 title(main=main_title, outer=TRUE)
 title(xlab = "Subscale score groups")
 labels <- sapply(nums, function(i) paste("(n=", i, ")", sep=""))
-labels = c(c(paste("(n=", nrow(data), ")", sep="")), labels[ord])
+labels = c(c(paste("(n=", nrow(prefs), ")", sep="")), labels[ord])
 axis(side = 1, at = seq(from=1, to=length(labels), by=1), line=1, col = NA, labels = labels, tck = -0.01)
 
 col <- rainbow_hcl(nrow(wmat_all))

@@ -21,7 +21,7 @@ Vue.use(VueAnalytics, {
   id: process.env.GA_ID,
   router,
   autoTracking: {
-    pageviewOnLoad: false,
+    pageviewOnLoad: true,
   },
 });
 
@@ -41,7 +41,6 @@ Vue.component('app-logo', Logo);
 Vue.component('my-button', Button);
 
 router.beforeEach((to, from, next) => {
-  //console.log('Route transition', from.path, '->', to.path);
   const authRequired = to.matched.some(route => route.meta.auth);
   const unauthRequired = to.matched.some(route => route.meta.unauth);
   const authed = store.state.user.isAuthenticated;
@@ -55,7 +54,7 @@ router.beforeEach((to, from, next) => {
 });
 
 const i18n = new VueI18n({
-  locale: 'ko',
+  locale: 'en',
   fallbackLocale: 'en',
 });
 

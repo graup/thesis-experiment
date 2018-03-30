@@ -1,5 +1,7 @@
 from itertools import combinations
 from random import randint
+import choix
+import numpy as np
 
 def balanced_latin_squares(n):
     "Source: https://medium.com/@graycoding/balanced-latin-squares-in-python-2c3aa6ec95b9"
@@ -43,7 +45,7 @@ def get_preference_counts(comparisons, include=None):
         counts = {key: counts.get(key, 0) for key in include}
     return counts
 
-def get_top_preference(comparisons, include=None):
+def get_top_preference(comparisons, include=None, default=None):
     counts = get_preference_counts(comparisons, include)
     highscore = max(counts.values())
     winners = [condition for condition, count in counts.items() if count == highscore]
@@ -55,5 +57,19 @@ def get_top_preference(comparisons, include=None):
         try:
             winner = comparisons['_'.join(winners)]
         except KeyError:
-            winner = comparisons['_'.join(winners[::-1])]    
+            winner = comparisons['_'.join(winners[::-1])]
+    if winner is None and default is not None:
+        return default
     return winner
+
+def get_ranking(comparisons):
+    comps = []
+    for pair, winner in comparisons.items():
+        pair_items = pair.split('_')
+        if pair_items[0] == 'check':
+            continue
+        other = pair_items[0] if pair_items[1] == winner else pair_items[1]
+        comps.append((conditions.index(winner), conditions.index(other)))
+    params = choix.ilsr_pairwise(len(conditions), comps, alpha=1e-5)
+    ranking = np.argsort(params)
+    return [conditions[r] for r in ranking][::-1]

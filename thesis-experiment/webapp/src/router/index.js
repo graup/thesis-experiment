@@ -12,6 +12,7 @@ import FAQ from '@/components/pages/FAQ';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   scrollBehavior(to, from, savedPosition) {
     return new Promise((resolve) => {
       setTimeout(() => {

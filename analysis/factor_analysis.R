@@ -6,28 +6,36 @@ mvs_scales = c('intrinsic', 'integrated', 'identified', 'introjected', 'external
 data = read.csv("data/raw_answers.csv", sep=";", header=T)
 num_total = nrow(data)
 
-factor_cols <- c("mvs_check", "comp_check", "preferred")
+factor_cols <- c("mvs_check", "comp_check", "gcos_check", "preferred")
 data[factor_cols] <- lapply(data[factor_cols], factor)
+raw_cols = setdiff(24:89, c(48, 58, 62, 72, 76, 86))
+raw_cols_names = colnames(data[,raw_cols])
+raw_mvs_cols_names = colnames(data[,24:47])
+data[,raw_cols] <- lapply(data[,raw_cols], factor)
 
 data = data[data$comp_check=='1',]  # filter out failing the check
 data = data[data$mvs_check=='1',]  # filter out failing the check
-data = data[ , !(names(data) %in% c("comp_check", "mvs_check"))]  # drop these columns
+data = data[ , !(names(data) %in% c("comp_check", "mvs_check"))]  # we don't need these columns anymore
+
 data_raw = data[ , !(names(data) %in% c(test_scales, mvs_scales, 'preferred', 'preferred_simple'))]  # drop these columns
+data_raw = data_raw[ , 22:ncol(data_raw)]
 data_raw = data_raw[ , !(names(data_raw) %in% c('gcos_0_check', 'gcos_0_check.1', 'gcos_0_check.2', 'gcos_10_check', 'gcos_10_check.1', 'gcos_10_check.2'))]  # drop these columns
 
-data_raw_raw = data_raw[ , !(names(data_raw) %in% c('pref_A_over_C', 'pref_I_over_BL', 'pref_C_over_I', 'pref_A_over_I'))]
+data_raw_raw = data_raw[ , !(names(data_raw) %in% c('pref_A_C', 'pref_C_BL', 'pref_A_BL'))]
 
+data$preferred_simple_num = mapvalues(data$preferred_simple, from = levels(data$preferred_simple), to = seq(1, length(levels(data$preferred_simple))))
+
+library(plyr)
 bin_low_mid_high = function(data, scales) {
   lapply(data[scales], function(col) {
     # cut into <25%, 25-75%, 75%<
     c = cut(col,  breaks=c(0, quantile(col, probs=c(0.25, 0.75), na.rm=TRUE), max(col)))
     # map to integer factors
-    #mapvalues(c, from = levels(c), to = seq(1, 3))
-    c
+    mapvalues(c, from = levels(c), to = seq(1, 3))
   })
 }
 
-library(plyr)
+
 bin_low_high = function(data, scales) {
   lapply(data[scales], function(col) {
     c = cut(col,  breaks=c(0, quantile(col, probs=c(0.75), na.rm=TRUE), max(col)))
@@ -35,11 +43,6 @@ bin_low_high = function(data, scales) {
   })
 }
 
-mvs_scales_high = unlist(lapply(mvs_scales, function(key) paste(key, '_high', sep="")))
-data[mvs_scales_high] <- bin_low_mid_high(data, mvs_scales)
-
-test_scales_high = unlist(lapply(test_scales, function(key) paste(key, '_high', sep="")))
-data[test_scales_high] <- bin_low_mid_high(data, test_scales)
 
 # assign treatment groups 1 BL, 2 I, 3 C, 4 A
 data$group <- 1
@@ -69,27 +72,44 @@ data$preferred_num = mapvalues(data$preferred, from = levels(data$preferred), to
 #print(forest) 
 #print(importance(forest, type = 2)) 
 
+library(partykit)
+data_raw$preferred_simple = data$preferred_simple
+fit <- ctree(pref_A_C ~ ., data=data_raw[ , !(names(data_raw) %in% c('preferred_simple', 'pref_A_BL', 'pref_C_BL', 'preferred_simple_num'))],
+             control = ctree_control(minsplit = 1, minbucket = 8, maxsurrogate=100, mtry=20, splittry=100, mincriterion=0.01))
+plot(fit, main="Conditional Inference Tree for Preferance of A over C")
+
+fit <- glmtree(preferred_simple ~ .,  family = "binomial", data=data_raw[ , !(names(data_raw) %in% c('pref_A_C', 'pref_A_BL', 'pref_C_BL', 'preferred_simple_num'))])
+plot(fit)
+print(fit)
+
+fit <- glmtree(pref_A_C ~ .,  family = "binomial", data=data_raw[ , !(names(data_raw) %in% c('preferred_simple', 'pref_A_BL', 'pref_C_BL', 'preferred_simple_num'))])
+plot(fit)
+print(fit)
+
 library(rpart)
 library(rpart.plot)
-fit <- rpart(pref_A_over_C~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_I_over_BL', 'pref_C_over_I', 'pref_A_over_I'))])
-#printcp(fit) # display the results 
-#plotcp(fit) # visualize cross-validation results 
+fit <- rpart(pref_A_C~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_A_BL', 'pref_C_BL', 'preferred_simple', 'preferred_simple_num'))],
+             control = rpart.control(minsplit=10, cp = 0.001, xval=20))
+printcp(fit)
+plotcp(fit) # visualize cross-validation results 
 summary(fit)
 rpart.plot(fit, main="Prefers A over C")
 fit$variable.importance[1:5]
-#  gcos_3_A         gcos_8_I mvs_4_integrated         gcos_2_I         gcos_2_C
+#  gcos_4_I gcos_11_I
 
-fit <- rpart(pref_C_over_I~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_A_over_C', 'pref_I_over_BL', 'pref_A_over_I'))])
+fit <- rpart(pref_A_BL~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_A_C', 'pref_C_BL', 'preferred_simple_num'))])
+printcp(fit)
 summary(fit)
 rpart.plot(fit, main="Prefers C over I")
 fit$variable.importance[1:5]
-#  gcos_5_A         gcos_9_A         gcos_1_C mvs_8_identified        gcos_12_A
+#  mvs_20_amotivation           gcos_4_I          gcos_13_C    gcos_11_A
 
-fit <- rpart(pref_A_over_I~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_A_over_C', 'pref_I_over_BL', 'pref_C_over_I'))])
+fit <- rpart(pref_C_BL~., method="class", data=data_raw[ , !(names(data_raw) %in% c('pref_A_C', 'pref_A_BL', 'preferred_simple_num'))])
+printcp(fit)
 summary(fit)
 rpart.plot(fit, main="Prefers A over I")
 fit$variable.importance[1:5]
-# gcos_11_C gcos_13_I gcos_11_A  gcos_5_C  gcos_8_C
+# gcos_6_A     mvs_2_intrinsic   gcos_4_C
 
 
 library(FactoMineR)
@@ -100,7 +120,7 @@ result <- PCA(data_raw_raw_p, ncp=5, quali.sup=q)
 plot(result, choix="ind", habillage=q)
 plotellipses(result, q)
 
-data_raw_raw_p = data[,1:24]
+data_raw_raw_p = data[,22:87]  # 24, 42
 data_raw_raw_p$preferred_simple = data$preferred_simple
 q = ncol(data_raw_raw_p)
 result <- PCA(data_raw_raw_p, ncp=5, quali.sup=q) 
@@ -108,8 +128,6 @@ plot(result, choix="ind", habillage=q)
 plotellipses(result, q)
 
 
-
- 
 dim1 = result$var$cor[rev(order(result$var$contrib[,"Dim.1"]))[1:5],]  #mvs_2_intrinsic, mvs_4_integrated, 
 dim2 = result$var$cor[rev(order(result$var$contrib[,"Dim.2"]))[1:5],]  #mvs_21_amotivation, mvs_22_amotivation, 
 dim3 = result$var$cor[rev(order(result$var$contrib[,"Dim.3"]))[1:5],]  #gcos_13_I, gcos_13_C
@@ -122,17 +140,157 @@ result$var$cor[rev(order(apply(result$var$contrib, 1, sum)))[1:10],]
 
 # Try to build regression model with newly selected factors
 names = c(rownames(dim1), rownames(dim2), rownames(dim3), rownames(dim4), rownames(dim5))
-frm = as.formula(paste('preferred~(', paste(names, collapse="+"), ')'))
-library(arm)
-fit <- bayesglm(frm, data=data, family="binomial")
-summary(fit)
+
+names = colnames(data[,22:86])
+# 1:21 prefs
+# 22:46 mvs
+# 47:89 gcos
+prefs = data[,1:87]  
+mvs_scales_high = unlist(lapply(mvs_scales, function(key) paste(key, '_high', sep="")))
+prefs[mvs_scales_high] <- bin_low_mid_high(data, mvs_scales)
+
+test_scales_high = unlist(lapply(test_scales, function(key) paste(key, '_high', sep="")))
+prefs[test_scales_high] <- bin_low_mid_high(data, test_scales)
 
 
-library(nnet) # for multinom
-library(car) # for Anova
-frm = as.formula(paste('preferred~(', paste(test_scales_high, collapse="+"), ')'))
-m = multinom(frm, data=data)
-Anova(m, type=3)
+library(prefmod)
+# Rerunning same model that produced Figure 3/4
+objnames = c('AA', 'RR', 'CC', 'A', 'I', 'C', 'BL')
+dsgnmat <- llbt.design(prefs, nitems = length(objnames),
+                       resptype = "paircomp", ia = TRUE,
+                       num.scovs=names,
+                       cat.scovs=c(test_scales_high, mvs_scales_high),
+                       objnames=objnames)
+objnames = c('A', 'C')
+
+# Compare A and C regarding GCOS and MVS test scores
+formula = as.formula(paste('y ~ (', paste(objnames, collapse='+'), ') + (', paste(objnames, collapse='+'), '):(', paste(c(test_scales_high, mvs_scales_high), collapse="+"),')'))
+# formula = y ~ (A + C) + (A + C):(test_A_high + test_C_high + test_I_high + intrinsic_high + integrated_high + identified_high + introjected_high + external_high + amotivation_high)
+res <- gnm(formula, eliminate = mu, family='poisson', data=dsgnmat)
+s <- summary(res)
+sc = as.data.frame(s$coefficients)
+sc[with(sc, order(-abs(Estimate))), ]
+# strongest effects:
+# C:test_C_high3      +0.8 p<0.001
+# C:intrinsic_high3   -0.6 p<0.01
+# A:amotivation_high3 -0.4 p<0.01
+
+# Now let's figure out which of these scales' items we can use
+# amotivation: mvs_20-23_amotivation
+# intrinsic: mvs_0-3_intrinsic
+# test_C: gcos_1-13_C
+names = c(
+  sapply(seq(20,23), function(n) paste('mvs_', n, '_amotivation', sep="")),
+  sapply(seq(0,3), function(n) paste('mvs_', n, '_intrinsic', sep="")),
+  sapply(setdiff(seq(0,13), c(0, 10)), function(n) paste('gcos_', n, '_C', sep=""))
+)
+formula = as.formula(paste('y ~ (', paste(objnames, collapse='+'), ') + (', paste(objnames, collapse='+'), '):(', paste(names, collapse="+"),')'))
+# formula = y ~ (A + C) + (A + C):(mvs_20_amotivation + mvs_21_amotivation + mvs_22_amotivation + mvs_23_amotivation + mvs_0_intrinsic + mvs_1_intrinsic + mvs_2_intrinsic + mvs_3_intrinsic + gcos_1_C + gcos_2_C + gcos_3_C + gcos_4_C + gcos_5_C + gcos_6_C + gcos_7_C + gcos_8_C + gcos_9_C + gcos_11_C + gcos_12_C + gcos_13_C)
+res <- gnm(formula, eliminate = mu, family='poisson', data=dsgnmat)
+s <- summary(res)
+sc = as.data.frame(s$coefficients)
+sc[with(sc, order(-abs(Estimate))), ]
+# Strongest effects
+# C:mvs_22_amotivation  -0.27  p<0.01
+# C:mvs_1_intrinsic     -0.24  p<0.01
+# A:mvs_20_amotivation  +0.19  p<0.05
+# A:mvs_0_intrinsic     +0.17  p<0.05
+# A:mvs_22_amotivation  -0.17  p<0.01
+# C:mvs_20_amotivation  +0.16  p<0.05
+# C:gcos_11_C           +0.12  p<0.01
+# C:gcos_2_C            +0.12  p<0.05
+# A:gcos_2_C            -0.09  p<0.1
+
+
+# Step3: Make a decision tree with these items to check the accuracy
+require(caTools)
+library(caret)
+
+for (minsplit in c(10)) {  #seq(5,13)
+  total_k1 = 0
+  total_k2 = 0
+  n_repeat = 25
+  set.seed(1000)
+  for (r in 1:n_repeat) {
+    d <- data
+    sample = sample.split(d$pref_A_C, SplitRatio = .6)
+    train = subset(d, sample == TRUE)
+    test  = subset(d, sample == FALSE)
+    
+    #frm = pref_A_C~(mvs_22_amotivation+mvs_1_intrinsic+mvs_20_amotivation+mvs_0_intrinsic+gcos_11_C+gcos_2_C)
+    #frm = pref_A_C~.
+    frm = as.formula(paste('pref_A_C ~ (', paste(c(test_scales, mvs_scales), collapse="+"),')'))
+    fit <- rpart(frm, method="class", data=train[ , !(names(train) %in% c('pref_C_BL', 'pref_A_BL'))],
+                 control = rpart.control(minsplit=minsplit))
+    #printcp(fit)
+    #plotcp(fit)
+    #summary(fit)
+    #rpart.plot(fit, main="Prefers A over C", extra=103)
+    
+    calc_accuracy = function(fit, data, column) {
+      p <- predict(fit, data, type="class")  # 
+      confusionMatrix(p, data[[column]], positive="True") 
+    }
+    a1 <- calc_accuracy(fit, train, 'pref_A_C') # Accuracy 75%, Sensitivity 46%, Specificity 89%
+    a2 <- calc_accuracy(fit, test, 'pref_A_C') # Accuracy 57%, Sensitivity 46%, Specificity 62%
+  
+    total_k1 = total_k1 + a1$overall[['Kappa']] / n_repeat
+    total_k2 = total_k2 + a2$overall[['Kappa']] / n_repeat
+  }
+  print(minsplit)
+  print(paste("kappa 1", total_k1))
+  print(paste("kappa 2", total_k2))
+}
+
+library(rpartScore)
+data$pref_A_C.num = as.numeric(mapvalues(data$pref_A_C, from = levels(data$pref_A_C), to = seq(1, length(levels(data$pref_A_C)))))
+fit <- rpartScore(frm, data=data, control = rpart.control(minsplit=5))
+
+
+
+library (partykit)
+names = c(
+  sapply(seq(20,23), function(n) paste('mvs_', n, '_amotivation', sep="")),
+  sapply(seq(0,3), function(n) paste('mvs_', n, '_intrinsic', sep="")),
+  sapply(setdiff(seq(0,13), c(0, 10)), function(n) paste('gcos_', n, '_C', sep=""))
+)
+frm = as.formula(paste('pref_A_C ~ (', paste(c(test_scales, mvs_scales), collapse="+"),')'))
+frm = as.formula(paste('pref_A_C ~ (', paste(raw_mvs_cols_names, collapse="+"),')'))
+fit <- ctree(frm, data = data,
+             control = ctree_control(minsplit = 1, minbucket = 5, mincriterion=0.01))
+plot(fit, main="Conditional Inference Tree for Preferance of A over C")
+confusionMatrix(predict(fit), data$pref_A_C, positive="True") 
+
+
+set.seed(20180329)
+n_repeat = 50
+results_train = list()
+results_test = list()
+for (r in 1:n_repeat) {
+  d <- data
+  sample = sample.split(d$pref_A_C, SplitRatio = .75)
+  train = subset(d, sample == TRUE)
+  test  = subset(d, sample == FALSE)
+  
+  frm = as.formula(paste('pref_A_C ~ (', paste(raw_mvs_cols_names, collapse="+"),')'))
+  fit <- ctree(frm, data = train,
+               control = ctree_control(minsplit = 1, minbucket = 5, mincriterion=0.001))
+  
+  calc_accuracy = function(fit, data, column) {
+    p <- predict(fit) 
+    confusionMatrix(p, data[[column]], positive="True") 
+  }
+  a1 <- confusionMatrix(predict(fit), train$pref_A_C, positive="True") 
+  a2 <- confusionMatrix(predict(fit, newdata=test, type="response"), test$pref_A_C, positive="True")
+  results_train[[r]] <- c(a1$byClass, a1$overall)
+  results_test[[r]]  <- c(a2$byClass, a2$overall)
+}
+results_train = do.call(cbind, results_train)
+results_test = do.call(cbind, results_test)
+print(rowMeans(results_train))
+print(rowMeans(results_test))
+plot(fit, main="Conditional Inference Tree for Preferance of A over C")
+
 
 
 

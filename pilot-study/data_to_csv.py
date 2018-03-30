@@ -1,7 +1,7 @@
 import json
 import glob, os
 import csv
-from experiment import get_top_preference, get_preference_counts, orderings, conditions
+from experiment import get_top_preference, get_preference_counts, orderings, conditions, get_ranking
 from gcos import normalize_score, vignette as gcos_vignette
 from mvs import vignette as mvs_vignette
 from itertools import combinations
@@ -23,19 +23,25 @@ writer4 = csv.writer(csvfile4, delimiter=';', quotechar='"', quoting=csv.QUOTE_M
 #header = ['subject', 'duration', 'test_A', 'test_C', 'test_I', 'item_1', 'item_2', 'result', 'order', 'pair_order']
 pairs = list(combinations(conditions, 2))
 pairs = ['_'.join(item) for item in sorted(pairs, key=lambda item: (conditions.index(item[1]), conditions.index(item[0])))]
+# order should be (12) (13) (23) (14) (24) (34) (15) (25) 
+
 test_keys = ('A','C','I',)
 mvs_scales = ['intrinsic', 'integrated', 'identified', 'introjected', 'external', 'amotivation']
 
-header = pairs + ['mvs_check', 'comp_check',] + mvs_scales + ['test', ] + ['test_A', 'test_C', 'test_I',] + ['duration', 'order', 'volunteering_freq']
+header = pairs + ['mvs_check', 'comp_check','gcos_check',] + mvs_scales + ['test', ] + ['test_A', 'test_C', 'test_I',] + ['duration', 'order', 'volunteering_freq']
 print(header)
 writer.writerow(header)
 
 test_score_categories = []
 
-raw_score_header = ['mvs_check', 'comp_check']
+interest_pairs = ('A_C', 'C_BL', 'A_BL',)
+
+raw_score_header = pairs + ['mvs_check', 'comp_check']
 raw_score_header += ['mvs_%d_%s' % (i, mvs_vignette[i]['scale']) for i in range(len(mvs_vignette))]
-raw_score_header += ['gcos_%d_%s' % (q, gcos_vignette[q]['code'][a] if gcos_vignette[q]['code']!=None else 'check') for a in range(3) for q in range(len(gcos_vignette))]
-raw_score_header += ['test_A', 'test_C', 'test_I',] + mvs_scales + ['preferred', 'preferred_simple', 'pref_A_over_C', 'pref_I_over_BL', 'pref_C_over_I', 'pref_A_over_I']
+raw_score_header += ['gcos_%d_%s' % (q, gcos_vignette[q]['code'][a]) for a in range(3) for q in range(len(gcos_vignette)) if gcos_vignette[q]['code']!=None]
+#raw_score_header += ['gcos_check_%d' % i for i in range(1, 7)] + ['gcos_check_all']
+raw_score_header += ['gcos_check']
+raw_score_header += ['test_A', 'test_C', 'test_I',] + mvs_scales + ['preferred', 'preferred_simple', ] + ['pref_%s' % p for p in interest_pairs]
 writer4.writerow(raw_score_header)
 
 data_header = ['duration', 'order', 'pair_order'] + \
@@ -47,6 +53,16 @@ data_header = ['duration', 'order', 'pair_order'] + \
     ['age', 'education', 'sex', 'volunteering_freq']
 writer2.writerow(data_header)
 
+
+def get_first_in(ranks, include):
+    if len(ranks) == 0:
+        return None
+    first = ranks.pop(0)
+    if first in include:
+        return first
+    return get_first_in(ranks, include)
+
+
 for filename in glob.glob("data/*.json"):
     row = []
     row_raw = []
@@ -54,19 +70,21 @@ for filename in glob.glob("data/*.json"):
         data = json.load(data_file)
         if not 'comparisons' in data:
             continue
-        #print(data)
         
-        #for version in ('A', 'I', 'C', 'BL',):
-        #    row.append(2*sum([1 for item in data['comparisons'].items() if item[1] == version]) - 3)
-        
+        # Comparisons
+        comps = []
         for pair in pairs:
             result = data['comparisons'][pair]
             a, b = pair.split('_')
             numeric = 1 if result == a else -1
-            #numeric = 0 if result == a else 1
-            row.append(numeric)
-        #(12) (13) (23) (14) (24) (34) (15) (25) 
+            comps.append(numeric)
+        row += comps
 
+        ranking = get_ranking(data['comparisons'])
+
+
+
+        # Order effect
         order = 1 + data['user_counter']%len(orderings)
         pair_orders = [pair['pair_order'] for pair in data.get('comparison_pairs', [])]
         pair_order = 'o' + ''.join(map(str, pair_orders))
@@ -85,14 +103,29 @@ for filename in glob.glob("data/*.json"):
             row_raw.append(data['volunteering']['mvs_%d' % i])
 
         for q in range(len(gcos_vignette)):
-            for a in range(3):
+            if gcos_vignette[q]['code'] is None:
+                continue
+            for a in range(3):    
                 row_raw.append(data['gcos_raw'][str(q)][str(a)])
-        
+
 
         # find attention check in comparisons
         check_comp = list(filter(lambda k: k.endswith('check'), data['comparisons'].keys()))[0]
         check_passed = data['comparisons'][check_comp] == data['comparisons'][check_comp.replace('_check', '')]
         row.append(int(check_passed))
+        
+        # GCOS attention checks
+        gcos_checks = list(map(int, [
+            data['gcos_raw']['0']['0'] >= 6,
+            data['gcos_raw']['0']['1'] >= 6,
+            data['gcos_raw']['0']['2'] <= 2,
+            data['gcos_raw']['10']['0'] >= 6,
+            data['gcos_raw']['10']['1'] <= 2,
+            data['gcos_raw']['10']['2'] >= 6,
+        ]))
+        row.append(int(sum(gcos_checks) >= 5))
+
+        
 
         row += [mvs_scale_scores[key] for key in mvs_scales]
 
@@ -112,25 +145,6 @@ for filename in glob.glob("data/*.json"):
         test_scores_values_norm = [normalize_score(score) for score in test_scores_values]
 
         demographics = data.get('demographics', {})
-
-        # see if A over C
-        prefs = get_preference_counts(data['comparisons'])
-        try:
-            pref_a_over_c = prefs['A'] > prefs['C']
-        except KeyError:
-            pref_a_over_c = False
-        try:
-            pref_i_over_bl = prefs['I'] > prefs['BL']
-        except KeyError:
-            pref_i_over_bl = False
-        try:
-            pref_c_over_i = prefs['C'] > prefs['I']
-        except KeyError:
-            pref_c_over_i = False
-        try:
-            pref_a_over_i = prefs['A'] > prefs['I']
-        except KeyError:
-            pref_a_over_i = False
         
         vol_freq = min(2, int(data['volunteering']['frequency']))+1
         row = row + test_scores_values + [duration, order, str(vol_freq)]
@@ -156,16 +170,24 @@ for filename in glob.glob("data/*.json"):
             vol_freq
         ])
 
+        prefs = []
+        for pair in interest_pairs:
+            items = pair.split('_')
+            prefs.append( ranking.index(items[0]) < ranking.index(items[1]) )
+
         #writer3.writerow([survey.get('result_reason'), survey.get('open')])
         writer3.writerow([survey.get('result_reason')])
         writer4.writerow(
+            comps +
             [int(mvs_check), int(check_passed)] +
-            row_raw + test_scores_values + [mvs_scale_scores[key] for key in mvs_scales] +
+            row_raw + [int(sum(gcos_checks) >= 5)] + test_scores_values + [mvs_scale_scores[key] for key in mvs_scales] +
             
-            [get_top_preference(data['comparisons']),
-            get_top_preference(data['comparisons'], ['A', 'C', 'I', 'BL']),
-            pref_a_over_c, pref_i_over_bl, pref_c_over_i, pref_a_over_i])
+            [ranking[0],
+            get_first_in(ranking, ['A', 'C', ]),
+            
+            ] + prefs)
 
+print(raw_score_header)
 print('Labels for test (category column)', test_score_categories)
 print('Conditions: ', conditions)
 print('Compairsons: ', pairs)

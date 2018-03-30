@@ -13,8 +13,11 @@
         <my-button :text="$t('login')" link-to="login" />
       </div>
 
-      <div v-if="!touchDevice" class="message warning" v-html="mobile-browser-advice">
-        
+      <div v-if="!touchDevice" class="message warning">
+        <p v-html="$t('mobile-browser-advice')"></p>
+        <img src='https://chart.googleapis.com/chart?cht=qr&chl=http%3A%2F%2Fapp.kaist.manyideas.org&chs=180x180&choe=UTF-8&chld=L|2' alt=''>
+        <br>
+        https://kaist.manyideas.org
       </div>
     </main>
     <footer></footer>
