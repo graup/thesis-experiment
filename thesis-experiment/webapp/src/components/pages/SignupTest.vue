@@ -1,0 +1,190 @@
+<template>
+  <div class="viewport hello has-header">
+    <header>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
+      <div class="view-title">{{$t('title')}}</div>
+      <div class="icon-button" v-on:click="goBack"><ChevronLeftIcon /></div>
+    </header>
+
+    <main class="content">
+
+      <p class="intro">{{$t('test-intro')}}</p>
+
+      <div class="form-wrapper">
+
+        <form action="" class="form">
+          <div class="form-group">
+            <select id="age" class="form-input" v-model="userData.age" required>
+              <option value="">{{$t('please-select')}}</option>
+              <option value="1826">18-26</option>
+              <option value="2732">27-32</option>
+              <option value="3340">33-40</option>
+              <option value="4155">41-55</option>
+              <option value="56">56+</option>
+            </select>
+            <label class="form-label" for="age">{{$t('age')}}</label>
+            <div class="error" v-if="errors.age">{{errors.age.join(' ')}}</div>
+          </div>
+          <div class="form-group">
+            <select id="sex" class="form-input" v-model="userData.sex" required>
+              <option value="">{{$t('please-select')}}</option>
+              <option value="female">{{$t('female')}}</option>
+              <option value="male">{{$t('male')}}</option>
+            </select>
+            <label class="form-label" for="sex">{{$t('sex')}}</label>
+            <div class="error" v-if="errors.sex">{{errors.sex.join(' ')}}</div>
+          </div>
+          <div class="form-group">
+            <select id="occupation" class="form-input" v-model="userData.occupation" required>
+              <option value="">{{$t('please-select')}}</option>
+              <option value="student">{{$t('student')}}</option>
+              <option value="professor">{{$t('professor')}}</option>
+              <option value="instructor">{{$t('instructor')}}</option>
+              <option value="staff">{{$t('staff')}}</option>
+              <option value="other">{{$t('other')}}</option>
+            </select>
+            <label class="form-label" for="occupation">{{$t('occupation')}}</label>
+            <div class="error" v-if="errors.occupation">{{errors.occupation.join(' ')}}</div>
+          </div>
+
+          <div class="form-group">
+            <strong>{{$t('q1-question')}}</strong><br>
+            {{$t('q1-answer')}}
+            <RatingInput min="1" max="7" v-model="userData.q1" />
+          </div>
+
+          <p>{{$t('gcos-prompt')}}</p>
+
+          <div class="form-group">
+            <strong>{{$t('q2-question')}}</strong><br>
+            {{$t('q2-answer')}}
+            <RatingInput min="1" max="7" v-model="userData.q2" />
+          </div>
+
+          <div class="form-group">
+            <strong>{{$t('q3-question')}}</strong><br>
+            {{$t('q3-answer')}}
+            <RatingInput min="1" max="7" v-model="userData.q3" />
+          </div>
+
+          <div class="form-group">
+            <strong>{{$t('q4-question')}}</strong><br>
+            {{$t('q4-answer')}}
+            <RatingInput min="1" max="7" v-model="userData.q4" />
+          </div>
+
+          <div class="form-group button-group vertical spaced" style="max-width: 200px;">
+            <my-button :text="$t('continue-button')" primary={true} v-on:click.native.capture="saveInfo" v-bind:loading="loading" />
+          </div>
+        </form>
+      </div>
+    </main>
+    <footer></footer>
+  </div>
+</template>
+
+<i18n>
+{
+  "en": {
+    "title": "Sign up Information",
+    "test-intro": "Please answer the following questions honestly. This information is important for our research. It is not used inside this application and will always be kept private.",
+    "age": "Age range",
+    "please-select": "Please select",
+    "sex": "Sex",
+    "female": "Female",
+    "male": "Male",
+    "occupation": "Occupation",
+    "student": "Student",
+    "professor": "Professor",
+    "staff": "Staff",
+    "contractor": "Contractor",
+    "instructor": "Instructor",
+    "other": "Other",
+    "continue-button": "Continue",
+    "gcos-prompt": "Imagine the following situations and how you would respond.",
+    "q1-question": "When I volunteer, I do it because...",
+    "q1-answer": "I don’t know; I can’t see what I’m getting out of it.",
+    "q2-question": "You have a school-age daughter. On parents' night the teacher tells you that your daughter is doing poorly and doesn't seem involved in the work.",
+    "q2-answer": "You are likely to scold her and hope she does better.",
+    "q3-question": "You have been invited to a large party where you know very few people. As you look forward to the evening, you would likely expect that:",
+    "q3-answer": "You'll try to fit in with whatever is happening in order to have a good time and not look bad.",
+    "q4-question": "A woman who works for you has generally done an adequate job. However, for the past two weeks her work has not been up to par and she appears to be less actively interested in her work. Your reaction is likely to be:",
+    "q4-answer": "Ask her about the problem and let her know you are available to help work it out."
+  },
+  "ko": {
+    "title": "가입 정보",
+    "test-intro": "다음 질문을 정직하게 답해주세요. 이 정보는 우리 연구에 중요합니다. 애플리케이션에서는 사용되지 않으며 항상 비공개로 유지됩니다.",
+    "age": "연령대",
+    "please-select": "선택 해주세요",
+    "occupation": "직업",
+    "sex": "성별",
+    "female": "여성",
+    "male": "남성",
+    "student": "학생",
+    "professor": "교수",
+    "staff": "직원",
+    "contractor": "계약자",
+    "instructor": "강사",
+    "other": "그 이외의",
+    "continue-button": "계속하기",
+    "gcos-prompt": "다음과 같은 상황과 어떻게 대응할 것인지 상상해보세요.",
+    "q1-question": "자원 할 때, 이유는...",
+    "q1-answer": "몰라, 내가 빠져 나가는 것을 볼 수 없다.",
+    "q2-question": "학령기 딸이 있는데, 부모님의 밤에 선생님이 딸이 잘하고 있지 않고 일에 관여하지 않는 것 같다고 말씀하셨습니다.",
+    "q2-answer": "딸을 꾸짖고 더 나아질 것을 희망한다",
+    "q3-question": "극소수의 사람들을 알고있는 큰 파티에 초대되었습니다. 저녁을 고대 할 때, 그것을 기대할 것입니다:",
+    "q3-answer": "즐거운 시간을 보내고 나빠 보이지 않기 위해 일어나고있는 일에 적응하려고 노력할 것이다.",
+    "q4-question": "당신을 위해 일하는 여자는 일반적으로 적절한 일을했습니다. 그러나 지난 2주 동안 일은 동등하지 않았고 일에 덜 적극적으로 관심을 보였습니다. 귀하의 반응은 다음과 같을 수 있습니다:",
+    "q4-answer": "문제가 뭐라고 물어보고, 해결하는 것을 도울다는 것을 알려 드릴 것이다."
+  }
+}
+</i18n>
+
+<script>
+import ChevronLeftIcon from "icons/chevron-left";
+import RatingInput from "../elements/RatingInput";
+import {navigationMixins} from "@/mixins";
+
+export default {
+  mixins: [navigationMixins],
+  data() {
+    return {
+      userData: {
+        occupation: '',
+        age: '',
+        sex: '',
+        q1: null,
+        q2: null,
+        q3: null,
+        q4: 4,
+      },
+      errors: {},
+      loading: false,
+    };
+  },
+  methods: {
+    saveInfo() {
+      this.$data.loading = true;
+      console.log(this.userData);
+      this.$store.dispatch('saveTest', { user: this.userData, requestOptions: {} }).then(() => {
+        this.$router.push('feed');
+      }).catch(error => {
+        this.$data.errors = error.response.data;
+        this.$data.loading = false;
+      });
+    },
+  },
+  components: {
+    ChevronLeftIcon,
+    RatingInput,
+  },
+};
+</script>
+
+<style scoped>
+.intro {
+  padding: 0 2em;
+  margin: 1rem 0;
+  text-align: center;
+}
+</style>

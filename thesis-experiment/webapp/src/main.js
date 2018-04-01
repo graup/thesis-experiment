@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
 });
 
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: 'ko',
   fallbackLocale: 'en',
 });
 

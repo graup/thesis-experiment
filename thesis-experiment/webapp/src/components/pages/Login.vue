@@ -81,7 +81,11 @@ export default {
       this.$store.dispatch('login', { user: data, requestOptions }).then(() => {
         this.$router.push('feed');
       }).catch(error => {
-        this.$data.error = error.response.data.error_description;
+        if (error.response) {
+          this.$data.error = error.response.data.error_description;
+        } else {
+          this.$data.error = ''+error;
+        }
         this.$data.loading = false;
       });
     },

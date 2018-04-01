@@ -15,7 +15,7 @@
     </ul>
     <ul class="menu-items" v-if="!isAuthenticated">
       <li><a class="menu-item" v-on:click="$router.push('login')">{{$t('login')}}</a></li>
-      <li><a class="menu-item" v-on:click="$router.push('signup')">{{$t('signup')}}</a></li>
+      <li><a class="menu-item" v-on:click="$router.push('signup')">{{$t('signup-consent')}}</a></li>
     </ul>
   </div>
 </template>

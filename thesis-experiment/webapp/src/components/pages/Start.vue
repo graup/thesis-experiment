@@ -9,7 +9,7 @@
       </p>
 
       <div class="button-group vertical spaced" style="max-width: 200px;">
-        <my-button :text="$t('signup')" link-to="signup" primary={true} />
+        <my-button :text="$t('signup')" link-to="signup-consent" primary={true} />
         <my-button :text="$t('login')" link-to="login" />
       </div>
 

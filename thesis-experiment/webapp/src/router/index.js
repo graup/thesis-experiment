@@ -3,6 +3,8 @@ import Router from 'vue-router';
 import Start from '@/components/pages/Start';
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
+import SignupConsent from '@/components/pages/SignupConsent';
+import SignupTest from '@/components/pages/SignupTest';
 import Feed from '@/components/pages/Feed';
 import MyFeed from '@/components/pages/MyFeed';
 import IssueDetails from '@/components/pages/IssueDetails';
@@ -27,6 +29,8 @@ export default new Router({
     { path: '/', name: 'start', component: Start },
     { path: '/login', name: 'login', component: Login, meta: { unauth: true } },
     { path: '/signup', name: 'signup', component: Signup, meta: { unauth: true } },
+    { path: '/signup-consent', name: 'signup-consent', component: SignupConsent, meta: { unauth: true } },
+    { path: '/signup-test', name: 'signup-test', component: SignupTest, meta: { auth: true } },
     { path: '/feed', name: 'feed', component: Feed, meta: { auth: true } },
     { path: '/faq', name: 'faq', component: FAQ, meta: { auth: true } },
     { path: '/my-posts', name: 'my-posts', component: MyFeed, meta: { auth: true } },
