@@ -56,13 +56,14 @@ def get_auto_treatment(group=None):
         stats = filter(lambda item: item['assignment__group'] is not None, stats)
     return max(stats, key=itemgetter('ratio_distance'))
 
-def auto_assign_user(user):
+def auto_assign_user(user, group=None):
     """Assign user to a treatment, satisfying the treatment assignment target ratios for (treatment, group)"""
-    try:
-        result = ClassificationResult.objects.filter(user=user)[0]
-        group = result.calculated_group
-    except IndexError:
-        group = None
+    if not group:
+        try:
+            result = ClassificationResult.objects.filter(user=user)[0]
+            group = result.calculated_group
+        except IndexError:
+            pass
     treatment = get_auto_treatment(group)
     if not group:
         group = treatment['assignment__group']

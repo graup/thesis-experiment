@@ -11,7 +11,7 @@ from django.contrib import admin
 class AssignmentForm(forms.ModelForm):
     treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect, required=False)
     auto_assign = forms.BooleanField(required=False)
-    group = forms.ChoiceField(choices=[(None, '(None)')]+[(g, g) for g in Assignment.GROUPS])
+    group = forms.ChoiceField(choices=[(None, '(None)')]+[(g, g) for g in Assignment.GROUPS], required=False)
 
     class Meta:
         model = Assignment
@@ -58,8 +58,8 @@ class AssignmentUpdateView(TemplateView):
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data.get('auto_assign', False):
-                    auto_assign_user(form.cleaned_data['user'])
-                else:
+                    auto_assign_user(form.cleaned_data['user'], form.cleaned_data['group'])
+                elif form.cleaned_data.get('treatment', False):
                     form.save()
             return HttpResponseRedirect(self.get_success_url())
         else:
