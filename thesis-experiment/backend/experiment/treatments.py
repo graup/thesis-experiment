@@ -29,7 +29,8 @@ def assignment_stats():
         'assignment__group': s[1],
         'count': 0,
         'id': treatments_by_name[s[0]]['id'],
-        'target_assignment_ratio': treatments_by_name[s[0]]['target_assignment_ratio']
+        'target_assignment_ratio': treatments_by_name[s[0]]['target_assignment_ratio'],
+        'label': treatments_by_name[s[0]]['label']
     } for s in missing_splits]
 
     # Compute ratio distances
@@ -43,7 +44,16 @@ def assignment_stats():
             c.update(new_ratio=(1+c['count'])/total_assignments)  # ratio after updating
         c.update(ratio_distance=c['target_assignment_ratio']-c['new_ratio'])  # difference after updating
         c.update(display_ratio=c['ratio']-abs(min(0, c['ratio_distance'])))
-    return counts
+    return sorted(counts, key=itemgetter('assignment__group', 'name'))
+
+def get_auto_treatment(group=None):
+    # Get treatment that this user would be auto-assigned to
+    stats = assignment_stats()
+    if group:
+        stats = filter(lambda item: item['assignment__group'] == group or item['assignment__group'] is None, stats)
+    else:
+        stats = filter(lambda item: item['assignment__group'] is not None, stats)
+    return max(stats, key=itemgetter('ratio_distance'))
 
 def auto_assign_user(user):
     """Assign user to a treatment, satisfying the treatment assignment target ratios for (treatment, group)"""
@@ -52,12 +62,9 @@ def auto_assign_user(user):
         group = result.calculated_group
     except IndexError:
         group = None
-    # Select treatment given group with highest ratio distance
-    stats = assignment_stats()
-    if group:
-        stats = filter(lambda item: item['assignment__group'] == group or item['assignment__group'] is None, stats)
-    treatment = max(stats, key=itemgetter('ratio_distance'))
-    # Create new assignment
+    treatment = get_auto_treatment(group)
+    if not group:
+        group = treatment['assignment__group']
     assignment = Assignment(treatment_id=treatment['id'], user=user, group=group)
     assignment.save()
     return assignment

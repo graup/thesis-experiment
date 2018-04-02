@@ -30,7 +30,6 @@ export default {
     font-size: .8em;
     color: #888;
     margin: 0 0 0 1.25rem;
-    text-transform: uppercase;
     font-weight: 500;
   }
   .content {

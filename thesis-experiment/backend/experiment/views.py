@@ -3,7 +3,7 @@ from django.urls import reverse
 from django import forms
 from django.http import HttpResponseRedirect
 from .models import Assignment, Treatment
-from .treatments import get_default_treatment, auto_assign_user, assignment_stats
+from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
 from django.contrib.auth.models import User
 from django.db.models import Max
 from django.contrib import admin
@@ -11,10 +11,11 @@ from django.contrib import admin
 class AssignmentForm(forms.ModelForm):
     treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect, required=False)
     auto_assign = forms.BooleanField(required=False)
+    group = forms.ChoiceField(choices=[(None, '(None)')]+[(g, g) for g in Assignment.GROUPS])
 
     class Meta:
         model = Assignment
-        fields = ['user', 'treatment',]
+        fields = ['user', 'group', 'treatment', 'auto_assign']
 
 class AssignmentUpdateView(TemplateView):
     model = Assignment
@@ -43,7 +44,12 @@ class AssignmentUpdateView(TemplateView):
         # Add Django Admin context
         context.update(admin.site.each_context(self.request))
         # Add stats
-        context.update(stats=assignment_stats())
+        stats = assignment_stats()
+        context.update(
+            stats=stats,
+            next_assignments=[get_auto_treatment(g) for g in Assignment.GROUPS],
+            total_n=sum([t['count'] for t in stats])
+        )
         return context
 
     def post(self, form):
@@ -51,7 +57,7 @@ class AssignmentUpdateView(TemplateView):
         formset = context['formset']
         if formset.is_valid():
             for form in formset:
-                if form.cleaned_data['auto_assign']:
+                if form.cleaned_data.get('auto_assign', False):
                     auto_assign_user(form.cleaned_data['user'])
                 else:
                     form.save()

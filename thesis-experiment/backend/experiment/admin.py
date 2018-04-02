@@ -8,5 +8,5 @@ admin.site.register(Treatment, TreatmentAdmin)
 
 class AssignmentAdmin(admin.ModelAdmin):
     model = Assignment
-    list_display = ('user', 'treatment', 'assigned_date',)
+    list_display = ('user', 'group', 'treatment', 'assigned_date',)
 admin.site.register(Assignment, AssignmentAdmin)

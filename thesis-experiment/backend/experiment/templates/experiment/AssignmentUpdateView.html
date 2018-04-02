@@ -4,24 +4,32 @@
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
-{% block coltype %}colMS{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-<div id="content-main">
 
-<div class="assignment-stats">
-  {% for t in stats %}
-  <div class="assignment" style="flex: {% widthratio t.display_ratio 1 100  %}">
-    <strong>{{t.label}}</strong><br>
-    N={{t.count}}
-    ({% widthratio t.ratio 1 100 %}%, target: {% widthratio t.target_assignment_ratio 1 100 %}%)
-  </div>
-  <div class="assignment-distance" style="flex: {% widthratio t.ratio_distance 1 100  %}">
-  </div>
-  {% endfor %}
-</div>
+<div id="content-main">
+  <div class="assignment-stats">
+      {% for t in stats %}
+      <div class="assignment" style="flex: {% widthratio t.display_ratio 1 100  %}">
+        <strong>{{t.label}}</strong><br>
+        {{t.assignment__group}}<br>
+        N={{t.count}}
+        ({% widthratio t.ratio 1 100 %}%, target: {% widthratio t.target_assignment_ratio 1 100 %}%)
+      </div>
+      <div class="assignment-distance" style="flex: {% widthratio t.ratio_distance 1 100  %}">
+      </div>
+      {% endfor %}
+    </div>
+<p>
+  N={{total_n}}.
+  Next auto assignment will be:
+    {% for t in next_assignments %}
+      {{t.name}}/{{t.assignment__group}}
+      {% widthratio t.ratio 1 100 %}% -> {% widthratio t.new_ratio 1 100 %}%,
+    {% endfor %}
+</p>
 
 <form method="post">{% csrf_token %}
 <div class="inline-group">
