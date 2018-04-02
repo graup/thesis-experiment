@@ -30,7 +30,7 @@ class AssignmentUpdateView(TemplateView):
             Assignment.objects.order_by().values('user_id').annotate(
                 max_id=Max('id')
             ).values('max_id')
-        ).order_by('treatment', 'user')
+        ).order_by('group', 'treatment', 'user')
         # Get unassigned users
         unassigned_users = User.objects.exclude(pk__in=qs.values('user_id')).values('id', 'username')
         initials = [{'user': u['id']} for u in unassigned_users]
