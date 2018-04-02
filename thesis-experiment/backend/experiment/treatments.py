@@ -44,7 +44,8 @@ def assignment_stats():
             c.update(new_ratio=(1+c['count'])/total_assignments)  # ratio after updating
         c.update(ratio_distance=c['target_assignment_ratio']-c['new_ratio'])  # difference after updating
         c.update(display_ratio=c['ratio']-abs(min(0, c['ratio_distance'])))
-    return sorted(counts, key=itemgetter('assignment__group', 'name'))
+    xstr = lambda s: s if s else ''
+    return sorted(counts, key=lambda item: tuple(map(xstr, itemgetter('assignment__group', 'name')(item))))
 
 def get_auto_treatment(group=None):
     # Get treatment that this user would be auto-assigned to
