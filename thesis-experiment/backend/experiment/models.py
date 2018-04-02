@@ -53,11 +53,15 @@ class Assignment(models.Model):
 class ClassificationResult(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed_date = models.DateField(auto_now_add=True)
-    score_autonomy = models.IntegerField(default=0)
-    score_impersonal = models.IntegerField(default=0)
-    score_control = models.IntegerField(default=0)
-    score_amotivation = models.IntegerField(default=0)
+    score_autonomy = models.IntegerField()
+    score_impersonal = models.IntegerField()
+    score_control = models.IntegerField()
+    score_amotivation = models.IntegerField()
     calculated_group = models.CharField(max_length=10, blank=True, null=True)
+
+    age = models.CharField(max_length=10)
+    sex = models.CharField(max_length=10)
+    occupation = models.CharField(max_length=10)
 
     class Meta:
         ordering = ('-id',)

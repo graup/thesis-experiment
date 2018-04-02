@@ -31,6 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-        auto_assign_user(user)
+        #auto_assign_user(user)
 
         return user

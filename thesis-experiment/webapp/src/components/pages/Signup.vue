@@ -102,7 +102,7 @@ export default {
       data.set('password', this.$data.password);
       data.set('email', this.$data.email);
       this.$store.dispatch('signup', { user: data, requestOptions: {} }).then(() => {
-        this.$router.push('feed');
+        this.$router.push('signup-test');
       }).catch(error => {
         this.$data.errors = error.response.data;
         this.$data.loading = false;

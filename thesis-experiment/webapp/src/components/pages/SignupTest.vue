@@ -50,27 +50,31 @@
           <div class="form-group">
             <strong>{{$t('q1-question')}}</strong><br>
             {{$t('q1-answer')}}
-            <RatingInput min="1" max="7" v-model="userData.q1" />
+            <RatingInput min="1" max="7" v-model="userData.score_amotivation" />
+            <div class="error" v-if="errors.score_amotivation">{{errors.score_amotivation.join(' ')}}</div>
           </div>
 
-          <p>{{$t('gcos-prompt')}}</p>
+          <p style="margin-top: 1.5rem">{{$t('gcos-prompt')}}</p>
 
           <div class="form-group">
             <strong>{{$t('q2-question')}}</strong><br>
             {{$t('q2-answer')}}
-            <RatingInput min="1" max="7" v-model="userData.q2" />
+            <RatingInput min="1" max="7" v-model="userData.score_impersonal" />
+            <div class="error" v-if="errors.score_impersonal">{{errors.score_impersonal.join(' ')}}</div>
           </div>
 
           <div class="form-group">
             <strong>{{$t('q3-question')}}</strong><br>
             {{$t('q3-answer')}}
-            <RatingInput min="1" max="7" v-model="userData.q3" />
+            <RatingInput min="1" max="7" v-model="userData.score_control" />
+            <div class="error" v-if="errors.score_control">{{errors.score_control.join(' ')}}</div>
           </div>
 
           <div class="form-group">
             <strong>{{$t('q4-question')}}</strong><br>
             {{$t('q4-answer')}}
-            <RatingInput min="1" max="7" v-model="userData.q4" />
+            <RatingInput min="1" max="7" v-model="userData.score_autonomy" />
+            <div class="error" v-if="errors.score_autonomy">{{errors.score_autonomy.join(' ')}}</div>
           </div>
 
           <div class="form-group button-group vertical spaced" style="max-width: 200px;">
@@ -153,10 +157,10 @@ export default {
         occupation: '',
         age: '',
         sex: '',
-        q1: null,
-        q2: null,
-        q3: null,
-        q4: 4,
+        score_amotivation: null,
+        score_autonomy: null,
+        score_impersonal: null,
+        score_control: null,
       },
       errors: {},
       loading: false,
@@ -166,10 +170,13 @@ export default {
     saveInfo() {
       this.$data.loading = true;
       console.log(this.userData);
-      this.$store.dispatch('saveTest', { user: this.userData, requestOptions: {} }).then(() => {
+      this.$store.dispatch('saveClassification', { user: this.userData, requestOptions: {} }).then(() => {
         this.$router.push('feed');
       }).catch(error => {
-        this.$data.errors = error.response.data;
+        if (error.response) {
+          this.$data.errors = error.response.data;
+        }
+        console.log(error);
         this.$data.loading = false;
       });
     },

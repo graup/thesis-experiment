@@ -20,6 +20,9 @@ const navigationMixins = {
       return this.$store.getters.authToken;
     },
     user() {
+      if (this.$store.state.user.isAuthenticated && this.$store.state.user.user.active_treatment.name === 'default') {
+        this.$router.push('signup-test');
+      }
       return this.$store.state.user.user;
     },
   },

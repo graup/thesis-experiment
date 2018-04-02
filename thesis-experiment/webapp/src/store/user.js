@@ -3,7 +3,7 @@ import VueAuthenticate from 'vue-authenticate';
 import VueAxios from 'vue-axios';
 import axios from 'axios';
 import $http from '../utils/http';
-import { apiGet } from '../utils/api';
+import { apiGet, apiPost } from '../utils/api';
 
 Vue.use(VueAxios, axios);
 
@@ -82,7 +82,6 @@ export default {
               meta: {
                 analytics: [
                   ['set', 'userId', user.id],
-                  ['set', 'userTreatment', user.active_treatment.name],
                 ],
               },
             });
@@ -106,6 +105,26 @@ export default {
           payload.user.set('client_id', 'webapp');
           payload.requestOptions = { config: { headers: { 'Content-Type': 'multipart/form-data' } } };
           dispatch('login', payload).then(resolve).catch(reject);
+        }).catch(reject);
+      });
+    },
+    saveClassification({ commit, state }, { user }) {
+      return new Promise((resolve, reject) => {
+        if (!state.isAuthenticated) {
+          reject();
+        }
+        apiPost('classification/', user).then((response) => {
+          user = response.data;
+          commit('setUser', {
+            user,
+            meta: {
+              analytics: [
+                ['set', 'userId', user.id],
+                ['set', 'userTreatment', user.active_treatment.name],
+              ],
+            },
+          });
+          resolve(user);
         }).catch(reject);
       });
     },
