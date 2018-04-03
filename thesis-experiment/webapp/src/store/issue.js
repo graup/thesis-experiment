@@ -132,6 +132,33 @@ export default {
         }).catch(reject);
       });
     },
+    deleteComment({ commit }, { comment }) {
+      return new Promise((resolve, reject) => {
+        apiDelete(`comments/${comment.id}/`).then(() => {
+          commit('markCommentsDirty', {
+            slug: '',
+            deleted: true,
+            meta: {
+              analytics: [['event', 'comment', 'delete', comment.id]],
+            },
+          });
+          resolve();
+        }).catch(reject);
+      });
+    },
+    flagComment({ commit }, { comment, reason }) {
+      return new Promise((resolve, reject) => {
+        apiPost(`comments/${comment.id}/flag/`, { reason }).then(() => {
+          commit('markCommentsDirty', {
+            slug: '',
+            meta: {
+              analytics: [['event', 'comment', 'flag', comment.id]],
+            },
+          });
+          resolve();
+        }).catch(reject);
+      });
+    },
     getComments(context, { slug }) {
       // Try to return already fetched data
       if (context.state.loaded_comments[slug]) {

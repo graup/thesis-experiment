@@ -138,3 +138,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 SITE_ID = 1
+
+SLACK_HOOK_URL = os.getenv("SLACK_HOOK_URL"),

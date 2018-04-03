@@ -1,6 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.models import ContentType
+from django.db.models.signals import post_save
+from django.urls import reverse
+from config.utils import notify_slack
 from random import random
 
 
@@ -34,14 +38,14 @@ class Assignment(models.Model):
     GROUPS = ('autonomy', 'control', )
     NUM_GROUPS = len(GROUPS)
 
-    __treatment = None
+    __treatment_id = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__treatment_id = self.treatment_id
 
     def __str__(self):
-        return '%s - %s/%s' % (self.user, self.treatment, self.group)
+        return '%s - %s/%s' % (self.user, self.treatment.name, self.group)
 
     def save(self, *args, **kwargs):
         if self.treatment_id != self.__treatment_id:
@@ -49,6 +53,17 @@ class Assignment(models.Model):
             self.pk = None
         super().save(*args, **kwargs)
 
+
+def notify_assignment(sender, instance, created, **kwargs):
+    from .treatments import assignment_stats
+    if not created:
+        return
+    content_type = ContentType.objects.get_for_model(instance.__class__)
+    url = reverse("admin:%s_%s_change" % (content_type.app_label, content_type.model), args=(instance.pk,))
+    stats = assignment_stats()
+    stats_text = ', '.join(['%s/%s N=%d (%d%%)' % (s['name'], s['assignment__group'], s['count'], 100*s['ratio']) for s in stats if s['count'] > 0])
+    notify_slack('*New assignment!* %s \n Stats: %s \n' % (instance, stats_text), url)
+post_save.connect(notify_assignment, sender=Assignment)
 
 class ClassificationResult(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

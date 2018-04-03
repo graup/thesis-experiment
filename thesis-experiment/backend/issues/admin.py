@@ -8,15 +8,18 @@ admin.site.register(Category, admin.ModelAdmin)
 
 class TagAdmin(admin.ModelAdmin):
     model = Tag
-    list_display = ('author', 'kind_display', 'issue_link', 'data',)
-    read_only_fields = ('issue_link', 'kind_display',)
+    list_display = ('author', 'kind_display', 'content_link', 'data',)
+    read_only_fields = ('content_link', 'kind_display',)
 
-    def issue_link(self, obj):
-        return mark_safe('<a href="{}">{}</a>'.format(
-            reverse("admin:issues_issue_change", args=(obj.issue.pk,)),
-            obj.issue
+    def content_link(self, obj):
+        content_type = obj.content_type
+        if not content_type:
+            return ''
+        return mark_safe('<a href="{}">{}: {}</a>'.format(
+            reverse("admin:%s_%s_change" % (content_type.app_label, content_type.model), args=(obj.content_object.pk,)),
+            content_type.model.title(), obj.content_object
         ))
-    issue_link.short_description = 'issue'
+    content_link.short_description = 'content object'
 
     def kind_display(self, obj):
         color = 'inherit'

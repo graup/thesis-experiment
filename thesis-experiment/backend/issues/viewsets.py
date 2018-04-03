@@ -27,11 +27,30 @@ class LargeResultsSetPagination(LimitOffsetPagination):
     default_limit = 100
     max_limit = 1000
 
-class CommentViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
+class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Comment.objects
     serializer_class = CommentSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (IsAuthenticated,)
+
+    def perform_destroy(self, instance):
+        if self.request.user != instance.author and not self.request.user.is_superuser: 
+            raise PermissionDenied()
+        instance.delete()
+    
+    @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
+    def flag(self, request, **kwargs):
+        self.kwargs = kwargs
+        if not self.request.user or not self.request.user.is_authenticated:
+            raise NotAuthenticated()
+
+        obj = self.get_object()
+        obj.flag(self.request.user, self.request.data['reason'])
+        context = {
+            'request': request
+        }
+        serializer = CommentSerializer(obj, context=context)
+        return Response(serializer.data)
 
 class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Issue.objects
@@ -47,12 +66,12 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
         if self.request.method == "POST":
             return qs
         # Add like count
-        qs = qs.annotate(like_count=Count('tag', filter=Q(tag__kind=0), distinct=True))
+        qs = qs.annotate(like_count=Count('tag_set', filter=Q(tag_set__kind=0), distinct=True))
         # Add comment count
         qs = qs.annotate(comment_count=Count('comment', filter=Q(comment__deleted_date__isnull=True), distinct=True))
         # Add if user has liked this issue
         if self.request.user and self.request.user.is_authenticated:
-            qs = qs.annotate(user_liked=Count('tag', filter=Q(tag__kind=0) & Q(tag__author=self.request.user), distinct=True))
+            qs = qs.annotate(user_liked=Count('tag_set', filter=Q(tag_set__kind=0) & Q(tag_set__author=self.request.user), distinct=True))
         return qs
     
     def perform_create(self, serializer):
