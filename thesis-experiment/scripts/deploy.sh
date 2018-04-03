@@ -5,6 +5,7 @@ ssh ssh.pythonanywhere.com /bin/bash -l << EOF
   git pull
   echo "Updating packages..."
   pip install -r requirements.txt -q
+  DJANGO_SETTINGS_MODULE='config.settings.test' python manage.py test
   python manage.py collectstatic --noinput
   python manage.py migrate
 EOF

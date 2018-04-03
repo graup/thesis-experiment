@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = False
+TESTING = False
 
 ALLOWED_HOSTS = []
 
@@ -139,4 +140,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 SITE_ID = 1
 
-SLACK_HOOK_URL = os.getenv("SLACK_HOOK_URL"),
+SLACK_HOOK_URL = os.getenv("SLACK_HOOK_URL")

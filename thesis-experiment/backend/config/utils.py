@@ -4,6 +4,8 @@ import json
 from django.conf import settings
 
 def notify_slack(text, attach_url=None):
+    if settings.TESTING:
+        return
     if attach_url:
         attach_url = settings.BASE_URL + attach_url
         text = '%s %s' % (text, attach_url)
