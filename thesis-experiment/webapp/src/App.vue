@@ -242,6 +242,15 @@ footer {
   text-shadow: 0 1px 1px #fff;
 }
 
+.view-help {
+  text-align: center;
+  margin: 1rem 3rem;
+  font-size: 90%;
+  color: #aaa;
+  line-height: 1.5;
+  text-shadow: 0 1px 1px #fff;
+}
+
 .big-loading {
   text-align: center;
   font-size: 90%;

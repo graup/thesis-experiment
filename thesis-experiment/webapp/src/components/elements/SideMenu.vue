@@ -10,6 +10,7 @@
     <ul class="menu-items" v-if="isAuthenticated">
       <li><a class="menu-item" v-on:click="gotoRoute('feed')">{{$t('recent-ideas')}}</a></li>
       <li><a class="menu-item" v-on:click="gotoRoute('my-posts')">{{$t('my-ideas')}}</a></li>
+      <li><a class="menu-item" v-on:click="gotoRoute('my-reactions')">{{$t('my-reactions')}}</a></li>
       <li><a class="menu-item" v-on:click="gotoRoute('faq')">{{$t('faq')}}</a></li>
       <li><a class="menu-item" v-on:click="logout">{{$t('logout')}}</a></li>
     </ul>
@@ -25,6 +26,7 @@
   "en": {
     "recent-ideas": "Recent Ideas",
     "my-ideas": "My Ideas",
+    "my-reactions": "My Reactions",
     "faq": "FAQ",
     "logout": "Log out",
     "login": "Log in",
@@ -33,6 +35,7 @@
   "ko": {
     "recent-ideas": "최근 아이디어",
     "my-ideas": "내 아이디어",
+    "my-reactions": "내 반응",
     "faq": "FAQ",
     "logout": "로그아웃",
     "login": "로그인",

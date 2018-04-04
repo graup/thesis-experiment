@@ -72,10 +72,14 @@ export default {
     overflow: scroll;
 
     transform: translateY(100%);
-    transition: all .25s;
+    transition: transform .25s;
+
+    opacity: 0;
   }
   &.visible .content {
     transform: translateY(0%);
+
+    opacity: 1;
   }
 }
 

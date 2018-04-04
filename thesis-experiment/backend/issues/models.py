@@ -107,7 +107,7 @@ class Issue(SoftDeletableModel):
             tag = Tag(content_object=self, author=user, kind=0)
             tag.save()
         if not liked and likes:
-            Tag.objects.filter(content_object=self, author=user, kind=0).delete()
+            self.tag_set.filter(kind=0, author=user).delete()
         self.user_liked = liked
 
     def flag(self, user, reason):

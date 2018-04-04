@@ -43,6 +43,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
     like_count = serializers.IntegerField(read_only=True)
     comment_count = serializers.IntegerField(read_only=True)
     user_liked = serializers.BooleanField(read_only=True)
+    user_commented = serializers.BooleanField(read_only=True)
     comments_url = serializers.HyperlinkedIdentityField(read_only=True, view_name='issue-comments', lookup_field='slug', )
     location = LocationSerializer(required=False)
 
@@ -67,7 +68,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
             'author',
             'categories', 'slug',
             'like_count', 'comment_count',
-            'user_liked',
+            'user_liked', 'user_commented',
             'comments_url',
             'location',
         )
@@ -75,5 +76,5 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
         }
-        read_only_fields = ('slug', 'user_liked',)
+        read_only_fields = ('slug', 'user_liked', 'user_commented',)
 

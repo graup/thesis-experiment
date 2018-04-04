@@ -7,7 +7,7 @@
       </div>
     </Sheet>
 
-    <div class="comment">
+    <div class="comment" v-bind:class={isAuthor}>
       <div class="content" v-on:click="showSheet">
         {{item.text}}
         <span class="date">{{item.created_date | moment("from", "now")}}</span>
@@ -122,6 +122,9 @@ export default {
     font-size: .9em;
     text-align: right;
     color: #666;
+  }
+  &.isAuthor .author {
+    color: #039e63;
   }
 }
 </style>

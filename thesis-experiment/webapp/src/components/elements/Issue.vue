@@ -34,7 +34,11 @@
         </span> {{item.like_count}}
       </span>
       <span class="icon-with-text" v-on:click.capture.stop="gotoDetails">
-        <CommentIcon /> {{item.comment_count}}
+        <span class="comment-container" v-bind:class="{commented: item.user_commented}">
+          <CommentIcon />
+          <CommentFilledIcon fillColor="#c521ff" />
+        </span>
+        {{item.comment_count}}
       </span>     
       <span class="icon-with-text">
         <span class="date" v-if="!expanded">{{item.created_date | moment("from", "now")}}</span>
@@ -69,6 +73,7 @@
 import HeartIcon from 'icons/heart-outline';
 import HeartFilledIcon from 'icons/heart';
 import CommentIcon from 'icons/comment-outline';
+import CommentFilledIcon from 'icons/comment';
 import LocationIcon from "icons/map-marker";
 import PersonIcon from 'icons/account-circle';
 import SubmenuIcon from "icons/dots-horizontal";
@@ -144,6 +149,7 @@ export default {
     HeartIcon,
     HeartFilledIcon,
     CommentIcon,
+    CommentFilledIcon,
     PersonIcon,
     LocationIcon,
     SubmenuIcon,
@@ -248,7 +254,7 @@ export default {
   }
 }
 
-.like-container {
+.like-container, .comment-container {
   position: relative;
   width: 16px;
   display: inline-block;
@@ -259,16 +265,16 @@ export default {
     left: 0;
     transition: all .3s cubic-bezier(0.14, 0.83, 0.37, 1.35);
   }
-  .heart-icon {
+  .heart-icon, .comment-icon {
     transform: scale(0) translateY(0px);
     transform-origin: center center;
   }
 
-  &.liked {
-    .heart-outline-icon {
+  &.liked, &.commented {
+    .heart-outline-icon, .comment-outline-icon {
       opacity: 0;
     }
-    .heart-icon {
+    .heart-icon, .comment-icon {
       transform: scale(1.2) translateY(-1px);
     }
   }

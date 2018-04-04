@@ -7,6 +7,7 @@ import SignupConsent from '@/components/pages/SignupConsent';
 import SignupTest from '@/components/pages/SignupTest';
 import Feed from '@/components/pages/Feed';
 import MyFeed from '@/components/pages/MyFeed';
+import MyReactionFeed from '@/components/pages/MyReactionFeed';
 import IssueDetails from '@/components/pages/IssueDetails';
 import NewIssue from '@/components/pages/NewIssue';
 import FAQ from '@/components/pages/FAQ';
@@ -34,6 +35,7 @@ export default new Router({
     { path: '/feed', name: 'feed', component: Feed, meta: { auth: true } },
     { path: '/faq', name: 'faq', component: FAQ, meta: { auth: true } },
     { path: '/my-posts', name: 'my-posts', component: MyFeed, meta: { auth: true } },
+    { path: '/my-reactions', name: 'my-reactions', component: MyReactionFeed, meta: { auth: true } },
     { path: '/issues/new', name: 'new-issue', component: NewIssue, meta: { auth: true } },
     {
       path: '/issues/:slug',

@@ -71,7 +71,10 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
         qs = qs.annotate(comment_count=Count('comment', filter=Q(comment__deleted_date__isnull=True), distinct=True))
         # Add if user has liked this issue
         if self.request.user and self.request.user.is_authenticated:
-            qs = qs.annotate(user_liked=Count('tag_set', filter=Q(tag_set__kind=0) & Q(tag_set__author=self.request.user), distinct=True))
+            qs = qs.annotate(
+                user_liked=Count('tag_set', filter=Q(tag_set__kind=0) & Q(tag_set__author=self.request.user), distinct=True),
+                user_commented=Count('comment', filter=Q(comment__deleted_date__isnull=True) & Q(comment__author=self.request.user), distinct=True)
+            )
         return qs
     
     def perform_create(self, serializer):
