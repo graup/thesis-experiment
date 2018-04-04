@@ -3,13 +3,13 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-
+from django.utils.timezone import now
 from .serializers import *
 from .models import Issue
 from rest_framework.pagination import LimitOffsetPagination
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
@@ -83,6 +83,39 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
         if self.request.user != instance.author and not self.request.user.is_superuser: 
             raise PermissionDenied()
         instance.soft_delete()
+    
+    @list_route(permission_classes=[IsAuthenticated,], url_name='stats', methods=['get'])
+    def stats(self, request, pk=None):
+        tz = pytz.timezone('Asia/Seoul')
+        today_local = now().astimezone(tz).date()
+        today_local_time = tz.localize(datetime(today_local.year, today_local.month, today_local.day))
+        filter_today = Q(created_date__gt=today_local_time.astimezone(pytz.utc)) & Q(created_date__lt=now())
+        filter_week = Q(created_date__gt=today_local_time.astimezone(pytz.utc) - timedelta(days=6)) & Q(created_date__lt=now())
+        filter_today_i = Q(issue__created_date__gt=today_local_time.astimezone(pytz.utc)) & Q(issue__created_date__lt=now())
+        filter_week_i = Q(issue__created_date__gt=today_local_time.astimezone(pytz.utc) - timedelta(days=6)) & Q(issue__created_date__lt=now())
+        filter_today_c = Q(comment__created_date__gt=today_local_time.astimezone(pytz.utc)) & Q(comment__created_date__lt=now())
+        filter_week_c = Q(comment__created_date__gt=today_local_time.astimezone(pytz.utc) - timedelta(days=6)) & Q(comment__created_date__lt=now())
+        data = {
+            'number_of_issues': {
+                'today': Issue.available_objects.filter(filter_today).count(),
+                'week': Issue.available_objects.filter(filter_week).count()
+            },
+            'number_of_comments': {
+                'today': Comment.available_objects.filter(filter_today).count(),
+                'week': Comment.available_objects.filter(filter_week).count()
+            },
+            'number_of_contrbutors': {
+                'today': User.objects.annotate(
+                    count_issues=Count('issue__id', filter=filter_today_i),
+                    count_comments=Count('comment__id', filter=filter_today_c)
+                ).filter(Q(count_issues__gt=0) | Q(count_comments__gt=0)).count(),
+                'week': User.objects.annotate(
+                    count_issues=Count('issue__id', filter=filter_week_i),
+                    count_comments=Count('comment__id', filter=filter_week_c)
+                ).filter(Q(count_issues__gt=0) | Q(count_comments__gt=0)).count()
+            }
+        }
+        return Response(data)
 
     @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
     def comments(self, request, **kwargs):

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { apiGet, apiPost, apiDelete } from '../utils/api';
 
 export default {
@@ -8,6 +9,8 @@ export default {
     loaded_issues: false,
     loaded_comments: {},
     comments_by_issue_slug: {},
+    stats: {},
+    stats_load_time: null,
   },
   getters: {
   },
@@ -37,6 +40,10 @@ export default {
     },
     markCommentsDirty(state, { slug }) {
       state.loaded_comments[slug] = false;
+    },
+    setStats(state, { stats }) {
+      state.stats = stats;
+      state.stats_load_time = moment();
     },
   },
   actions: {
@@ -191,6 +198,23 @@ export default {
           });
           // Reload comments
           dispatch('fetchComments', { slug });
+          resolve(response.data);
+        }).catch(reject);
+      });
+    },
+    getStats(context) {
+      // Only reload if data is stale
+      if (context.state.stats_load_time && context.state.stats_load_time.diff(moment(), 'minutes') <= 30) {
+        return new Promise((resolve) => {
+          resolve(context.state.stats);
+        });
+      }
+      return context.dispatch('fetchStats');
+    },
+    fetchStats({ commit }) {
+      return new Promise((resolve, reject) => {
+        apiGet('issues/stats/').then((response) => {
+          commit('setStats', { stats: response.data });
           resolve(response.data);
         }).catch(reject);
       });
