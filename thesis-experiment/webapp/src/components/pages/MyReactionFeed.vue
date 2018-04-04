@@ -42,10 +42,10 @@
     "view-explanation": "These are all ideas that you have liked or commented on."
   },
   "ko": {
-    "title": "내 반응",
+    "title": "내가 반응한 아이디어",
     "loading-error": "로딩 중 오류가 발생했습니다.<br>페이지를 새로고침 해 보십시오.",
-    "empty-state": "아직 없습니다. <br> 댓글 남거나 좋아요 눌러 보세요!",
-    "view-explanation": "회원님이 댓글을 님기거나 좋아요 눌린 아이디어입니다."
+    "empty-state": "아직 없습니다. <br> 댓글 남기거나 하트를 눌러 보세요!",
+    "view-explanation": "회원님이 댓글을 남기거나 하트를 누른 아이디어입니다."
   }
 }
 </i18n>

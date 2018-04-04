@@ -72,8 +72,8 @@
   "en": {
     "new-idea": "New Idea",
     "intro-text": "What is your idea to make KAIST a better place? It could be about facilities, organization, social problems, ...",
-    "sub-text-autonomy": "<strong>Let's have a real impact together!</strong> Among all ideas submitted until April 11, we will hand-pick three promising ideas, present them to the whole school, and follow up with concrete steps to support their implementation!",
-    "sub-text-control": "<strong>Participation reward:</strong> Among all contributors until April 11th, we will randomly select 10 members to win $20.",
+    "sub-text-autonomy": "<strong>Let's have a real impact together!</strong> Among all ideas submitted until April 12th, we will hand-pick three promising ideas, present them to the whole school, and follow up with concrete steps to support their implementation!",
+    "sub-text-control": "<strong>Participation reward:</strong> Among all contributors until April 12th, we will randomly select 10 members to win $20.",
     "title-label": "What's your idea in one sentence?",
     "description-label": "Describe your idea in a bit more detail",
     "description-placeholder": "Reasons, expected outcomes, affected population...",
@@ -87,8 +87,8 @@
   "ko": {
     "new-idea": "새로운 아이디어",
     "intro-text": "KAIST를 더 좋은 곳으로 만들기 위한 당신의 생각은 무엇인가요? 시설, 조직, 문화 문제 등...",
-    "sub-text-autonomy": "<strong>함께 변화를 만들어 보아요!</strong> 4월 11일까지 제출 된 모든 아이디어 중에서 3가지 훌륭한 아이디어를 선정하여 공지하고 실현될 수 있도록 지원해 드립니다.",
-    "sub-text-control": "<strong>참여 보상:</strong> 4월 11 일까지 참여하신 분들을 대상으로 10명을 무작위로 선정하여 2만원을 드립니다!",
+    "sub-text-autonomy": "<strong>함께 변화를 만들어 보아요!</strong> 4월 12일까지 제출 된 모든 아이디어 중에서 3가지 훌륭한 아이디어를 선정하여 공지하고 실현될 수 있도록 지원해 드립니다.",
+    "sub-text-control": "<strong>참여 보상:</strong> 4월 12일까지 참여하신 분들을 대상으로 10명을 무작위로 선정하여 2만원을 드립니다!",
     "title-label": "아이디어를 한 문장 이내로 써주세요",
     "description-label": "아이디어를 자세하게 설명해주세요",
     "description-placeholder": "이유, 예상 결과, 대상 등",
