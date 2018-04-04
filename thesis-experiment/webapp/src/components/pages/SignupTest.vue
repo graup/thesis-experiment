@@ -40,9 +40,9 @@
             <label for="occupation">{{$t('occupation')}}</label>
             <select id="occupation" class="form-input" v-model="userData.occupation" required>
               <option value="">{{$t('please-select')}}</option>
-              <option value="student">{{$t('student')}}</option>
-              <option value="professor">{{$t('professor')}}</option>
-              <option value="instructor">{{$t('instructor')}}</option>
+              <option value="undergrad">{{$t('undergrad')}}</option>
+              <option value="grad">{{$t('grad')}}</option>
+              <option value="faculty">{{$t('faculty')}}</option>
               <option value="staff">{{$t('staff')}}</option>
               <option value="other">{{$t('other')}}</option>
             </select>
@@ -104,12 +104,11 @@
     "sex": "Sex",
     "female": "Female",
     "male": "Male",
-    "occupation": "Occupation",
-    "student": "Student",
-    "professor": "Professor",
+    "occupation": "Position",
+    "undergrad": "Undergrad student",
+    "grad": "Grad student",
+    "faculty": "Faculty",
     "staff": "Staff",
-    "contractor": "Contractor",
-    "instructor": "Instructor",
     "other": "Other",
     "continue-button": "Continue",
     "test-instruction": "To help us better understand your personal attitude towards civic participation, please answer the following questions.",
@@ -128,20 +127,20 @@
     "test-intro": "다음 질문에 정직하게 답해주세요. 이 정보는 우리 연구에 중요합니다. 애플리케이션에서는 사용되지 않으며 항상 비공개로 유지됩니다.",
     "age": "연령대",
     "please-select": "선택 해주세요",
-    "occupation": "직업",
     "sex": "성별",
     "female": "여성",
     "male": "남성",
     "student": "학생",
-    "professor": "교수",
+    "occupation": "직업",
+    "undergrad": "학부생",
+    "grad": "대학원생",
+    "faculty": "교원",
     "staff": "직원",
-    "contractor": "계약자",
-    "instructor": "강사",
     "other": "기타",
     "continue-button": "계속하기",
     "test-instruction": "시민 참여에 대한 당신의 개인적인 태도를 더 잘 이해할 수 있도록 다음 질문에 답하세요.",
     "gcos-prompt": "다음과 같은 상황과 어떻게 대응할 것인지 상상해보세요.",
-    "q1-question": "자원 봉사를 하든 안 하든, 자원할 이유가 무엇이라고 생각하면...",
+    "q1-question": "당신은 자원 봉사를 하든 안 하든, 자원할 이유가 무엇이라고 생각하면...",
     "q1-answer": "몰라, 내가 빠져 나가는 것을 볼 수 없다.",
     "q2-question": "학령기 딸이 있는데, 부모님의 밤에 선생님이 딸이 잘하고 있지 않고 일에 관여하지 않는 것 같다고 말씀하셨습니다.",
     "q2-answer": "딸을 꾸짖고 더 나아질 것을 희망한다",

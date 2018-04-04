@@ -17,8 +17,10 @@
         </transition>
 
         <div v-if="issue">
-          <div class="tutorial-message" v-if="issue.author.username!=user.username">
-            {{$t('tutorial-issue-details')}}
+          <div class="tutorial-message" v-if="issue.author.username!=user.username && treatmentName">
+            <span v-html="$t('tutorial-issue-details')" v-if="treatmentName=='baseline'"/>
+            <span v-html="$t('tutorial-issue-details-autonomy')" v-if="treatmentName=='autonomy'" />
+            <span v-html="$t('tutorial-issue-details-control')" v-if="treatmentName=='control'" />
           </div>
 
           <div class="tutorial-message" v-if="issue.author.username==user.username && !comments.length && issue.like_count<=1">
@@ -39,8 +41,9 @@
     <footer>
       <div class="call-to-action">
         <div v-if="!commentMode">
-          <p v-if="user.active_treatment && user.active_treatment.name=='orientation_autonomy'">
-            {{$t('comment-cta-treatment')}} 
+          <p v-if="treatmentName">
+            <span v-html="$t('comment-cta-autonomy')" v-if="treatmentName=='autonomy'" />
+            <span v-html="$t('comment-cta-control')" v-if="treatmentName=='control'" />
           </p>
           <my-button :text="$t('comment-cta')" primary={true} v-on:click.native="toggleCommentMode()" />
         </div>
@@ -59,17 +62,23 @@
   "en": {
     "issue-details": "Idea Details",
     "tutorial-issue-details": "Here you can see details about the idea and comments that other people left. If you agree with this issue, how about showing your support by tapping the heart? If you have another opinion, try writing a short comment.",
+    "tutorial-issue-details-autonomy": "Here you can see details about the idea. <strong>Discussing ideas and showing your support is important for our community.</strong> If you agree with this issue, how about showing your support by tapping the heart? If you have another opinion, try writing a short comment.",
+    "tutorial-issue-details-control": "Here you can see details about the idea. If you agree with this issue, how about showing your support by tapping the heart? If you have another opinion, try writing a short comment. <strong>Remember, all active users have a chance to win $20!</strong>",
     "tutorial-your-idea": "This is your idea! Good job. Let's wait until other members give their opinion.",
     "no-comments": "No comments yet. <br>You can be the first!",
-    "comment-cta-treatment": "Let's share our diverse viewpoints!",
+    "comment-cta-autonomy": "Let's share our diverse viewpoints!",
+    "comment-cta-control": "Be active, get a chance to win!",
     "comment-cta": "Leave a comment"
   },
   "ko": {
     "issue-details": "아이디어 세부 정보",
     "tutorial-issue-details": "여기에서 다른 사람들이 남긴 아이디어와 의견에 대한 세부 정보를 볼 수 있습니다. 이 문제에 동의하신다면 하트를 눌러 공감을 표시해 보시면 어떨까요? 다른 의견이 있으면 간단한 설명을 적어주세요.",
+    "tutorial-issue-details": "여기에서 다른 사람들이 남긴 아이디어와 의견에 대한 세부 정보를 볼 수 있습니다. <strong>아이디어를 토론하고 지원을 보여주는 것은 유리 지역 사회에서 중요합니다.</strong> 이 문제에 동의하신다면 하트를 눌러 공감을 표시해 보시면 어떨까요? 다른 의견이 있으면 간단한 설명을 적어주세요.",
+    "tutorial-issue-details": "여기에서 다른 사람들이 남긴 아이디어와 의견에 대한 세부 정보를 볼 수 있습니다. 이 문제에 동의하신다면 하트를 눌러 공감을 표시해 보시면 어떨까요? 다른 의견이 있으면 간단한 설명을 적어주세요. <strong>모든 활성 사용자는 2만원 얻을 수있는 기회가 있음을 기억하십시오!</strong>",
     "tutorial-your-idea": "당신의 아이디어입니다! 훌륭해요. 다른 사람들이 의견을 남길 때까지 기다려 보아요.",
     "no-comments": "아직 댓글이 없습니다. <br> 첫번째 댓글을 남겨보세요.",
-    "comment-cta-treatment": "다양한 관점을 공유해 보아요",
+    "comment-cta-autonomy": "다양한 관점을 공유해 보아요!",
+    "comment-cta-control": "노력하고 상을 받을 기회를 얻으세요!",
     "comment-cta": "댓글 남기기"
   }
 }

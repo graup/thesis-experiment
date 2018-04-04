@@ -34,6 +34,10 @@
       <p class="intro">
         {{$t('intro-text')}}
       </p>
+      <p v-if="treatmentName" class="intro">
+        <span v-html="$t('sub-text-autonomy')" v-if="treatmentName=='autonomy'" />
+        <span v-html="$t('sub-text-control')" v-if="treatmentName=='control'" />
+      </p>
 
       <div class="form-wrapper form-wide">
         <form action="" class="form">
@@ -68,9 +72,11 @@
   "en": {
     "new-idea": "New Idea",
     "intro-text": "What is your idea to make KAIST a better place? It could be about facilities, organization, social problems, ...",
+    "sub-text-autonomy": "<strong>Let's have a real impact together!</strong> Among all ideas submitted until April 11, we will hand-pick three promising ideas, present them to the whole school, and follow up with concrete steps to support their implementation!",
+    "sub-text-control": "<strong>Participation reward:</strong> Among all contributors until April 11th, we will randomly select 10 members to win $20.",
     "title-label": "What's your idea in one sentence?",
-    "description-label": "Describe your idea in a bit more detail.",
-    "description-placeholder": "For example, explain some reasons or expected outcomes.",
+    "description-label": "Describe your idea in a bit more detail",
+    "description-placeholder": "Reasons, expected outcomes, affected population...",
     "attachments-label": "Attach place (optional)",
     "post-idea-button": "Post Idea",
     "select-place": "Select a place related to this idea",
@@ -81,9 +87,11 @@
   "ko": {
     "new-idea": "새로운 아이디어",
     "intro-text": "KAIST를 더 좋은 곳으로 만들기 위한 당신의 생각은 무엇인가요? 시설, 조직, 사회 문제 등...",
-    "title-label": "당신의 아이디어를 한 문장 이내로 나타내주세요.",
-    "description-label": "아이디어를 좀 더 자세하게 설명해주세요.",
-    "description-placeholder": "예를 들어, 이유 또는 예상되는 결과를 설명해주세요.",
+    "sub-text-autonomy": "<strong>함께 실생활에 영향을 미치자!</strong> 4월 11 일까지 제출 된 모든 아이디어 중에서 3 가지 유망한 아이디어를 선택하여 전체 학교에 발표하고 구현을 지원하기위한 구체적인 단계를 수행합니다.",
+    "sub-text-control": "<strong>참여 보상:</strong> 4월 11 일까지 모든 참여자 중에서 10명 무작위로 선택하여 2만원 줄 거에요!",
+    "title-label": "아이디어를 한 문장 이내로 써주세요",
+    "description-label": "아이디어를 자세하게 설명해주세요",
+    "description-placeholder": "이유, 예상 결과, 영향인구수 등",
     "attachments-label": "위치 첨부 (선택 사항)",
     "post-idea-button": "아이디어 게시하기",
     "select-place": "이 아이디어와 관련된 장소를 선택해주세요.",

@@ -1,9 +1,14 @@
 <template>
   <div class="call-to-action">
-    <p>{{leadText}}</p>
+    <p v-if="treatmentName">
+      <span v-html="$t('cta-lead-text')" v-if="treatmentName=='baseline'"/>
+      <span v-html="$t('cta-lead-text-autonomy')" v-if="treatmentName=='autonomy'" />
+      <span v-html="$t('cta-lead-text-control')" v-if="treatmentName=='control'" />
+    </p>
     <my-button :text="$t('cta-button-text')" primary={true} :link-to="{name: 'new-issue'}" />
-    <div v-if="treatment">
-      <p class="message" v-html="$t('cta-sub-text-treatment')"></p>
+    <div v-if="treatmentName">
+      <p class="message" v-html="$t('cta-sub-text-autonomy')" v-if="treatmentName=='autonomy'" />
+      <p class="message" v-html="$t('cta-sub-text-control')" v-if="treatmentName=='control'" />
     </div>
   </div>
 </template>
@@ -12,28 +17,28 @@
 {
   "en": {
     "cta-lead-text": "Make our community a better place!",
-    "cta-lead-text-treatment": "We need your contribution!",
-    "cta-sub-text-treatment": "24 other people contributed today.<br>Your ideas matter.",
+    "cta-lead-text-autonomy": "We need everyone's contribution!",
+    "cta-lead-text-control": "Become a Top Contributor of the Week!",
+    "cta-sub-text-autonomy": "24 other people contributed today.<br>Your ideas matter.",
+    "cta-sub-text-control": "Your chance to win $20!",
     "cta-button-text": "Share your idea"
   },
   "ko": {
     "cta-lead-text": "우리 지역 사회를 더 좋은 곳으로 만드세요!",
-    "cta-lead-text-treatment": "당신의 참여가 필요합니다!",
-    "cta-sub-text-treatment": "오늘 24 명의 사람들이 참여했습니다.<br>당신의 아이디어는 소중합니다.",
+    "cta-lead-text-autonomy": "모두의 참여가 필요합니다!",
+    "cta-lead-text-control": "이번 주 최우수 사용자가 되세요!",
+    "cta-sub-text-autonomy": "오늘 24 명의 사람들이 참여했습니다.<br>당신의 아이디어는 소중합니다.",
+    "cta-sub-text-control": "2만원 얻을 수있는 기회!",
     "cta-button-text": "당신의 아이디어 공유하기"
   }
 }
 </i18n>
 
 <script>
+import {navigationMixins} from "@/mixins";
 
 export default {
-  props: ['treatment'],
-  computed: {
-    leadText() {
-      return this.$props.treatment ? this.$t('cta-lead-text-treatment') : this.$t('cta-lead-text');
-    }
-  }
+  mixins: [navigationMixins],
 };
 </script>
 

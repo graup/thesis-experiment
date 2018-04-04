@@ -21,8 +21,10 @@
 
         <IssueList v-bind:items="issues" v-on::click.native="completeTutorial('feed')" />
 
-        <div class="empty-state" v-if="!loading && !issues.length" v-html="$t('empty-state')">
-          
+        <div class="empty-state" v-if="!loading && !issues.length">
+          <span v-html="$t('empty-state')" v-if="treatmentName=='baseline'"/>
+          <span v-html="$t('empty-state-autonomy')" v-if="treatmentName=='autonomy'" />
+          <span v-html="$t('empty-state-control')" v-if="treatmentName=='control'" />
         </div>
 
       </vue-pull-refresh>
@@ -39,12 +41,16 @@
   "en": {
     "my-ideas": "My Ideas",
     "loading-error": "An error occurred while loading.<br>Try to reload this page.",
-    "empty-state": "Nothing yet. <br>Post your first idea now!"
+    "empty-state": "Nothing yet. <br>Post your first idea now!",
+    "empty-state-autonomy": "Nothing yet. <br>Share your ideas with the community now!<br>Everyone’s voice counts.",
+    "empty-state-control": "Nothing yet. <br>Share your ideas for a chance to win $20!"
   },
   "ko": {
     "my-ideas": "내 아이디어",
     "loading-error": "로딩 중 오류가 발생했습니다.<br>페이지를 새로고침 해 보십시오.",
-    "empty-state": "아직 아무런 아이디어가 없습니다. <br> 지금 바로 첫 번째 아이디어를 게시하세요!"
+    "empty-state": "아직 없습니다. <br> 지금 바로 첫 번째 아이디어를 게시하세요!",
+    "empty-state-autonomy": "아직 없습니다. <br>지금 커뮤니티와 아이디어 공유하세요!<br>모든 사람의 목소리가 중요합니다.",
+    "empty-state-control": "아직 없습니다. <br>2만원 얻을 기회를 위해 아이디어를 공유하세요!"
   }
 }
 </i18n>

@@ -25,6 +25,12 @@ const navigationMixins = {
       }
       return this.$store.state.user.user;
     },
+    treatmentName() {
+      if (this.$store.state.user.isAuthenticated && this.$store.state.user.user.active_treatment) {
+        return this.$store.state.user.user.active_treatment.name;
+      }
+      return false;
+    },
   },
   methods: {
     goBack() {
