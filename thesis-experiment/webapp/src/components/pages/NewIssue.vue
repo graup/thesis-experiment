@@ -86,16 +86,16 @@
   },
   "ko": {
     "new-idea": "새로운 아이디어",
-    "intro-text": "KAIST를 더 좋은 곳으로 만들기 위한 당신의 생각은 무엇인가요? 시설, 조직, 사회 문제 등...",
-    "sub-text-autonomy": "<strong>함께 실생활에 영향을 미치자!</strong> 4월 11 일까지 제출 된 모든 아이디어 중에서 3 가지 유망한 아이디어를 선택하여 전체 학교에 발표하고 구현을 지원하기위한 구체적인 단계를 수행합니다.",
-    "sub-text-control": "<strong>참여 보상:</strong> 4월 11 일까지 모든 참여자 중에서 10명 무작위로 선택하여 2만원 줄 거에요!",
+    "intro-text": "KAIST를 더 좋은 곳으로 만들기 위한 당신의 생각은 무엇인가요? 시설, 조직, 문화 문제 등...",
+    "sub-text-autonomy": "<strong>함께 변화를 만들어 보아요!</strong> 4월 11일까지 제출 된 모든 아이디어 중에서 3가지 훌륭한 아이디어를 선정하여 공지하고 실현될 수 있도록 지원해 드립니다.",
+    "sub-text-control": "<strong>참여 보상:</strong> 4월 11 일까지 참여하신 분들을 대상으로 10명을 무작위로 선정하여 2만원을 드립니다!",
     "title-label": "아이디어를 한 문장 이내로 써주세요",
     "description-label": "아이디어를 자세하게 설명해주세요",
-    "description-placeholder": "이유, 예상 결과, 영향인구수 등",
+    "description-placeholder": "이유, 예상 결과, 대상 등",
     "attachments-label": "위치 첨부 (선택 사항)",
     "post-idea-button": "아이디어 게시하기",
     "select-place": "이 아이디어와 관련된 장소를 선택해주세요.",
-    "searching-places": "근처에있는 장소를 찾는 중...",
+    "searching-places": "근처 장소를 찾는 중...",
     "cancel": "취소",
     "try-again": "다시 시도"
   }

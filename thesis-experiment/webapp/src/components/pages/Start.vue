@@ -33,10 +33,10 @@
     "mobile-browser-advice": "This application is designed for use on mobile devices.<br>Please visit this web site on a mobile device."
   },
   "ko": {
-    "hello": "KAIST의 미래를 위한 중요한 이슈와 아이디어를 모으는데 참여하세요. 모든 사람의 참여가 필요합니다!",
+    "hello": "KAIST의 미래를 위한 중요한 이슈와 아이디어를 모으는 데에 참여하세요. 우리 모두의 참여가 필요합니다!",
     "signup": "회원 가입",
     "login": "로그인",
-    "mobile-browser-advice": "이 웹사이트는 모바일 장치에서 사용하도록 설계되었습니다. <br> 모바일 장치에서 웹 사이트를 방문하십시오."
+    "mobile-browser-advice": "이 웹사이트는 모바일에서 사용하도록 설계되었습니다. <br> 모바일 기기에서 웹사이트를 방문하십시오."
   }
 }
 </i18n>

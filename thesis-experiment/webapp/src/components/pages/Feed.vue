@@ -48,9 +48,9 @@
   "ko": {
     "recent-ideas": "최근 제안된 아이디어",
     "loading-error": "로딩 중 오류가 발생했습니다.<br>이 페이지를 새로고침 해보십시오.",
-    "tutorial-welcome": "<strong>KAIST를 위한 Many Ideas에 오신 것을 환영합니다!</strong> <br> 들어와 주셔서 감사합니다.  이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요.",
-    "tutorial-welcome-autonomy": "KAIST를 위한 Many Ideas에 오신 것을 환영합니다, <strong>우리의 결합 된 목소리가 실제적인 영향을 미칠 수있는 곳!</strong> 들어와 주셔서 감사합니다.  이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요.",
-    "tutorial-welcome-control": "KAIST를 위한 Many Ideas에 오신 것을 환영합니다! <br> 들어와 주셔서 감사합니다.  이 페이지에서 다른 회원이 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요. <strong>적극적으로 참여하면 2만원 얻을 수있는 기회를 얻을 수 있어요!</strong>"
+    "tutorial-welcome": "<strong>KAIST를 위한 Many Ideas에 오신 것을 환영합니다!</strong> <br> 방문해주셔서 감사합니다.  이 페이지에서 다른 사용자가 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요.",
+    "tutorial-welcome-autonomy": "<strong>우리의 하나 된 목소리가 실질적인 변화를 만들어낼 수 있는 곳!</strong> KAIST를 위한 Many Ideas에 오신 것을 환영합니다 방문해주셔서 감사합니다.  이 페이지에서 다른 사용자가 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요.",
+    "tutorial-welcome-control": "KAIST를 위한 Many Ideas에 오신 것을 환영합니다! <br> 방문해주셔서 감사합니다.  이 페이지에서 다른 사용자가 올린 아이디어를 볼 수 있습니다. 관심있는 내용이 있나요? <br> 게시물을 클릭해보세요. <strong>적극적으로 참여하면 2만원을 경품으로 받을 수 있어요!</strong>"
   }
 }
 </i18n>

@@ -25,7 +25,7 @@
     "complete-agree": "completely agree"
   },
   "ko": {
-    "complete-disagree": "완전히 동의하지 않는다",
+    "complete-disagree": "전혀 동의하지 않는다",
     "complete-agree": "완전히 동의한다"
   }
 }

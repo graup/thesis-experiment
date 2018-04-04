@@ -43,7 +43,7 @@
     "username-email": "아이디 또는 이메일",
     "password": "비밀번호",
     "login": "로그인",
-    "login-button": "로그인하기"
+    "login-button": "로그인"
   }
 }
 </i18n>

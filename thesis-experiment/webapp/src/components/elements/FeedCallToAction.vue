@@ -19,16 +19,16 @@
     "cta-lead-text": "Make our community a better place!",
     "cta-lead-text-autonomy": "We need everyone's contribution!",
     "cta-lead-text-control": "Become a Top Contributor of the Week!",
-    "cta-sub-text-autonomy": "{count} other people contributed today.<br>Your ideas matter.",
+    "cta-sub-text-autonomy": "24 other people contributed today.<br>Your ideas matter.",
     "cta-sub-text-control": "Your chance to win $20!",
     "cta-button-text": "Share your idea"
   },
   "ko": {
-    "cta-lead-text": "우리 지역 사회를 더 좋은 곳으로 만드세요!",
-    "cta-lead-text-autonomy": "모두의 참여가 필요합니다!",
+    "cta-lead-text": "우리 커뮤니티를 더 좋은 곳으로 만드세요!",
+    "cta-lead-text-autonomy": "우리 모두의 참여가 필요합니다!",
     "cta-lead-text-control": "이번 주 최우수 사용자가 되세요!",
-    "cta-sub-text-autonomy": "오늘 {count} 명의 사람들이 참여했습니다.<br>당신의 아이디어는 소중합니다.",
-    "cta-sub-text-control": "2만원 얻을 수있는 기회!",
+    "cta-sub-text-autonomy": "오늘 24 명의 사람들이 참여했습니다.<br>당신의 아이디어는 소중합니다.",
+    "cta-sub-text-control": "2만원 경품의 기회!",
     "cta-button-text": "당신의 아이디어 공유하기"
   }
 }
