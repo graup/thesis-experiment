@@ -6,8 +6,29 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_save
 from django.urls import reverse
+from django.utils.timezone import now
 from config.utils import notify_slack
 from autoslug import AutoSlugField
+
+
+class SoftDeletableManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_date__isnull=True)
+
+
+class SoftDeletableModel(models.Model):
+    deleted_date = models.DateTimeField(_('date deleted'), blank=True, null=True)
+
+    objects = models.Manager()
+    available_objects = SoftDeletableManager()
+
+    def soft_delete(self):
+        self.deleted_date = now()
+        self.save()
+        print("soft deleted object %s " % self)
+    
+    class Meta:
+        abstract = True
 
 
 class Category(models.Model):
@@ -58,7 +79,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
-class Issue(models.Model):
+class Issue(SoftDeletableModel):
     "A user-generated issue"
     title = models.CharField(max_length=250)
     text = models.TextField()
@@ -99,15 +120,14 @@ class Issue(models.Model):
         verbose_name = _("issue")
 
 
-class Comment(models.Model):
+class Comment(SoftDeletableModel):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_date = models.DateTimeField(_('date created'), auto_now_add=True)
-    deleted_date = models.DateTimeField(_('date deleted'), blank=True, null=True)
     text = models.TextField()
 
     tag_set = GenericRelation(Tag)
-    
+
     def flag(self, user, reason):
         tag = Tag(content_object=self, author=user, kind=1, data=reason)
         tag.save()
@@ -118,4 +138,6 @@ class Comment(models.Model):
         verbose_name = _("comment")
 
     def __str__(self):
+        if self.deleted_date is not None:
+            return '(deleted) %s' % self.text[:50]
         return self.text[:50]

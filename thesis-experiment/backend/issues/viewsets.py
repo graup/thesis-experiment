@@ -36,7 +36,7 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets
     def perform_destroy(self, instance):
         if self.request.user != instance.author and not self.request.user.is_superuser: 
             raise PermissionDenied()
-        instance.delete()
+        instance.soft_delete()
     
     @detail_route(methods=['post'], permission_classes=[IsAuthenticated,])
     def flag(self, request, **kwargs):
@@ -53,7 +53,7 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets
         return Response(serializer.data)
 
 class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = Issue.objects
+    queryset = Issue.available_objects
     serializer_class = IssueSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title',)
@@ -82,7 +82,7 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
     def perform_destroy(self, instance):
         if self.request.user != instance.author and not self.request.user.is_superuser: 
             raise PermissionDenied()
-        instance.delete()
+        instance.soft_delete()
 
     @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
     def comments(self, request, **kwargs):
@@ -157,7 +157,7 @@ class UserViewSet(viewsets.GenericViewSet):
         since_dt = datetime.utcfromtimestamp(since_ts/1000.0).replace(tzinfo=pytz.utc)
         
         # Find issues with new comments
-        issues = Issue.objects.filter(
+        issues = Issue.available_objects.filter(
             author=self.request.user,
             comment__created_date__gte=since_dt,
             comment__deleted_date__isnull=True
