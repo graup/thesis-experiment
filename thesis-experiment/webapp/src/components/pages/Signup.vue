@@ -61,7 +61,7 @@
   "ko": {
     "sign-up": "회원 가입",
     "username": "아이디",
-    "username-help": "아이디어와 의견 옆에 나타납니다.",
+    "username-help": "아이디어와 댓글 옆에 나타납니다.",
     "email": "이메일",
     "email-help": "비공개로 유지됩니다.",
     "password": "비밀번호",
