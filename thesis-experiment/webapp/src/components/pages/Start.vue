@@ -15,9 +15,9 @@
 
       <div v-if="!touchDevice" class="message warning">
         <p v-html="$t('mobile-browser-advice')"></p>
-        <img src='https://chart.googleapis.com/chart?cht=qr&chl=http%3A%2F%2Fapp.kaist.manyideas.org&chs=180x180&choe=UTF-8&chld=L|2' alt=''>
+        <img :src='codeUrl' alt=''>
         <br>
-        https://kaist.manyideas.org
+        https://manyideas.org
       </div>
     </main>
     <footer></footer>
@@ -47,6 +47,12 @@ import {localeMixin} from "@/mixins";
 export default {
   mixins: [localeMixin],
   name: 'Start',
+  computed: {
+    codeUrl() {
+      const currentUrl = window.location.href;
+      return `https://chart.googleapis.com/chart?cht=qr&chl=${encodeURIComponent(currentUrl)}&chs=180x180&choe=UTF-8&chld=L|2`;
+    }
+  },
   data() {
     return {
       touchDevice: !!('ontouchstart' in window),
