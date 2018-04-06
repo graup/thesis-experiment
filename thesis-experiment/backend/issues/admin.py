@@ -52,15 +52,23 @@ class CommentInline(admin.TabularInline):
 
 class IssueAdmin(admin.ModelAdmin):
     model = Issue
-    list_display = ('title', 'created_date', 'deleted_date', 'author',)
+    list_display = ('title', 'created_date', 'deleted_date', 'author', 'score', 'heat',)
     inlines = [
         CommentInline,
     ]
-    actions = ['soft_delete']
+    actions = ['recalc_heat', 'soft_delete']
 
     def soft_delete(self, request, queryset):
         rows_updated = queryset.update(deleted_date=Now())
         self.message_user(request, "%d issues successfully soft-deleted." % rows_updated)
     soft_delete.short_description = "Soft-delete issue"
+
+    def recalc_heat(self, request, queryset):
+        rows_updated = 0
+        for issue in queryset.all():
+            issue.save()
+            rows_updated += 1
+        self.message_user(request, "%d issues successfully updated." % rows_updated)
+    recalc_heat.short_description = "Re-calculate heat"
 admin.site.register(Issue, IssueAdmin)
 admin.site.register(Location, admin.ModelAdmin)

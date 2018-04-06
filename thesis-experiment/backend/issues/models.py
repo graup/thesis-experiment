@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from config.utils import notify_slack
 from autoslug import AutoSlugField
+from .fields import HeatIndexField
 
 
 class SoftDeletableManager(models.Manager):
@@ -90,6 +91,8 @@ class Issue(SoftDeletableModel):
     slug = AutoSlugField(populate_from='title', unique=True)
     location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL)
 
+    heat = HeatIndexField(score_field='score', timestamp_field='created_date')
+
     tag_set = GenericRelation(Tag)
 
     def __str__(self):
@@ -110,13 +113,17 @@ class Issue(SoftDeletableModel):
             self.tag_set.filter(kind=0, author=user).delete()
         self.user_liked = liked
 
+    @property
+    def score(self):
+        return self.get_like_count()
+
     def flag(self, user, reason):
         tag = Tag(content_object=self, author=user, kind=1, data=reason)
         tag.save()
         return tag
 
     class Meta:
-        ordering = ('-created_date',)
+        ordering = ('-heat',)
         verbose_name = _("issue")
 
 
