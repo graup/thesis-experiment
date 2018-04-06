@@ -84,7 +84,7 @@ class ClassificationResult(models.Model):
     def calculate_group(self):
         "Calculate group based on Inference Tree computed from Mturk data"
         prob_autonomy = 0
-        if self.score_amotivation <= 2:
+        if self.score_amotivation <= 3:  # 2 on 5-scale likert -> 3 on 7-scale likert
             if self.score_impersonal <= 3:
                 if self.score_control <= 2:
                     prob_autonomy = 1.0  # Autonomy with 0% error
