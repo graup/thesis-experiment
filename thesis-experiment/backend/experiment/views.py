@@ -2,11 +2,67 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 from django import forms
 from django.http import HttpResponseRedirect
-from .models import Assignment, Treatment
-from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
 from django.contrib.auth.models import User
 from django.db.models import Max
 from django.contrib import admin
+from rest_framework.exceptions import PermissionDenied
+import csv
+from django.http import StreamingHttpResponse
+from django.utils.timezone import now
+from .models import Assignment, Treatment
+from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
+from issues.models import Issue, Comment, Tag
+
+
+class Echo:
+    def write(self, value):
+        return value
+
+def data_export_csv_view(request):
+    if not request.user.is_superuser: 
+        raise PermissionDenied()
+
+    header = ['id', 'username', 'group', 'treatment', 'occupation', 'sex', 'age', 'issue_count', 'comment_count', 'like_count', 'flag_count']
+
+    def get_row(user):
+        dt = {
+            'id': user.id,
+            'username': user.username,
+            'issue_count': user.issue_set.count(),
+            'comment_count': user.comment_set.count(),
+            'like_count': user.tag_set.filter(kind=0).count(),
+            'flag_count': user.tag_set.filter(kind=1).count(),
+        }
+        try:
+            classification = user.classificationresult_set.order_by('-completed_date')[0]
+            assignment = user.assignment_set.order_by('-assigned_date')[0]
+        except IndexError:
+            return dt
+
+        dt.update({
+            'group': classification.calculated_group,
+            'treatment': assignment.treatment.name,
+            'age': classification.age,
+            'sex': classification.sex,
+            'occupation': classification.occupation,
+        })
+        return dt
+
+    def iter_items(items, pseudo_buffer):
+        writer = csv.DictWriter(pseudo_buffer, fieldnames=header)
+        yield writer.writer.writerow(writer.fieldnames)
+
+        for item in items:
+            yield writer.writerow(get_row(item))
+
+    response = StreamingHttpResponse(
+        streaming_content=(iter_items(User.objects.all(), Echo())),
+        content_type="text/csv"
+    )
+    filename = 'data_%s.csv' % now().isoformat()[:16].replace(':', '-')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    return response
+
 
 class AssignmentForm(forms.ModelForm):
     treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect, required=False)
@@ -67,3 +123,4 @@ class AssignmentUpdateView(TemplateView):
 
     def get_success_url(self):
         return reverse('treatment-assignments')
+
