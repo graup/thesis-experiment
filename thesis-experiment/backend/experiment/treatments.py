@@ -34,7 +34,7 @@ def assignment_stats():
     } for s in missing_splits]
 
     # Compute ratio distances
-    total_assignments = sum([c['count'] for c in counts]) * Assignment.NUM_GROUPS
+    total_assignments = sum([c['count'] for c in counts])
     for c in counts:
         c.update(target_assignment_ratio=c['target_assignment_ratio']/Assignment.NUM_GROUPS)
         if total_assignments == 0:
