@@ -11,11 +11,14 @@ from .serializers import UserSerializer
 class TokenView(oauth2_provider.views.TokenView):
     def create_token_response(self, request):
         post_data = request.POST.copy()
-        email = post_data.pop('email', None)
-        #if email:
-        #    username = get_user_model().objects.filter(email=email[0]).values_list('username', flat=True).last()
-        #    post_data['username'] = username
-        #    request.POST = post_data
+        User = get_user_model()
+        try:
+            username = User.objects.filter(email=post_data['username']).values_list('username', flat=True).last()
+            if username:
+                post_data['username'] = username
+                request.POST = post_data
+        except User.DoesNotExist:
+            pass
         return super(TokenView, self).create_token_response(request)
 
 class OAuthSuccessView(TemplateView):
