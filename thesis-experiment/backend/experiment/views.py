@@ -15,7 +15,8 @@ from .models import Assignment, Treatment
 from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
 from issues.models import Issue, Comment, Tag
 import pytz
-
+from collections import defaultdict
+from operator import itemgetter
 
 
 class Echo:
@@ -72,28 +73,39 @@ def stats_export_csv_view(request):
     if not request.user.is_superuser: 
         raise PermissionDenied()
 
-    header = ['date', 'signups', 'issue_count', 'comment_count', 'like_count']
+    header = ['date', 'signups', 'issue_count', 'comment_count']
 
     tz = pytz.timezone('Asia/Seoul')
 
     response = HttpResponse(content_type="text/csv")
     filename = 'stats_%s.csv' % now().isoformat()[:16].replace(':', '-')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    writer = csv.DictWriter(response, fieldnames=header)
+    writer = csv.DictWriter(response, fieldnames=header, restval=0)
     writer.writer.writerow(writer.fieldnames)
-    qs = User.objects.all().filter(
+    user_stats = User.objects.all().filter(
         assignment__isnull=False
     ).annotate(
         date=TruncDay('date_joined',  tzinfo=tz)
     ).order_by('date').values('date').annotate(
-        signups=Count('id', distinct=True),
-        issue_count=Count('issue__id', distinct=True),
-        comment_count=Count('comment__id', distinct=True),
-        like_count=Count('tag__id', filter=Q(tag__kind=0), distinct=True)
+        signups=Count('id', distinct=True)
     )
-    for row in qs:
-        print(row)
-        writer.writerow(row)
+    issue_stats = Issue.objects.all().annotate(
+        date=TruncDay('created_date',  tzinfo=tz)
+    ).order_by('date').values('date').annotate(
+        issue_count=Count('id', distinct=True)
+    )
+    comment_stats = Comment.objects.all().annotate(
+        date=TruncDay('created_date',  tzinfo=tz)
+    ).order_by('date').values('date').annotate(
+        comment_count=Count('id', distinct=True)
+    )
+    merged_stats = defaultdict(dict)
+    for stat in (user_stats, issue_stats, comment_stats,):
+        for row in stat:
+            row['date'] = row['date'].date()
+            merged_stats[row['date']].update(row)
+    merged_stats = sorted(merged_stats.values(), key=itemgetter('date'))
+    writer.writerows(merged_stats)
     return response
 
 class AssignmentForm(forms.ModelForm):
