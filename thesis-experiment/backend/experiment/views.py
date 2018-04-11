@@ -5,9 +5,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.db.models import Max
 from django.contrib import admin
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
 from rest_framework.exceptions import PermissionDenied
 import csv
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
 from django.utils.timezone import now
 from .models import Assignment, Treatment
 from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
@@ -63,6 +65,32 @@ def data_export_csv_view(request):
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
 
+
+def stats_export_csv_view(request):
+    if not request.user.is_superuser: 
+        raise PermissionDenied()
+
+    header = ['date', 'signups', 'issue_count', 'comment_count', 'like_count']
+
+    response = HttpResponse(content_type="text/csv")
+    filename = 'stats_%s.csv' % now().isoformat()[:16].replace(':', '-')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    writer = csv.DictWriter(response, fieldnames=header)
+    writer.writer.writerow(writer.fieldnames)
+    qs = User.objects.all().filter(
+        assignment__isnull=False
+    ).annotate(
+        date=TruncDate('date_joined')
+    ).order_by('date').values('date').annotate(
+        signups=Count('id', distinct=True),
+        issue_count=Count('issue__id', distinct=True),
+        comment_count=Count('comment__id', distinct=True),
+        like_count=Count('tag__id', filter=Q(tag__kind=0), distinct=True)
+    )
+    for row in qs:
+        print(row)
+        writer.writerow(row)
+    return response
 
 class AssignmentForm(forms.ModelForm):
     treatment = forms.ModelChoiceField(queryset=Treatment.objects, widget=forms.RadioSelect, required=False)
