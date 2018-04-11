@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Max
 from django.contrib import admin
 from django.db.models import Count, Q
-from django.db.models.functions import TruncDate
+from django.db.models.functions import TruncDay
 from rest_framework.exceptions import PermissionDenied
 import csv
 from django.http import StreamingHttpResponse, HttpResponse
@@ -14,6 +14,8 @@ from django.utils.timezone import now
 from .models import Assignment, Treatment
 from .treatments import get_default_treatment, auto_assign_user, assignment_stats, get_auto_treatment
 from issues.models import Issue, Comment, Tag
+import pytz
+
 
 
 class Echo:
@@ -72,6 +74,8 @@ def stats_export_csv_view(request):
 
     header = ['date', 'signups', 'issue_count', 'comment_count', 'like_count']
 
+    tz = pytz.timezone('Asia/Seoul')
+
     response = HttpResponse(content_type="text/csv")
     filename = 'stats_%s.csv' % now().isoformat()[:16].replace(':', '-')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
@@ -80,7 +84,7 @@ def stats_export_csv_view(request):
     qs = User.objects.all().filter(
         assignment__isnull=False
     ).annotate(
-        date=TruncDate('date_joined')
+        date=TruncDay('date_joined',  tzinfo=tz)
     ).order_by('date').values('date').annotate(
         signups=Count('id', distinct=True),
         issue_count=Count('issue__id', distinct=True),
