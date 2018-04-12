@@ -27,19 +27,22 @@ def data_export_csv_view(request):
     if not request.user.is_superuser: 
         raise PermissionDenied()
 
-    header = ['id', 'username', 'group', 'treatment', 'occupation', 'sex', 'age', 'issue_count', 'comment_count', 'like_count', 'flag_count', 'like_received_count']
+    header = ['id', 'username', 'group', 'treatment', 'occupation', 'sex', 'age', 'issue_count', 'comment_count', 'like_count', 'flag_count', 'like_received_count', 'avg_issue_length']
 
     def get_row(user):
         like_counts = user.issue_set.annotate(like_count=Count('tag_set', filter=Q(tag_set__kind=0))).values_list('like_count')
         like_received_count = sum([a[0] for a in like_counts])
+        issue_count = user.issue_set.count()
+        issue_length = sum([sum(list(map(len, v))) for v in user.issue_set.values_list('text', 'title')])
         dt = {
             'id': user.id,
             'username': user.username,
-            'issue_count': user.issue_set.count(),
+            'issue_count': issue_count,
             'comment_count': user.comment_set.count(),
             'like_count': user.tag_set.filter(kind=0).count(),
             'like_received_count': like_received_count,
             'flag_count': user.tag_set.filter(kind=1).count(),
+            'avg_issue_length': round(issue_length/issue_count, 2)
         }
         try:
             classification = user.classificationresult_set.order_by('-completed_date')[0]
@@ -65,10 +68,10 @@ def data_export_csv_view(request):
 
     response = StreamingHttpResponse(
         streaming_content=(iter_items(User.objects.all(), Echo())),
-        content_type="text/plain"
+        content_type="text/csv"
     )
-    #filename = 'data_%s.csv' % now().isoformat()[:16].replace(':', '-')
-    #response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    filename = 'data_%s.csv' % now().isoformat()[:16].replace(':', '-')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
 
 
