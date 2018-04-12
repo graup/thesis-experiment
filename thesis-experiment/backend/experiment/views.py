@@ -27,15 +27,18 @@ def data_export_csv_view(request):
     if not request.user.is_superuser: 
         raise PermissionDenied()
 
-    header = ['id', 'username', 'group', 'treatment', 'occupation', 'sex', 'age', 'issue_count', 'comment_count', 'like_count', 'flag_count']
+    header = ['id', 'username', 'group', 'treatment', 'occupation', 'sex', 'age', 'issue_count', 'comment_count', 'like_count', 'flag_count', 'like_received_count']
 
     def get_row(user):
+        like_counts = user.issue_set.annotate(like_count=Count('tag_set', filter=Q(tag_set__kind=0))).values_list('like_count')
+        like_received_count = sum([a[0] for a in like_counts])
         dt = {
             'id': user.id,
             'username': user.username,
             'issue_count': user.issue_set.count(),
             'comment_count': user.comment_set.count(),
             'like_count': user.tag_set.filter(kind=0).count(),
+            'like_received_count': like_received_count,
             'flag_count': user.tag_set.filter(kind=1).count(),
         }
         try:
@@ -62,10 +65,10 @@ def data_export_csv_view(request):
 
     response = StreamingHttpResponse(
         streaming_content=(iter_items(User.objects.all(), Echo())),
-        content_type="text/csv"
+        content_type="text/plain"
     )
-    filename = 'data_%s.csv' % now().isoformat()[:16].replace(':', '-')
-    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    #filename = 'data_%s.csv' % now().isoformat()[:16].replace(':', '-')
+    #response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
 
 
