@@ -34,6 +34,9 @@ def data_export_csv_view(request):
         like_received_count = sum([a[0] for a in like_counts])
         issue_count = user.issue_set.count()
         issue_length = sum([sum(list(map(len, v))) for v in user.issue_set.values_list('text', 'title')])
+        avg_issue_length = 0
+        if issue_count > 0:
+            avg_issue_length = round(issue_length/issue_count, 2)
         dt = {
             'id': user.id,
             'username': user.username,
@@ -42,7 +45,7 @@ def data_export_csv_view(request):
             'like_count': user.tag_set.filter(kind=0).count(),
             'like_received_count': like_received_count,
             'flag_count': user.tag_set.filter(kind=1).count(),
-            'avg_issue_length': round(issue_length/issue_count, 2)
+            'avg_issue_length': avg_issue_length
         }
         try:
             classification = user.classificationresult_set.order_by('-completed_date')[0]
