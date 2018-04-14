@@ -60,6 +60,11 @@ appusage_vignette = [
     ]
 },
 {
+    'text': '(한글로 답하셔도 됨) Any other reason?',
+    'name': 'reason_join_free',
+    'free_form': True
+},
+{
     'text': "After your first session, did you plan on revisiting the app?",
     'name': "plan_revisit"
 },
@@ -89,12 +94,12 @@ appusage_vignette = [
     ]
 },
 {
-    'text': 'If you could choose your own reward, what would that be?',
+    'text': '(한글로 답하셔도 됨) If you could choose your own reward, what would that be?',
     'name': 'reward_free',
     'free_form': True
 },
 {
-    'text': 'Apart from a reward, what else would motivate you to continue using this app?',
+    'text': '(한글로 답하셔도 됨) Apart from a reward, what else would motivate you to continue using this app?',
     'name': 'reward_free',
     'free_form': True
 }
@@ -162,7 +167,7 @@ attrakdiff_source = [
     ]
 },
 {
-    'text': 'Do you have any suggestions how we could make this app better?',
+    'text': '(한글로 답하셔도 됨) Do you have any suggestions how we could make this app better?',
     'name': 'suggestion_free',
     'free_form': True
 }
