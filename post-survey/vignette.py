@@ -1,4 +1,5 @@
 from numpy import random
+import random as pyrandom
 
 def _shuffle(items):
     return list(random.permutation(items))
@@ -59,6 +60,10 @@ class Question(object):
         if randomize:
             if seed is not None:
                 random.seed(seed)
-            return _shuffle(self.answers)
+                pyrandom.seed(seed)
+            shuffled_items = _shuffle(self.answers)                
+            for item in shuffled_items:
+                item['flip'] = pyrandom.random() > 0.5
+            return shuffled_items
         return self.answers
 

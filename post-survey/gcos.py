@@ -261,5 +261,5 @@ for q in gcos_source:
         text=q['text'],
         answers=q['answers'],
         vignette=gcos,
-        scale_labels=('very unlikely', 'very likely')
+        scale_labels=('very unlikely', 'moderately likely', 'very likely')
     ))

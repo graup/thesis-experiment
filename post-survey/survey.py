@@ -106,7 +106,7 @@ appusage.questions = [Question(vignette=appusage, **q) for q in appusage_vignett
 attrakdiff_source = [
 {
     'text': 'With the help of these word pairs, please enter what you consider the most appropriate description for Many Ideas.',
-    'scale_labels': False,
+    'scale_labels': ('very', 'neither', 'very'),
      # Order: p PQ4, B1, p PQ2, p HQ2, p PQ3, HQ3, HQ4, p G1, PQ1, HQ1
     'answers': [
         {
@@ -151,7 +151,7 @@ attrakdiff_source = [
         },
         {
             'text': '',
-            'high_low': ('confusing', 'clearly structured'),
+            'high_low': ('confusing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 'clearly structured'),
             'name': 'pq'
         },
         {
@@ -167,5 +167,5 @@ attrakdiff_source = [
     'free_form': True
 }
 ]
-attrakdiff = Vignette(name='attrakdiff', scale=range(1, 8))
+attrakdiff = Vignette(name='attrakdiff', scale=range(1, 8), randomize=True)
 attrakdiff.questions = [Question(vignette=attrakdiff, **q) for q in attrakdiff_source]

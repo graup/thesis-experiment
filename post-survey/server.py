@@ -7,7 +7,7 @@ import json
 
 from gcos import gcos
 from mvs import mvs
-from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random, get_top_preference, rationale_texts, num_combinations
+#from experiment import get_ordered_pairs, get_ordering, shuffle_pair_random, get_top_preference, rationale_texts, num_combinations
 from survey import onlineusage, appusage, attrakdiff
 
 base_directory = os.path.dirname(os.path.realpath(__file__))
@@ -76,7 +76,7 @@ def survey1():
 
 @app.route('/step-2', methods=['GET', 'POST'])
 def survey2():
-    return survey_step(vignette=mvs, request=request, next_route='survey3', step=2, template='mvs.html')
+    return survey_step(vignette=mvs, request=request, next_route='survey4', step=2, template='mvs.html')
 
 @app.route('/step-3', methods=['GET', 'POST'])
 def survey3():
