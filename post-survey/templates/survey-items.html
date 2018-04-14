@@ -1,13 +1,14 @@
 
    
 <table class="questions">
+  
 {% for item in vignette.get_items(vignette.randomize, user_counter) %}
 {% set qloop = loop %}
   <tbody class="question">
     <tr><td colspan="100%" class="answer-text">{{item.text}}</td></tr>
   </tbody>
   <tbody class="answers">
-    {% for answer in item.get_items(vignette.randomize, user_counter) %}
+    {% for answer in item.get_items(vignette.randomize, vignette.flip_answers, user_counter) %}
     {% if not item.free_form and (loop.index0 % 7 == 0 and item.answers|length > 10 or loop.index0 == 0) %}
     </tbody>
     <tbody class="question">
@@ -20,7 +21,7 @@
           </td>
       </tr>
       {% endif %}
-      {% if not vignette.randomize %}
+      {% if not vignette.flip_answers %}
     <tr>
         <td class="rating space"></td>
         {% for rating in vignette.scale %}
@@ -51,6 +52,9 @@
           {% if answer.high_low and answer.flip %}{{answer.high_low[1] | safe}}{% endif %}
         </td>
         {% set scale = vignette.scale %}
+        {% if answer.flip %}
+          {% set scale = vignette.scale[::-1] %}
+        {% endif %}
         {% for rating in scale %}
         <td class="rating">
           <label>
@@ -61,7 +65,6 @@
         <td class="space">
             {% if answer.high_low and not answer.flip %}{{answer.high_low[1] | safe}}{% endif %}
             {% if answer.high_low and answer.flip %}{{answer.high_low[0] | safe}}{% endif %}
-            <input type="hidden" name="{{item.name}}_{{qloop.index0}}_{{answer.key}}_flip" value="{{answer.flip}}">
         </td>
         {% endif %}
       </tr>

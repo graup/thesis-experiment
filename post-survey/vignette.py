@@ -9,7 +9,7 @@ class Vignette(object):
     scale = None
     randomize = False
 
-    def __init__(self, name=None, scale=None, questions=None, randomize=False):
+    def __init__(self, name=None, scale=None, questions=None, randomize=False, flip_answers=False):
         self.questions = questions
         if questions is None:
             self.questions = []
@@ -20,6 +20,7 @@ class Vignette(object):
         if name is not None:
             self.name = name
         self.randomize = randomize
+        self.flip_answers = flip_answers
 
     def __len__(self):
         return sum([len(question.answers) for question in self.questions])
@@ -50,20 +51,21 @@ class Question(object):
             else:
                 answer['key'] = idx
     
-    def get_items(self, randomize=False, seed=None):
+    def get_items(self, randomize=False, flip_answers=False, seed=None):
         if not len(self.answers):
             return [{
                 'text': '',
                 'name': self.name,
                 'key': ''
             }]
+        items = self.answers
+        if seed is not None:
+            random.seed(seed)
+            pyrandom.seed(seed)
         if randomize:
-            if seed is not None:
-                random.seed(seed)
-                pyrandom.seed(seed)
-            shuffled_items = _shuffle(self.answers)                
-            for item in shuffled_items:
+            items = _shuffle(self.answers)     
+        if flip_answers:
+            for item in items:
                 item['flip'] = pyrandom.random() > 0.5
-            return shuffled_items
-        return self.answers
+        return items
 

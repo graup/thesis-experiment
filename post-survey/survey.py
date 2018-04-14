@@ -167,5 +167,5 @@ attrakdiff_source = [
     'free_form': True
 }
 ]
-attrakdiff = Vignette(name='attrakdiff', scale=range(1, 8), randomize=True)
+attrakdiff = Vignette(name='attrakdiff', scale=range(1, 8), randomize=False, flip_answers=True)
 attrakdiff.questions = [Question(vignette=attrakdiff, **q) for q in attrakdiff_source]
