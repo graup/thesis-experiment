@@ -61,6 +61,7 @@
         <td class="space">
             {% if answer.high_low and not answer.flip %}{{answer.high_low[1] | safe}}{% endif %}
             {% if answer.high_low and answer.flip %}{{answer.high_low[0] | safe}}{% endif %}
+            <input type="hidden" name="{{item.name}}_{{qloop.index0}}_{{answer.key}}_flip" value="{{answer.flip}}">
         </td>
         {% endif %}
       </tr>
