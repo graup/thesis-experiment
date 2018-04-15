@@ -100,7 +100,7 @@ appusage_vignette = [
 },
 {
     'text': '(한국어 답변 가능) Apart from a reward, what else would motivate you to continue using this app?',
-    'name': 'reward_free',
+    'name': 'motivation_free',
     'free_form': True
 }
 ]

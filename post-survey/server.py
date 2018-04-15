@@ -114,7 +114,7 @@ def dated_url_for(endpoint, **values):
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
-app.secret_key = os.urandom(32)
+app.secret_key = 'sdy2f356rfvesfudnufd8'
 app.user_counter = 0
 
 if __name__ == '__main__':
