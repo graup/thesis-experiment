@@ -119,6 +119,10 @@ class Issue(SoftDeletableModel):
     def score(self):
         return self.get_like_count()
 
+    @property
+    def comments(self):
+        return self.comment_set.filter(deleted_date__isnull=True)
+
     def flag(self, user, reason):
         tag = Tag(content_object=self, author=user, kind=1, data=reason)
         tag.save()
