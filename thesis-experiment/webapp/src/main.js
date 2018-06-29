@@ -45,6 +45,7 @@ router.beforeEach((to, from, next) => {
   const unauthRequired = to.matched.some(route => route.meta.unauth);
   const authed = store.state.user.isAuthenticated;
   if (authRequired && !authed) {
+    router.authRequiredRoute = router.currentRoute;
     next('/login');
   } else if (unauthRequired && authed) {
     next('/feed');

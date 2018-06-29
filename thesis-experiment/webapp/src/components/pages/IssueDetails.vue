@@ -175,6 +175,12 @@ export default {
       });
     },
     toggleCommentMode() {
+      if (!this.$store.state.user.isAuthenticated) {
+        this.$router.authRequiredRoute = this.$router.currentRoute;
+        this.$router.push('/login');
+        return;
+      }
+      
       this.commentMode = !this.commentMode;
       if (this.commentMode) {
         this.$nextTick(() => {

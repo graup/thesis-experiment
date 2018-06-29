@@ -179,7 +179,12 @@ export default {
       this.$data.loading = true;
       console.log(this.userData);
       this.$store.dispatch('saveClassification', { user: this.userData, requestOptions: {} }).then(() => {
-        this.$router.push('feed');
+        let dest = 'feed';
+        if (this.$router.authRequiredRoute) {
+          dest = this.$router.authRequiredRoute.path;
+          this.$router.authRequiredRoute = null;
+        }
+        this.$router.push(dest);
       }).catch(error => {
         if (error.response) {
           this.$data.errors = error.response.data;

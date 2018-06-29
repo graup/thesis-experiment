@@ -41,7 +41,6 @@ export default new Router({
       path: '/issues/:slug',
       name: 'issue-detail',
       component: IssueDetails,
-      meta: { auth: true },
       props: true,
     },
   ],

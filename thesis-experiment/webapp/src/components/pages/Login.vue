@@ -25,6 +25,8 @@
           </div>
         </form>
       </div>
+
+      <p class="sub-login-text" v-on:click="gotoSignup">{{$t('go-to-signup')}}</p>
       
     </main>
     <footer></footer>
@@ -37,13 +39,15 @@
     "username-email": "Username or email",
     "password": "Password",
     "login": "Log in",
-    "login-button": "Log in"
+    "login-button": "Log in",
+    "go-to-signup": "Sign up now"
   },
   "ko": {
     "username-email": "아이디 또는 이메일",
     "password": "비밀번호",
     "login": "로그인",
-    "login-button": "로그인"
+    "login-button": "로그인",
+    "go-to-signup": "회원가입"
   }
 }
 </i18n>
@@ -79,7 +83,12 @@ export default {
       data.set('client_id', 'webapp');
       const requestOptions = {config: { headers: {'Content-Type': 'multipart/form-data' }}};
       this.$store.dispatch('login', { user: data, requestOptions }).then(() => {
-        this.$router.push('feed');
+        let dest = 'feed';
+        if (this.$router.authRequiredRoute) {
+          dest = this.$router.authRequiredRoute.path;
+          this.$router.authRequiredRoute = null;
+        }
+        this.$router.push(dest);
       }).catch(error => {
         if (error.response) {
           this.$data.error = error.response.data.error_description;
@@ -89,6 +98,9 @@ export default {
         this.$data.loading = false;
       });
     },
+    gotoSignup() {
+      this.$router.push('signup');
+    }
   },
   components: {
     ChevronLeftIcon,
@@ -97,5 +109,12 @@ export default {
 </script>
 
 <style scoped>
+.sub-login-text {
+  text-align: center;
+  text-shadow: 0 1px #fff;
+  color: #386b8d;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
 </style>
 

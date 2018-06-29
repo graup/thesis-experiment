@@ -99,7 +99,7 @@ export default {
       return getBBox(this.$props.item.location.lat, this.$props.item.location.lon, 200);
     },
     isAuthor() {
-      return this.user.username == this.$props.item.author.username;
+      return this.user && this.user.username == this.$props.item.author.username;
     }
   },
   methods: {
