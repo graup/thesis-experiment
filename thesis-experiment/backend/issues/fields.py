@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .utils import calculate_heat
 
-DEFAULT_DECAY_TIME = 24*60*60*120 # 120 days
+DEFAULT_DECAY_TIME = 24*60*60*30 # 30 days
 DEFAULT_SCORE_BASE = 10
 
 
