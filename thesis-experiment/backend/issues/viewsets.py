@@ -59,7 +59,7 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
     search_fields = ('title',)
     pagination_class = LargeResultsSetPagination
     lookup_field = 'slug'
-    permission_classes = (IsAuthenticated,)
+    permission_classes = []
 
     def get_queryset(self):
         qs = self.queryset
