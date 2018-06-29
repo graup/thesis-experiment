@@ -43,14 +43,14 @@
     "loading-error": "An error occurred while loading.<br>Try to reload this page.",
     "empty-state": "Nothing yet. <br>Post your first idea now!",
     "empty-state-autonomy": "Nothing yet. <br>Share your ideas with the community now!<br>Everyone’s voice counts.",
-    "empty-state-control": "Nothing yet. <br>Share your ideas for a chance to win $20!"
+    "empty-state-control": "Nothing yet. <br>Please share your ideas with the community!"
   },
   "ko": {
     "my-ideas": "내 아이디어",
     "loading-error": "로딩 중 오류가 발생했습니다.<br>페이지를 새로고침 해 보십시오.",
     "empty-state": "아직 없습니다. <br> 지금 바로 첫 번째 아이디어를 게시하세요!",
     "empty-state-autonomy": "아직 없습니다. <br>바로 지금 여러분의 아이디어를 교내 구성원들과 공유하세요!<br>모든 사람의 의견 중요합니다.",
-    "empty-state-control": "아직 없습니다. <br>2만원 경품 기회를 위해 아이디어를 공유하세요!"
+    "empty-state-control": "아직 없습니다. <br>2바로 지금 여러분의 아이디어를 교내 구성원들과 공유하세요!"
   }
 }
 </i18n>
