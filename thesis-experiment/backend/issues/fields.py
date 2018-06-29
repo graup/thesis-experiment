@@ -9,8 +9,8 @@ from django.utils import timezone
 
 from .utils import calculate_heat
 
-DEFAULT_DECAY_TIME = 24*60*60*30 # 30 days
-DEFAULT_SCORE_BASE = 10
+DEFAULT_DECAY_TIME = 24*60*60*60 # 60 days
+DEFAULT_SCORE_BASE = 8
 
 
 class HeatIndexField(models.FloatField):
