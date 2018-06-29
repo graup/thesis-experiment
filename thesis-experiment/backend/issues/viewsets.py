@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters, permissions, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated, PermissionDenied
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.utils.timezone import now
 from .serializers import *
 from .models import Issue
@@ -31,7 +31,7 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets
     queryset = Comment.objects
     serializer_class = CommentSerializer
     pagination_class = LargeResultsSetPagination
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def perform_destroy(self, instance):
         if self.request.user != instance.author and not self.request.user.is_superuser: 
@@ -120,12 +120,12 @@ class IssueViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
         }
         return Response(data)
 
-    @detail_route(permission_classes=[IsAuthenticated,], url_name='comments')
+    @detail_route(permission_classes=[IsAuthenticatedOrReadOnly,], url_name='comments')
     def comments(self, request, **kwargs):
         """Show non-deleted comments for this issue"""
         self.kwargs = kwargs
-        if not self.request.user or not self.request.user.is_authenticated:
-            raise NotAuthenticated()
+        #if not self.request.user or not self.request.user.is_authenticated:
+        #    raise NotAuthenticated()
 
         obj = self.get_object()
         context = {
